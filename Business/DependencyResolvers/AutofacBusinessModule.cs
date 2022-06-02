@@ -56,6 +56,9 @@ namespace Business.DependencyResolvers
             builder.RegisterType<MailManager>().As<IMailService>();
             builder.RegisterType<MailDal>().As<IMailDal>();
 
+            builder.RegisterType<MailTemplateManager>().As<IMailTemplateService>();
+            builder.RegisterType<MailTemplateDal>().As<IMailTemplateDal>();
+
         }
     }
 }

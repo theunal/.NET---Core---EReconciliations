@@ -3,11 +3,6 @@ using Business.Const;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Business.Concrete
 {
@@ -24,6 +19,12 @@ namespace Business.Concrete
         {
             return new SuccessDataResult<MailTemplate>
                 (mailTemplateDal.Get(m => m.Id == id));
+        }
+
+        public IDataResult<MailTemplate> GetByTemplateName(string name, int companyId)
+        {
+            return new SuccessDataResult<MailTemplate>
+              (mailTemplateDal.Get(m => m.Type == name && m.CompanyId == companyId));
         }
 
         public IDataResult<List<MailTemplate>> GetAll(int companyId)
@@ -54,5 +55,7 @@ namespace Business.Concrete
             mailTemplateDal.Update(mailTemplate);
             return new SuccessResult(Messages.MailTemplateUpdated);
         }
+
+        
     }
 }

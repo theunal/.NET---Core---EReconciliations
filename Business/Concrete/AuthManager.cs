@@ -16,21 +16,24 @@ namespace Business.Concrete
         private readonly ITokenHelper tokenHelper;
         private readonly IMailParameterService mailParameterService;
         private readonly IMailService mailService;
+        private readonly IMailTemplateService mailTemplateService;
         public AuthManager(
             IUserService userService,
             ICompanyService companyService,
             ITokenHelper tokenHelper,
             IMailParameterService mailParameterService,
-            IMailService mailService)
+            IMailService mailService,
+            IMailTemplateService mailTemplateService)
         {
             this.userService = userService;
             this.companyService = companyService;
             this.tokenHelper = tokenHelper;
             this.mailParameterService = mailParameterService;
             this.mailService = mailService;
+            this.mailTemplateService = mailTemplateService;
         }
 
-     
+
 
         public IDataResult<AccessToken> CreateAccessToken(User user, int companyId)
         {
@@ -46,7 +49,7 @@ namespace Business.Concrete
             {
                 return new ErrorDataResult<User>(Messages.UserNotFound);
             }
-            
+
             if (!HashingHelper.VerifyPasswordHash(dto.Password, userToCheck.PasswordHash, userToCheck.PasswordSalt))
             {
                 return new ErrorDataResult<User>(Messages.PasswordError);
@@ -71,7 +74,7 @@ namespace Business.Concrete
                 PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt
             };
-            
+
             userService.Add(user);
             companyService.Add(company);
             companyService.AddUserCompany(user.Id, company.Id);
@@ -89,16 +92,31 @@ namespace Business.Concrete
                 PasswordHash = user.PasswordHash,
                 PasswordSalt = user.PasswordSalt,
             };
-            
+
+
+
+            string link = "http://localhost:5000/api/auth/confirmmail/" + user.MailConfirmValue;
+            string linkDescription = "Onayla";
+
+            var mailTemplate = mailTemplateService.GetByTemplateName("string", 2002);
+
+            string templateBody = mailTemplate.Data.Value;
+            templateBody = templateBody.Replace("{{title}}", "Kullanıcı Onay Maili");
+            templateBody = templateBody.Replace("{{message}}", "Maili onaylamak için aşağıdaki butona tıklayın.");
+            templateBody = templateBody.Replace("{{link}}", link);
+            templateBody = templateBody.Replace("{{linkDescription}}", linkDescription);
+
+
             var mailPamareter = mailParameterService.Get(2002);
             SendMailDto sendMailDto = new SendMailDto()
             {
                 MailParameter = mailPamareter.Data,
                 Email = dto.Email,
                 Subject = "Kullanıcı Onay Maili",
-                Body = "Maili onaylamak için aşağıdaki butona tıklayın."       
-            };
+                Body = templateBody
 
+            };
+            //"<a href='http://localhost:4200/confirm-mail/" + user.MailConfirmValue + "'>Onayla</a>"
             mailService.SendMail(sendMailDto);
 
             return new SuccessDataResult<UserCompanyDto>(userCompanyDto, Messages.UserRegistered);
