@@ -15,7 +15,7 @@ namespace WebApi.Controllers
         {
             this.authService = authService;
         }
-        
+
 
         [HttpPost("register")]
         public ActionResult Register(UserRegisterAndCompanyDto dto)
@@ -35,7 +35,7 @@ namespace WebApi.Controllers
 
             var registerResult = authService.
                  Register(dto.UserRegisterDto, dto.UserRegisterDto.Password, dto.Company);
-            
+
             var result = authService.CreateAccessToken(registerResult.Data, registerResult.Data.CompanyId);
             if (result.Success)
             {
@@ -44,7 +44,7 @@ namespace WebApi.Controllers
 
             return BadRequest(result.Message);
         }
-        
+
         [HttpPost("registerSecond")]
         public ActionResult RegisterSecond(UserRegisterDto dto)
         {
@@ -52,9 +52,9 @@ namespace WebApi.Controllers
             if (!userExists.Success)
             {
                 return BadRequest(userExists.Message);
-               // return BadRequest(userExists); bu şekilde de çalışabilir
+                // return BadRequest(userExists); bu şekilde de çalışabilir
             }
-            
+
             var user = authService.RegisterSecond(dto, dto.Password);
             var result = authService.CreateAccessToken(user.Data, 0);
             if (result.Success)
@@ -83,6 +83,27 @@ namespace WebApi.Controllers
             return BadRequest(result.Message);
         }
 
+
+        [HttpGet("confirmUser")]
+        public IActionResult ConfirmUser(string value)
+        {
+            var user = authService.GtByMailConfirmValue(value);
+
+            if (user.Success)
+            {
+                user.Data.MailConfirm = true;
+                user.Data.MailConfirmDate = DateTime.Now;
+                var result = authService.Update(user.Data);
+                if (result.Success)
+                {
+                    return Ok(result.Message);
+                }
+                return BadRequest(result.Message);
+            }
+
+            return BadRequest(user.Message);
+
+        }
 
     }
 }

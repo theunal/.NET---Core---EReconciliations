@@ -29,8 +29,8 @@ namespace Business.Const
         public static string MailTemplateAdded = "Mail şablonu başarıyla eklendi.";
         public static string MailTemplateDeleted = "Mail şablonu başarıyla silindi.";
         public static string MailTemplateUpdated = "Mail şablonu başarıyla güncellendi.";
-
-
+        public static string UserMailConfirmSuccessfuly = "Kullanıcı mail adresi onaylandı.";
+        public static string MailHasAlreadyBeenConfirmed = "Mail zaten onaylandı.";
 
 
 

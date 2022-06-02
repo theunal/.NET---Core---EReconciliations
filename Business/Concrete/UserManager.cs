@@ -46,9 +46,26 @@ namespace Business.Concrete
             return userDal.GetClaims(user, companyId);
         }
 
+        public User GtByMailConfirmValue(string value)
+        {
+            return userDal.Get(u => u.MailConfirmValue == value);
+        }
+
         public IResult Update(User entity)
         {
             throw new NotImplementedException();
         }
+
+        void IUserService.Update(User entity)
+        {
+            userDal.Update(entity);
+        }
+
+        public IDataResult<User> GetByValue(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+  
     }
 }

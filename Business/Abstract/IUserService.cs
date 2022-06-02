@@ -10,13 +10,16 @@ namespace Business.Abstract
 
 
         IResult Add(User entity);
-        IResult Update(User entity);
+
         IResult Delete(User entity);
 
+        
 
-
+        void Update(User entity);
         List<OperationClaim> GetClaims(User user, int companyId);
         User GetByEmail(string email);
+        User GtByMailConfirmValue(string value);
+        IDataResult<User> GetByValue(int id);
 
     }
 }

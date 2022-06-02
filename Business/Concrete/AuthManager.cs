@@ -86,7 +86,7 @@ namespace Business.Concrete
                 AddedAt = user.AddedAt,
                 CompanyId = company.Id,
                 IsActive = user.IsActive,
-                MailConfirm = user.MailConfirm,
+                MailConfirm = false,
                 MailConfirmDate = user.MailConfirmDate,
                 MailConfirmValue = user.MailConfirmValue,
                 PasswordHash = user.PasswordHash,
@@ -95,7 +95,7 @@ namespace Business.Concrete
 
 
 
-            string link = "http://localhost:5000/api/auth/confirmmail/" + user.MailConfirmValue;
+            string link = "https://localhost:7154/api/Auth/confirmUser?value=" + user.MailConfirmValue;
             string linkDescription = "Onayla";
 
             var mailTemplate = mailTemplateService.GetByTemplateName("string", 2002);
@@ -114,9 +114,8 @@ namespace Business.Concrete
                 Email = dto.Email,
                 Subject = "Kullanıcı Onay Maili",
                 Body = templateBody
-
             };
-            //"<a href='http://localhost:4200/confirm-mail/" + user.MailConfirmValue + "'>Onayla</a>"
+            
             mailService.SendMail(sendMailDto);
 
             return new SuccessDataResult<UserCompanyDto>(userCompanyDto, Messages.UserRegistered);
@@ -162,7 +161,28 @@ namespace Business.Concrete
             }
             return new SuccessResult();
         }
+        
+        public IDataResult<User> GtByMailConfirmValue(string value)
+        {
+            var user = userService.GtByMailConfirmValue(value);
+           
+            if (user is null) 
+            {
+                return new ErrorDataResult<User>(user, Messages.UserNotFound);
+            }
+            else if (user.MailConfirm == true)
+            {
+                return new ErrorDataResult<User>(user, Messages.MailHasAlreadyBeenConfirmed);
+            }
+            
+            return new SuccessDataResult<User>(user);
+        }
 
+        public IResult Update(User entity)
+        {
+            userService.Update(entity);
+            return new SuccessResult(Messages.UserMailConfirmSuccessfuly);
+        }
     }
 }
 

@@ -11,8 +11,11 @@ namespace Business.Abstract
         IDataResult<UserCompanyDto> Register(UserRegisterDto dto, string password, Company company);
         IDataResult<User> RegisterSecond(UserRegisterDto dto, string password);
         IDataResult<User> Login(UserLoginDto dto);
+        IDataResult<User> GtByMailConfirmValue(string value);
         IResult UserExists(string email);
         IResult CompanyExists(Company company);
         IDataResult<AccessToken> CreateAccessToken(User user, int companyId);
+
+        IResult Update(User entity);
     }
 }
