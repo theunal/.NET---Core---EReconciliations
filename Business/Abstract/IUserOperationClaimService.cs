@@ -1,8 +1,10 @@
-﻿using Core.Utilities.Results;
+﻿
+
+using Core.Utilities.Results;
 
 namespace Business.Abstract
 {
-    public interface CurrencyAccountService<T>
+    public interface IUserOperationClaimService<T>
     {
         IDataResult<List<T>> GetAll();
         IDataResult<T> Get(int id);
@@ -12,4 +14,5 @@ namespace Business.Abstract
         IResult Update(T entity);
         IResult Delete(T entity);
     }
+    
 }

@@ -1,10 +1,8 @@
-﻿
-
-using Core.Utilities.Results;
+﻿using Core.Utilities.Results;
 
 namespace Business.Abstract
 {
-    public interface UserOperationClaimService<T>
+    public interface IBaBsReconciliationService<T>
     {
         IDataResult<List<T>> GetAll();
         IDataResult<T> Get(int id);
@@ -14,5 +12,4 @@ namespace Business.Abstract
         IResult Update(T entity);
         IResult Delete(T entity);
     }
-    
 }

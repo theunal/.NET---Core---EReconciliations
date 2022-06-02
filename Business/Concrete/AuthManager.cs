@@ -8,11 +8,11 @@ using Entities.Dtos;
 
 namespace Business.Concrete
 {
-    public class AuthManager : AuthService
+    public class AuthManager : IAuthService
     {
-        private readonly UserService userService;
+        private readonly IUserService<User> userService;
         private readonly ITokenHelper tokenHelper;
-        public AuthManager(UserService userService, ITokenHelper tokenHelper)
+        public AuthManager(IUserService<User> userService, ITokenHelper tokenHelper)
         {
             this.userService = userService;
             this.tokenHelper = tokenHelper;
@@ -29,7 +29,7 @@ namespace Business.Concrete
         public IDataResult<User> Login(UserLoginDto dto)
         {
             var userToCheck = userService.GetByEmail(dto.Email);
-            if (userToCheck == null)
+            if (userToCheck is null)
             {
                 return new ErrorDataResult<User>(Messages.UserNotFound);
             }
@@ -48,6 +48,7 @@ namespace Business.Concrete
             HashingHelper.CreatePasswordHash(password, out passwordHash, out passwordSalt);
             var user = new User
             {
+                Name = dto.Name,
                 Email = dto.Email,
                 AddedAt = DateTime.Now,
                 IsActive = true,
@@ -64,12 +65,14 @@ namespace Business.Concrete
 
         public IResult UserExists(string email)
         {
-            if (userService.GetByEmail(email) != null)
+            if (userService.GetByEmail(email) is not null)
             {
                 return new ErrorResult(Messages.UserAlreadyExists);
             }
             return new SuccessResult();
         }
+
+        
     }
 }
 

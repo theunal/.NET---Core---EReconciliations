@@ -2,7 +2,7 @@
 
 namespace Business.Abstract
 {
-    public interface UserCompanyService<T>
+    public interface ICurrencyService<T>
     {
         IDataResult<List<T>> GetAll();
         IDataResult<T> Get(int id);

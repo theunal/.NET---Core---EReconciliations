@@ -38,12 +38,10 @@ namespace Core.DataAccess
         
         public void Add(TEntity entity)
         {
-            using (var context = new TContext())
-            {
-                var addedEntity = context.Entry(entity);
-                addedEntity.State = EntityState.Added;
-                context.SaveChanges();
-            }
+            using var context = new TContext();
+            var addedEntity = context.Entry(entity);
+            addedEntity.State = EntityState.Added;
+            context.SaveChanges();
         }
         public void Update(TEntity entity)
         {

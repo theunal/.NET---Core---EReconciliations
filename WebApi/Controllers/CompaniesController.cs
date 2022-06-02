@@ -8,8 +8,8 @@ namespace WebApi.Controllers
     [ApiController]
     public class CompaniesController : ControllerBase
     {
-        private readonly CompanyService<Company> companyService;
-        public CompaniesController(CompanyService<Company> companyService)
+        private readonly ICompanyService<Company> companyService;
+        public CompaniesController(ICompanyService<Company> companyService)
         {
             this.companyService = companyService;
         }

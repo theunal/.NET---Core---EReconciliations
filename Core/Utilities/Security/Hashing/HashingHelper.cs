@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Text;
 using System.Security.Cryptography;
+
 
 namespace Core.Utilities.Security.Hashing
 {
@@ -10,7 +9,6 @@ namespace Core.Utilities.Security.Hashing
         // string password veriliyor, çıkış olarak hash ve salt değerleri döndürülür.
         public static void CreatePasswordHash (string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
-
             using (var hmac = new HMACSHA512())
             {
                 passwordSalt = hmac.Key;
@@ -24,9 +22,7 @@ namespace Core.Utilities.Security.Hashing
         
         public static bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
         {
-
             using (var hmac = new HMACSHA512(passwordSalt))
-            
             {
                 var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
 
@@ -38,8 +34,6 @@ namespace Core.Utilities.Security.Hashing
                     }
                 }
             }
-            
-            
             return true;
         }
 

@@ -6,7 +6,7 @@ using Entities.Concrete;
 
 namespace Business.Concrete
 {
-    public class CompanyManager : CompanyService<Company>
+    public class CompanyManager : ICompanyService<Company>
     {
         private readonly ICompanyDal companyDal;
         public CompanyManager(ICompanyDal companyDal)

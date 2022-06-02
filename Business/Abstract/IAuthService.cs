@@ -5,11 +5,11 @@ using Entities.Dtos;
 
 namespace Business.Abstract
 {
-    public interface AuthService
+    public interface IAuthService
     {
         IDataResult<User> Register(UserRegisterDto dto, string password);
         IDataResult<User> Login(UserLoginDto dto);
         IResult UserExists(string email);
-        IDataResult<AccessToken> CreateAccessToken(User user);
+        IDataResult<AccessToken> CreateAccessToken(User user, int companyId);
     }
 }

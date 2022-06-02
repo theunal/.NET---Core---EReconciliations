@@ -5,7 +5,7 @@ using Entities.Concrete;
 
 namespace Business.Concrete
 {
-    public class MailParameterManager : MailParameterService<MailParameter>
+    public class MailParameterManager : IMailParameterService<MailParameter>
     {
         private readonly IMailParameterDal mailParameterDal;
         public MailParameterManager(IMailParameterDal mailParameterDal)

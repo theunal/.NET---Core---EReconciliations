@@ -2,7 +2,7 @@
 
 namespace Business.Abstract
 {
-    public interface OperationClaimService<T>
+    public interface IAccountReconciliationService<T>
     {
         IDataResult<List<T>> GetAll();
         IDataResult<T> Get(int id);

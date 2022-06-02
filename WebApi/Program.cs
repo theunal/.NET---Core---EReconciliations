@@ -26,16 +26,6 @@ builder.Services.AddSwaggerGen();
 
 
 
-// cross origin
-//builder.Services.AddCors(p =>
-//{
-//    // hepsine izin verir
-//    p.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin());
-
-
-//    // spesifik izin - angular için 4200 port
-//    // p.AddPolicy("AllowOrigin", options => options.WithOrigins("http://localhost:4200/"));
-//});
 
 // jwt
 IConfiguration configuration = builder.Configuration;
@@ -56,9 +46,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 
 
 
-
-
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -70,6 +57,7 @@ if (app.Environment.IsDevelopment())
 
 // cors config
 app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+// app.UseCors(builder => builder.WithOrigins("http://").AllowAnyOrigin());
 
 app.UseHttpsRedirection();
 
