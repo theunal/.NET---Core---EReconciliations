@@ -1,8 +1,9 @@
-﻿using Entities.Concrete;
+﻿using Core.Entities.Abstract;
+using Entities.Concrete;
 
 namespace Entities.Dtos
 {
-    public class SendMailDto
+    public class SendMailDto : IDto
     {
         public MailParameter MailParameter { get; set; }
         public string Email { get; set; }

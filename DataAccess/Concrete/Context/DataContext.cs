@@ -28,5 +28,8 @@ namespace DataAccess.Concrete.Context
         public DbSet<UserCompany>? UserCompanies { get; set; }
         public DbSet<UserOperationClaim>? UserOperationClaims { get; set; }
 
+
+        public DbSet<MailTemplate>? MailTemplates { get; set; }
+
     }
 }
