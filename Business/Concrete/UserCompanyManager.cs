@@ -5,7 +5,7 @@ using DataAccess.Abstract;
 
 namespace Business.Concrete
 {
-    public class UserCompanyManager : IUserCompanyService<UserCompany>
+    public class UserCompanyManager : IUserCompanyService
     {
         private readonly IUserCompanyDal userCompanyDal;
         public UserCompanyManager(IUserCompanyDal userCompanyDal)

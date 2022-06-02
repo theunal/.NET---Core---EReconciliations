@@ -1,11 +1,12 @@
 ﻿using Business.Abstract;
+using Business.Const;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
 
 namespace Business.Concrete
 {
-    public class MailParameterManager : IMailParameterService<MailParameter>
+    public class MailParameterManager : IMailParameterService
     {
         private readonly IMailParameterDal mailParameterDal;
         public MailParameterManager(IMailParameterDal mailParameterDal)
@@ -14,29 +15,39 @@ namespace Business.Concrete
         }
 
         
-        public IResult Add(MailParameter entity)
-        {
-            throw new NotImplementedException();
-        }
+        
 
-        public IResult Delete(MailParameter entity)
-        {
-            throw new NotImplementedException();
-        }
 
-        public IDataResult<MailParameter> Get(int id)
+        public IDataResult<MailParameter> Get(int companyId)
         {
-            throw new NotImplementedException();
+            return new SuccessDataResult<MailParameter>
+                (mailParameterDal.Get(x => x.CompanyId == companyId));
         }
+        
+        public IResult Update(MailParameter mailParameter)
+        {
+            var result = Get(mailParameter.CompanyId);
+            
+            if (result.Data == null) 
+            {
+                mailParameterDal.Add(mailParameter);
+            }
+            else // mail kayıtlı ise update ediyorum
+            {
+                result.Data.SMTP = mailParameter.SMTP;
+                result.Data.Port = mailParameter.Port;
+                result.Data.SSL = mailParameter.SSL;
+                result.Data.Email = mailParameter.Email;
+                result.Data.Password = mailParameter.Password;
+                mailParameterDal.Update(result.Data);
+            }
 
-        public IDataResult<List<MailParameter>> GetAll()
-        {
-            throw new NotImplementedException();
+            return new SuccessResult(Messages.MailUpdated);
         }
+     
 
-        public IResult Update(MailParameter entity)
-        {
-            throw new NotImplementedException();
-        }
+
+
+        
     }
 }

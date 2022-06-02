@@ -3,19 +3,19 @@ using Core.Utilities.Results;
 
 namespace Business.Abstract
 {
-    public interface IUserService<T>
+    public interface IUserService
     {
-        IDataResult<List<T>> GetAll();
-        IDataResult<T> Get(int id);
+        IDataResult<List<User>> GetAll();
+        IDataResult<User> Get(int id);
 
 
-        IResult Add(T entity);
-        IResult Update(T entity);
-        IResult Delete(T entity);
+        IResult Add(User entity);
+        IResult Update(User entity);
+        IResult Delete(User entity);
 
 
 
-        List<OperationClaim> GetClaims(T user, int companyId);
+        List<OperationClaim> GetClaims(User user, int companyId);
         User GetByEmail(string email);
 
     }

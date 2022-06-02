@@ -5,7 +5,7 @@ using DataAccess.Abstract;
 
 namespace Business.Concrete
 {
-    public class UserOperationClaimManager : IUserOperationClaimService<UserOperationClaim>
+    public class UserOperationClaimManager : IUserOperationClaimService
     {
         private readonly IUserOperationClaimDal userOperationClaimDal;
         public UserOperationClaimManager(IUserOperationClaimDal userOperationClaimDal)

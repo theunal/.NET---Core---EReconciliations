@@ -1,15 +1,12 @@
 ﻿using Core.Utilities.Results;
+using Entities.Concrete;
 
 namespace Business.Abstract
 {
-    public interface IMailParameterService<T>
+    public interface IMailParameterService
     {
-        IDataResult<List<T>> GetAll();
-        IDataResult<T> Get(int id);
 
-
-        IResult Add(T entity);
-        IResult Update(T entity);
-        IResult Delete(T entity);
+        IResult Update(MailParameter mailParameter);
+        IDataResult<MailParameter> Get(int companyId);
     }
 }

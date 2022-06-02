@@ -5,7 +5,7 @@ using Entities.Concrete;
 
 namespace Business.Concrete
 {
-    public class CurrencyAccountManager : ICurrencyAccountService<CurrencyAccount>
+    public class CurrencyAccountManager : ICurrencyAccountService
     {
         private readonly ICurrencyAccountDal currencyAccountDal;
         public CurrencyAccountManager(ICurrencyAccountDal currencyAccountDal)

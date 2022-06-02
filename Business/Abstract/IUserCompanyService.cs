@@ -1,15 +1,16 @@
 ﻿using Core.Utilities.Results;
+using Core.Entities.Concrete;
 
 namespace Business.Abstract
 {
-    public interface IUserCompanyService<T>
+    public interface IUserCompanyService
     {
-        IDataResult<List<T>> GetAll();
-        IDataResult<T> Get(int id);
+        IDataResult<List<UserCompany>> GetAll();
+        IDataResult<UserCompany> Get(int id);
 
 
-        IResult Add(T entity);
-        IResult Update(T entity);
-        IResult Delete(T entity);
+        IResult Add(UserCompany entity);
+        IResult Update(UserCompany entity);
+        IResult Delete(UserCompany entity);
     }
 }

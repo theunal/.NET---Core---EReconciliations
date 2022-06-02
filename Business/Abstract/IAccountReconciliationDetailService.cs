@@ -1,15 +1,16 @@
 ﻿using Core.Utilities.Results;
+using Entities.Concrete;
 
 namespace Business.Abstract
 {
-    public interface IAccountReconciliationDetailService<T>
+    public interface IAccountReconciliationDetailService
     {
-        IDataResult<List<T>> GetAll();
-        IDataResult<T> Get(int id);
+        IDataResult<List<AccountReconciliationDetail>> GetAll();
+        IDataResult<AccountReconciliationDetail> Get(int id);
 
         
-        IResult Add(T entity);
-        IResult Update(T entity);
-        IResult Delete(T entity);
+        IResult Add(AccountReconciliationDetail entity);
+        IResult Update(AccountReconciliationDetail entity);
+        IResult Delete(AccountReconciliationDetail entity);
     }
 }

@@ -5,7 +5,7 @@ using Entities.Concrete;
 
 namespace Business.Concrete
 {
-    public class AccountReconciliationDetailManager : IAccountReconciliationDetailService<AccountReconciliationDetail>
+    public class AccountReconciliationDetailManager : IAccountReconciliationDetailService
     {
         private readonly IAccountReconciliationDetailDal accountReconciliationDetailDal;
         public AccountReconciliationDetailManager(IAccountReconciliationDetailDal accountReconciliationDetailDal)

@@ -6,7 +6,7 @@ using Entities.Concrete;
 
 namespace Business.Concrete
 {
-    public class CompanyManager : ICompanyService<Company>
+    public class CompanyManager : ICompanyService
     {
         private readonly ICompanyDal companyDal;
         public CompanyManager(ICompanyDal companyDal)
@@ -15,10 +15,27 @@ namespace Business.Concrete
         }
 
         
+        public IDataResult<List<Company>> GetAll()
+        {
+            return new SuccessDataResult<List<Company>>(companyDal.GetAll(), Messages.CompanyAdded);
+        }
+        public IDataResult<Company> Get(Company company)
+        {
+            return new SuccessDataResult<Company>(companyDal.Get(c => c.Id == company.Id));
+        }
+
+
+
+        
+      
         public IResult Add(Company entity)
         {
             companyDal.Add(entity);
             return new SuccessResult(Messages.CompanyAdded);
+        }
+        public IResult Update(Company entity)
+        {
+            throw new NotImplementedException();
         }
 
         public IResult Delete(Company entity)
@@ -26,19 +43,10 @@ namespace Business.Concrete
             throw new NotImplementedException();
         }
 
-        public IDataResult<Company> Get(int id)
+        public IResult AddUserCompany(int userId, int companyId)
         {
-            throw new NotImplementedException();
-        }
-
-        public IDataResult<List<Company>> GetAll()
-        {
-            return new SuccessDataResult<List<Company>>(companyDal.GetAll(), Messages.CompanyAdded);
-        }
-
-        public IResult Update(Company entity)
-        {
-            throw new NotImplementedException();
+            companyDal.AddUserCompany(userId, companyId);
+            return new SuccessResult();
         }
     }
 }

@@ -18,8 +18,12 @@ namespace Business.Const
         public static string UserRegistered = "Kullanıcı başarıyla kaydedildi.";
         public static string AccessTokenCreated = "Access Token başarıyla oluşturuldu.";
         public static string UserAlreadyExists = "Bu kullanıcı zaten mevcut.";
+        public static string CompanyAlreadyExists = "Bu şirket zaten mevcut.";
         public static string SuccessfulLogin = "Giriş başarılı.";
         public static string PasswordError = "Şifre hatalı.";
         public static string UserNotFound = "Kullanıcı bulunamadı.";
+
+        public static string MailUpdated = "Mail başarıyla güncellendi.";
+        public static string MailSentSuccessfully = "Mail başarıyla gönderildi.";
     }
 }

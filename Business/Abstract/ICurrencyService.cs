@@ -1,15 +1,16 @@
 ﻿using Core.Utilities.Results;
+using Entities.Concrete;
 
 namespace Business.Abstract
 {
-    public interface ICurrencyService<T>
+    public interface ICurrencyService
     {
-        IDataResult<List<T>> GetAll();
-        IDataResult<T> Get(int id);
+        IDataResult<List<Currency>> GetAll();
+        IDataResult<Currency> Get(int id);
 
 
-        IResult Add(T entity);
-        IResult Update(T entity);
-        IResult Delete(T entity);
+        IResult Add(Currency entity);
+        IResult Update(Currency entity);
+        IResult Delete(Currency entity);
     }
 }

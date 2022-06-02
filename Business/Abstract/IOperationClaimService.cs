@@ -1,15 +1,16 @@
-﻿using Core.Utilities.Results;
+﻿using Core.Entities.Concrete;
+using Core.Utilities.Results;
 
 namespace Business.Abstract
 {
-    public interface IOperationClaimService<T>
+    public interface IOperationClaimService
     {
-        IDataResult<List<T>> GetAll();
-        IDataResult<T> Get(int id);
+        IDataResult<List<OperationClaim>> GetAll();
+        IDataResult<OperationClaim> Get(int id);
 
 
-        IResult Add(T entity);
-        IResult Update(T entity);
-        IResult Delete(T entity);
+        IResult Add(OperationClaim entity);
+        IResult Update(OperationClaim entity);
+        IResult Delete(OperationClaim entity);
     }
 }

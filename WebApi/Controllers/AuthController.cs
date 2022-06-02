@@ -1,4 +1,5 @@
 ﻿using Business.Abstract;
+using Entities.Concrete;
 using Entities.Dtos;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -14,10 +15,38 @@ namespace WebApi.Controllers
         {
             this.authService = authService;
         }
-
+        
 
         [HttpPost("register")]
-        public ActionResult Register(UserRegisterDto dto)
+        public ActionResult Register(UserRegisterAndCompanyDto dto)
+        {
+            var userExists = authService.UserExists(dto.UserRegisterDto.Email);
+            if (!userExists.Success)
+            {
+                return BadRequest(userExists.Message);
+            }
+
+            var companyExists = authService.CompanyExists(dto.Company);
+            if (!companyExists.Success)
+            {
+                return BadRequest(companyExists.Message);
+            }
+
+
+            var registerResult = authService.
+                 Register(dto.UserRegisterDto, dto.UserRegisterDto.Password, dto.Company);
+            
+            var result = authService.CreateAccessToken(registerResult.Data, registerResult.Data.CompanyId);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+
+            return BadRequest(result.Message);
+        }
+        
+        [HttpPost("registerSecond")]
+        public ActionResult RegisterSecond(UserRegisterDto dto)
         {
             var userExists = authService.UserExists(dto.Email);
             if (!userExists.Success)
@@ -26,7 +55,7 @@ namespace WebApi.Controllers
                // return BadRequest(userExists); bu şekilde de çalışabilir
             }
             
-            var user = authService.Register(dto, dto.Password);
+            var user = authService.RegisterSecond(dto, dto.Password);
             var result = authService.CreateAccessToken(user.Data, 0);
             if (result.Success)
             {

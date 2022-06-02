@@ -1,15 +1,17 @@
 ﻿using Core.Utilities.Results;
+using Entities.Concrete;
+
 
 namespace Business.Abstract
 {
-    public interface IBaBsReconciliationDetailService<T>
+    public interface IBaBsReconciliationDetailService
     {
-        IDataResult<List<T>> GetAll();
-        IDataResult<T> Get(int id);
+        IDataResult<List<BaBsReconciliationDetail>> GetAll();
+        IDataResult<BaBsReconciliationDetail> Get(int id);
 
 
-        IResult Add(T entity);
-        IResult Update(T entity);
-        IResult Delete(T entity);
+        IResult Add(BaBsReconciliationDetail entity);
+        IResult Update(BaBsReconciliationDetail entity);
+        IResult Delete(BaBsReconciliationDetail entity);
     }
 }
