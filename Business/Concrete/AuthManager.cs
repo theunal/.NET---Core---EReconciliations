@@ -1,11 +1,14 @@
 ﻿using Business.Abstract;
 using Business.Const;
+using Business.ValidationRules;
+using Core.CrossCuttingConcerns.Validaiton;
 using Core.Entities.Concrete;
 using Core.Utilities.Results;
 using Core.Utilities.Security.Hashing;
 using Core.Utilities.Security.JWT;
 using Entities.Concrete;
 using Entities.Dtos;
+using FluentValidation;
 
 namespace Business.Concrete
 {
@@ -45,16 +48,20 @@ namespace Business.Concrete
             return new SuccessDataResult<AccessToken>(accessToken, Messages.AccessTokenCreated);
         }
 
-        
 
 
 
 
 
 
-        
+
+
         public IDataResult<User> Login(UserLoginDto dto)
         {
+            /* validation */
+            ValidationTool.Validate(new UserLoginValidator(), dto);
+            /* validation */
+
             var userToCheck = userService.GetByEmail(dto.Email);
 
             if (userToCheck is null) return new ErrorDataResult<User>(Messages.UserNotFound); // kullanıcı bulunamadı
@@ -68,6 +75,16 @@ namespace Business.Concrete
 
         public IDataResult<UserCompanyDto> Register(UserRegisterDto dto, string password, Company company)
         {
+
+            /* validation */
+            UserRegisterAndCompanyDto userRegisterAndCompanyDto = new UserRegisterAndCompanyDto
+            {
+                UserRegisterDto = dto,
+                Company = company
+            };
+            ValidationTool.Validate(new UserRegisterAndCompanyValidator(), userRegisterAndCompanyDto);
+            /* validation */
+
             byte[] passwordHash, passwordSalt;
             HashingHelper.CreatePasswordHash(password, out passwordHash, out passwordSalt);
             var user = new User
@@ -138,6 +155,19 @@ namespace Business.Concrete
 
         public IDataResult<User> RegisterSecond(UserRegisterDto dto, string password, int companyId)
         {
+            /* validation */
+            UserRegisterSecondDto userRegisterSecondDto = new UserRegisterSecondDto
+            {
+                Email = dto.Email,
+                Name = dto.Name,
+                Password = password,
+                CompanyId = companyId
+            };
+            ValidationTool.Validate(new UserRegisterSecondValidator(), userRegisterSecondDto);
+            /* validation */
+
+
+
             byte[] passwordHash, passwordSalt;
             HashingHelper.CreatePasswordHash(password, out passwordHash, out passwordSalt);
 
@@ -170,7 +200,7 @@ namespace Business.Concrete
 
 
 
-        
+
 
         public IResult UserExists(string email)
         {

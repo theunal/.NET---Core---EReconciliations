@@ -1,11 +1,12 @@
 ﻿using Autofac;
+using Autofac.Extras.DynamicProxy;
 using Business.Abstract;
 using Business.Concrete;
-using Core.Entities.Concrete;
+using Castle.DynamicProxy;
+using Core.Utilities.Interceptors;
 using Core.Utilities.Security.JWT;
 using DataAccess.Abstract;
 using DataAccess.Concrete;
-using Entities.Concrete;
 
 namespace Business.DependencyResolvers
 {
@@ -58,6 +59,15 @@ namespace Business.DependencyResolvers
 
             builder.RegisterType<MailTemplateManager>().As<IMailTemplateService>();
             builder.RegisterType<MailTemplateDal>().As<IMailTemplateDal>();
+
+
+            // autofac config
+            var assembly = System.Reflection.Assembly.GetExecutingAssembly();
+            builder.RegisterAssemblyTypes(assembly).AsImplementedInterfaces()
+                .EnableInterfaceInterceptors(new ProxyGenerationOptions()
+                {
+                    Selector = new AspectInterceptorSelector()
+                }).SingleInstance();
 
         }
     }

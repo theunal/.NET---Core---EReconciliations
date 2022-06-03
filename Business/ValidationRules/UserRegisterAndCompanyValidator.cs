@@ -36,11 +36,22 @@ namespace Business.ValidationRules
             RuleFor(x => x.Company.TaxDepartment).NotEmpty().WithMessage("Vergi dairesi alanı boş olamaz.");
             RuleFor(x => x.Company.TaxDepartment).NotNull().WithMessage("Vergi dairesi alanı boş olamaz.");
             RuleFor(x => x.Company.TaxDepartment).MinimumLength(3).WithMessage("Vergi dairesi alanı en az 3 karakter olmalıdır.");
-            
-            RuleFor(x => x.Company.TaxIdNumber).MinimumLength(10).WithMessage("Vergi numarası alanı en az 10 karakter olmalıdır.");
 
-            RuleFor(x => x.Company.IdentityNumber).MinimumLength(11).WithMessage("Kimlik numarası alanı en az 11 karakter olmalıdır.");
+            RuleFor(x => x.Company.TaxIdNumber).Must(Sifirveya10).WithMessage("Vergi numarası alanı en az 11 karakter olmalıdır.");
+
+            RuleFor(x => x.Company.IdentityNumber).Must(Sifirveya11).WithMessage("Kimlik numarası alanı en az 10 karakter olmalıdır.");
 
         }
+        private bool Sifirveya10(string arg)
+        {
+            if (arg.Length == 0 || arg.Length == 10) return true;
+            return false;
+        }
+        private bool Sifirveya11(string arg)
+        {
+            if (arg.Length == 0 || arg.Length == 11) return true;
+            return false;
+        }
+  
     }
 }
