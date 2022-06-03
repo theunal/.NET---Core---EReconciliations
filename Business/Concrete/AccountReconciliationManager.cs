@@ -1,4 +1,5 @@
 ﻿using Business.Abstract;
+using Business.Const;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
@@ -16,27 +17,32 @@ namespace Business.Concrete
         
         public IResult Add(AccountReconciliation entity)
         {
-            throw new NotImplementedException();
+            accountReconciliationDal.Add(entity);
+            return new SuccessResult(Messages.AccountReconciliationAdded);
         }
 
         public IResult Delete(AccountReconciliation entity)
         {
-            throw new NotImplementedException();
+            accountReconciliationDal.Delete(entity);
+            return new SuccessResult(Messages.AccountReconciliationDeleted);
         }
-
-        public IDataResult<AccountReconciliation> Get(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IDataResult<List<AccountReconciliation>> GetAll()
-        {
-            throw new NotImplementedException();
-        }
-
         public IResult Update(AccountReconciliation entity)
         {
-            throw new NotImplementedException();
+            accountReconciliationDal.Update(entity);
+            return new SuccessResult(Messages.AccountReconciliationUpdated);
         }
+
+        public IDataResult<AccountReconciliation> GetById(int id)
+        {
+            return new SuccessDataResult<AccountReconciliation>(accountReconciliationDal.Get(x => x.Id == id));
+        }
+
+        public IDataResult<List<AccountReconciliation>> GetAll(int companyId)
+        {
+            return new SuccessDataResult<List<AccountReconciliation>>
+                (accountReconciliationDal.GetAll(x => x.CompanyId == companyId));
+        }
+
+     
     }
 }

@@ -5,10 +5,8 @@ namespace Business.Abstract
 {
     public interface IAccountReconciliationService
     {
-        IDataResult<List<AccountReconciliation>> GetAll();
-        IDataResult<AccountReconciliation> Get(int id);
-
-
+        IDataResult<List<AccountReconciliation>> GetAll(int companyId);
+        IDataResult<AccountReconciliation> GetById(int id);
         IResult Add(AccountReconciliation entity);
         IResult Update(AccountReconciliation entity);
         IResult Delete(AccountReconciliation entity);

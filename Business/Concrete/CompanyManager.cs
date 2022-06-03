@@ -4,6 +4,7 @@ using Core.Aspects.Autofac.Transaction;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
+using Entities.Dtos;
 
 namespace Business.Concrete
 {
@@ -18,8 +19,9 @@ namespace Business.Concrete
         
         public IDataResult<List<Company>> GetAll()
         {
-            return new SuccessDataResult<List<Company>>(companyDal.GetAll(), Messages.CompanyAdded);
+            return new SuccessDataResult<List<Company>>(companyDal.GetAll(), Messages.CompaniesHasBeenBrought);
         }
+
         public IDataResult<Company> Get(Company company)
         {
             return new SuccessDataResult<Company>(companyDal.Get(c => c.Id == company.Id));
@@ -32,7 +34,13 @@ namespace Business.Concrete
         
         public IResult Update(Company entity)
         {
-            throw new NotImplementedException();
+            var result = GetById(entity.Id);
+            if (result is not null)
+            {
+                companyDal.Update(entity);
+                return new SuccessResult(Messages.CompanyUpdated);
+            }
+            return new ErrorResult(Messages.CompanyNotFound);
         }
 
         public IResult Delete(Company entity)
@@ -52,11 +60,27 @@ namespace Business.Concrete
             return new SuccessResult(Messages.CompanyAdded);
         }
 
-        public IResult AddUserCompany(int userId, int companyId)
-        {
+        public IResult AddUserCompany(int userId, int companyId) // userCompany tablosuna user ve company id sini ekler
+        { 
             companyDal.AddUserCompany(userId, companyId);
             return new SuccessResult();
         }
-        
+
+        public IResult AddCompanyUser(CompanyDto dto) // mevcut usera company ekler
+        {   
+            companyDal.Add(dto.Company);
+            AddUserCompany(dto.UserId, dto.Company.Id);
+            return new SuccessResult(Messages.CompanyAdded);
+        }
+
+        public IDataResult<Company> GetById(int id)
+        {
+            var result = companyDal.Get(c => c.Id == id);
+            if (result is not null)
+            {
+                return new SuccessDataResult<Company>(result, Messages.CompanyHasBeenBrought);
+            }
+            return new ErrorDataResult<Company>(Messages.CompanyNotFound);
+        }
     }
 }

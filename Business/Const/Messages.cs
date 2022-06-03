@@ -3,11 +3,11 @@ namespace Business.Const
 {
     public static class Messages
     {
-        public static string CompanyAdded = "Şirket Eklendi.";
+
         public static string ProductNameInvalid = "Ürün İsmi Geçersiz.";
         public static string MaintenanceTime = "Sistem Bakımda";
         public static string ProductsListed = "Ürünler başarıyla getirildi.";
-        public static string ProductListed = "Ürün başarıyla getirildi.";   
+        public static string ProductListed = "Ürün başarıyla getirildi.";
         public static string ProductsListedByCategoryId = "Ürünler kategoriye göre getirildi.";
 
         public static string CheckProductCountOfCategoryError = "Bu kategoride daha fazla ürün eklenemez.";
@@ -18,12 +18,21 @@ namespace Business.Const
         public static string UserRegistered = "Kullanıcı başarıyla kaydedildi.";
         public static string AccessTokenCreated = "Access Token başarıyla oluşturuldu.";
         public static string UserAlreadyExists = "Bu kullanıcı zaten mevcut.";
-        public static string CompanyAlreadyExists = "Bu şirket zaten mevcut.";
         public static string SuccessfulLogin = "Giriş başarılı.";
         public static string PasswordError = "Şifre hatalı.";
         public static string UserNotFound = "Kullanıcı bulunamadı.";
         public static string UserNotActive = "Kullanıcı aktif değil.";
+
+
+        public static string CompanyAdded = "Şirket Eklendi.";
+        public static string CompanyUpdated = "Şirket Güncellendi.";
+        public static string CompanyAlreadyExists = "Bu şirket zaten mevcut.";
         public static string UserCompanyNotFound = "Kullanıcının şirketi bulunamadı.";
+        public static string CompanyNotFound = "Şirket bulunamadı.";
+        public static string CompanyHasBeenBrought = "Şirket getirildi.";
+        public static string CompaniesHasBeenBrought = "Şirketler getirildi.";
+
+
 
         public static string MailUpdated = "Mail başarıyla güncellendi.";
         public static string MailSentSuccessfully = "Mail başarıyla gönderildi.";
@@ -37,6 +46,19 @@ namespace Business.Const
         public static string MailConfirmNotExpired = "Onay maili zaten gönderildi. Lütfen Bekleyin.";
 
 
+        public static string CurrencyAccountAdded = "Cari Hesap Eklendi.";
+        public static string CurrencyAccountUpdated = "Cari Hesap Güncellendi.";
+        public static string CurrencyAccountDeleted = "Cari Hesap Silindi.";
+        public static string CurrencyAccountHasBeenBrought = "Cari Hesap Getirldi.";
+        public static string CurrencyAccountNotFound = "Cari Hesap Bulunamadı.";
+        public static string CurrencyAccountsHasBeenBrought = "Cari Hesaplar Getirildi.";
+
+
+
+
+        public static string AccountReconciliationAdded = "Cari Mutabakat Eklendi."; 
+        public static string AccountReconciliationUpdated = "Cari Mutabakat Güncelleni.";
+        public static string AccountReconciliationDeleted = "Cari Mutabakat Silindi.";
 
 
     }

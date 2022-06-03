@@ -1,5 +1,6 @@
 ﻿using Business.Abstract;
 using Entities.Concrete;
+using Entities.Dtos;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers
@@ -15,7 +16,7 @@ namespace WebApi.Controllers
         }
 
 
-        [HttpGet]
+        [HttpGet("getCompanyList")]
         public IActionResult GetList()
         {
             var companies = companyService.GetAll();
@@ -26,16 +27,31 @@ namespace WebApi.Controllers
             return BadRequest(companies.Message);
         }
 
-        [HttpPost]
-        public IActionResult Add([FromBody] Company company)
+        [HttpPost("addCompanyToUser")]
+        public IActionResult Add([FromBody] CompanyDto dto)
         {
-            var result = companyService.Add(company);
+            var result = companyService.AddCompanyUser(dto);
             if (result.Success)
             {
                 return Ok(result);
             }
             return BadRequest(result.Message);
-        
+
+        }
+
+
+        [HttpGet("getCompany")]
+        public IActionResult GetCompany(int id)
+        {
+            var result = companyService.GetById(id);
+            return result.Success ? Ok(result) : BadRequest(result.Message);
+        }
+
+        [HttpPost("updateCompany")]
+        public IActionResult UpdateCompany(Company company)
+        {
+            var result = companyService.Update(company);
+            return result.Success ? Ok(result) : BadRequest(result.Message);
         }
 
 
