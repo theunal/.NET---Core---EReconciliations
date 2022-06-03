@@ -1,6 +1,7 @@
 ﻿using Business.Abstract;
 using Business.Const;
 using Business.ValidationRules;
+using Core.Aspects.Validation;
 using Core.CrossCuttingConcerns.Validaiton;
 using Core.Entities.Concrete;
 using Core.Utilities.Results;
@@ -55,12 +56,12 @@ namespace Business.Concrete
 
 
 
-
+        [ValidationAspect(typeof(UserLoginValidator))]
         public IDataResult<User> Login(UserLoginDto dto)
         {
-            /* validation */
-            ValidationTool.Validate(new UserLoginValidator(), dto);
-            /* validation */
+            ///* validation */
+            //ValidationTool.Validate(new UserLoginValidator(), dto);
+            ///* validation */
 
             var userToCheck = userService.GetByEmail(dto.Email);
 
@@ -73,24 +74,16 @@ namespace Business.Concrete
                        new ErrorDataResult<User>(Messages.PasswordError); // şifre yanlış
         }
 
-        public IDataResult<UserCompanyDto> Register(UserRegisterDto dto, string password, Company company)
-        {
 
-            /* validation */
-            UserRegisterAndCompanyDto userRegisterAndCompanyDto = new UserRegisterAndCompanyDto
-            {
-                UserRegisterDto = dto,
-                Company = company
-            };
-            ValidationTool.Validate(new UserRegisterAndCompanyValidator(), userRegisterAndCompanyDto);
-            /* validation */
-
+        [ValidationAspect(typeof(UserRegisterAndCompanyValidator))]
+        public IDataResult<UserCompanyDto> Register(UserRegisterAndCompanyDto dto)
+        { 
             byte[] passwordHash, passwordSalt;
-            HashingHelper.CreatePasswordHash(password, out passwordHash, out passwordSalt);
+            HashingHelper.CreatePasswordHash(dto.UserRegisterDto.Password, out passwordHash, out passwordSalt);
             var user = new User
             {
-                Name = dto.Name,
-                Email = dto.Email,
+                Name = dto.UserRegisterDto.Name,
+                Email = dto.UserRegisterDto.Email,
                 AddedAt = DateTime.Now,
                 IsActive = true,
                 MailConfirm = false,
@@ -101,8 +94,8 @@ namespace Business.Concrete
             };
 
             userService.Add(user);
-            companyService.Add(company);
-            companyService.AddUserCompany(user.Id, company.Id);
+            companyService.Add(dto.Company);
+            companyService.AddUserCompany(user.Id, dto.Company.Id);
 
             UserCompanyDto userCompanyDto = new UserCompanyDto
             {
@@ -110,7 +103,7 @@ namespace Business.Concrete
                 Name = user.Name,
                 Email = user.Email,
                 AddedAt = user.AddedAt,
-                CompanyId = company.Id,
+                CompanyId = dto.Company.Id,
                 IsActive = user.IsActive,
                 MailConfirm = false,
                 MailConfirmDate = user.MailConfirmDate,
@@ -153,23 +146,11 @@ namespace Business.Concrete
             return mailService.SendMail(sendMailDto);
         }
 
-        public IDataResult<User> RegisterSecond(UserRegisterDto dto, string password, int companyId)
+        [ValidationAspect(typeof(UserRegisterSecondValidator))]
+        public IDataResult<User> RegisterSecond(UserRegisterSecondDto dto)
         {
-            /* validation */
-            UserRegisterSecondDto userRegisterSecondDto = new UserRegisterSecondDto
-            {
-                Email = dto.Email,
-                Name = dto.Name,
-                Password = password,
-                CompanyId = companyId
-            };
-            ValidationTool.Validate(new UserRegisterSecondValidator(), userRegisterSecondDto);
-            /* validation */
-
-
-
             byte[] passwordHash, passwordSalt;
-            HashingHelper.CreatePasswordHash(password, out passwordHash, out passwordSalt);
+            HashingHelper.CreatePasswordHash(dto.Password, out passwordHash, out passwordSalt);
 
             var user = new User
             {
@@ -186,8 +167,10 @@ namespace Business.Concrete
             };
 
             userService.Add(user);
-            companyService.AddUserCompany(user.Id, companyId);
+            companyService.AddUserCompany(user.Id, dto.CompanyId);
+            
             SendConfirmEmail(user);
+            
             return new SuccessDataResult<User>(user, Messages.UserRegistered);
         }
 

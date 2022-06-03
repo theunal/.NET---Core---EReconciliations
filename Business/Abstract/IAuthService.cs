@@ -8,8 +8,8 @@ namespace Business.Abstract
 {
     public interface IAuthService
     {
-        IDataResult<UserCompanyDto> Register(UserRegisterDto dto, string password, Company company);
-        IDataResult<User> RegisterSecond(UserRegisterDto dto, string password, int companyId);
+        IDataResult<UserCompanyDto> Register(UserRegisterAndCompanyDto dto);
+        IDataResult<User> RegisterSecond(UserRegisterSecondDto dto);
         IDataResult<User> Login(UserLoginDto dto);
         IDataResult<User> GtByMailConfirmValue(string value);
         IResult UserExists(string email);

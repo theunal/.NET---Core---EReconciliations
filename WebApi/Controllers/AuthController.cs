@@ -17,6 +17,29 @@ namespace WebApi.Controllers
         }
 
 
+
+
+        
+
+        [HttpPost("login")]
+        public ActionResult Login(UserLoginDto dto)
+        {
+            var userToLogin = authService.Login(dto);
+            if (!userToLogin.Success)
+            {
+                return BadRequest(userToLogin.Message);
+            }
+
+            var userCompany = authService.GetUserCompanyByUserId(userToLogin.Data.Id).Data;
+
+            var result = authService.CreateAccessToken(userToLogin.Data, userCompany.Id);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+
+            return BadRequest(result.Message);
+        }
         [HttpPost("register")]
         public ActionResult Register(UserRegisterAndCompanyDto dto)
         {
@@ -32,9 +55,9 @@ namespace WebApi.Controllers
                 return BadRequest(companyExists.Message);
             }
 
+       
 
-            var registerResult = authService.Register
-                (dto.UserRegisterDto, dto.UserRegisterDto.Password, dto.Company);
+            var registerResult = authService.Register(dto);
 
             var result = authService.CreateAccessToken(registerResult.Data, registerResult.Data.CompanyId);
             if (result.Success)
@@ -56,7 +79,7 @@ namespace WebApi.Controllers
                 // return BadRequest(userExists); bu şekilde de çalışabilir
             }
             
-            var user = authService.RegisterSecond(dto, dto.Password, dto.CompanyId);
+            var user = authService.RegisterSecond(dto);
             var result = authService.CreateAccessToken(user.Data, dto.CompanyId);
             if (result.Success)
             {
@@ -66,27 +89,14 @@ namespace WebApi.Controllers
             return BadRequest(result.Message);
         }
 
-        [HttpPost("login")]
-        public ActionResult Login(UserLoginDto dto)
-        {
-            var userToLogin = authService.Login(dto);
-            if (!userToLogin.Success)
-            {
-                return BadRequest(userToLogin.Message);
-            }
-
-            var userCompany = authService.GetUserCompanyByUserId(userToLogin.Data.Id).Data;
-            
-            var result = authService.CreateAccessToken(userToLogin.Data, userCompany.Id);
-            if (result.Success)
-            {
-                return Ok(result);
-            }
-
-            return BadRequest(result.Message);
-        }
 
 
+
+
+
+
+
+        
         [HttpGet("confirmUser")]
         public IActionResult ConfirmUser(string value)
         {
