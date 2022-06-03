@@ -12,6 +12,7 @@ namespace Business.Concrete
     public class AuthManager : IAuthService
     {
         private readonly IUserService userService;
+        private readonly IUserCompanyService userCompanyService;
         private readonly ICompanyService companyService;
         private readonly ITokenHelper tokenHelper;
         private readonly IMailParameterService mailParameterService;
@@ -19,6 +20,7 @@ namespace Business.Concrete
         private readonly IMailTemplateService mailTemplateService;
         public AuthManager(
             IUserService userService,
+            IUserCompanyService userCompanyService,
             ICompanyService companyService,
             ITokenHelper tokenHelper,
             IMailParameterService mailParameterService,
@@ -26,6 +28,7 @@ namespace Business.Concrete
             IMailTemplateService mailTemplateService)
         {
             this.userService = userService;
+            this.userCompanyService = userCompanyService;
             this.companyService = companyService;
             this.tokenHelper = tokenHelper;
             this.mailParameterService = mailParameterService;
@@ -42,20 +45,25 @@ namespace Business.Concrete
             return new SuccessDataResult<AccessToken>(accessToken, Messages.AccessTokenCreated);
         }
 
+        
+
+
+
+
+
+
+        
         public IDataResult<User> Login(UserLoginDto dto)
         {
             var userToCheck = userService.GetByEmail(dto.Email);
-            if (userToCheck is null)
-            {
-                return new ErrorDataResult<User>(Messages.UserNotFound);
-            }
 
-            if (!HashingHelper.VerifyPasswordHash(dto.Password, userToCheck.PasswordHash, userToCheck.PasswordSalt))
-            {
-                return new ErrorDataResult<User>(Messages.PasswordError);
-            }
+            if (userToCheck is null) return new ErrorDataResult<User>(Messages.UserNotFound); // kullanıcı bulunamadı
 
-            return new SuccessDataResult<User>(userToCheck, Messages.SuccessfulLogin);
+            if (userToCheck.IsActive == false) return new ErrorDataResult<User>(Messages.UserNotActive); //aktif değil
+
+            return HashingHelper.VerifyPasswordHash(dto.Password, userToCheck.PasswordHash, userToCheck.PasswordSalt) ?
+                       new SuccessDataResult<User>(userToCheck, Messages.SuccessfulLogin) : // giriş başarılı
+                       new ErrorDataResult<User>(Messages.PasswordError); // şifre yanlış
         }
 
         public IDataResult<UserCompanyDto> Register(UserRegisterDto dto, string password, Company company)
@@ -78,6 +86,7 @@ namespace Business.Concrete
             userService.Add(user);
             companyService.Add(company);
             companyService.AddUserCompany(user.Id, company.Id);
+
             UserCompanyDto userCompanyDto = new UserCompanyDto
             {
                 Id = user.Id,
@@ -93,8 +102,13 @@ namespace Business.Concrete
                 PasswordSalt = user.PasswordSalt,
             };
 
+            SendConfirmEmail(user);
 
+            return new SuccessDataResult<UserCompanyDto>(userCompanyDto, Messages.UserRegistered);
+        }
 
+        IResult SendConfirmEmail(User user)
+        {
             string link = "https://localhost:7154/api/Auth/confirmUser?value=" + user.MailConfirmValue;
             string linkDescription = "Onayla";
 
@@ -111,24 +125,27 @@ namespace Business.Concrete
             SendMailDto sendMailDto = new SendMailDto()
             {
                 MailParameter = mailPamareter.Data,
-                Email = dto.Email,
+                Email = user.Email,
                 Subject = "Kullanıcı Onay Maili",
                 Body = templateBody
             };
-            
-            mailService.SendMail(sendMailDto);
 
-            return new SuccessDataResult<UserCompanyDto>(userCompanyDto, Messages.UserRegistered);
+
+            user.MailConfirmDate = DateTime.Now;
+            userService.Update(user);
+            return mailService.SendMail(sendMailDto);
         }
 
-        public IDataResult<User> RegisterSecond(UserRegisterDto dto, string password)
+        public IDataResult<User> RegisterSecond(UserRegisterDto dto, string password, int companyId)
         {
             byte[] passwordHash, passwordSalt;
             HashingHelper.CreatePasswordHash(password, out passwordHash, out passwordSalt);
+
             var user = new User
             {
                 Name = dto.Name,
                 Email = dto.Email,
+
                 AddedAt = DateTime.Now,
                 IsActive = true,
                 MailConfirm = false,
@@ -139,8 +156,21 @@ namespace Business.Concrete
             };
 
             userService.Add(user);
+            companyService.AddUserCompany(user.Id, companyId);
+            SendConfirmEmail(user);
             return new SuccessDataResult<User>(user, Messages.UserRegistered);
         }
+
+
+
+
+
+
+
+
+
+
+        
 
         public IResult UserExists(string email)
         {
@@ -161,27 +191,63 @@ namespace Business.Concrete
             }
             return new SuccessResult();
         }
-        
-        public IDataResult<User> GtByMailConfirmValue(string value)
-        {
-            var user = userService.GtByMailConfirmValue(value);
-           
-            if (user is null) 
-            {
-                return new ErrorDataResult<User>(user, Messages.UserNotFound);
-            }
-            else if (user.MailConfirm == true)
-            {
-                return new ErrorDataResult<User>(user, Messages.MailHasAlreadyBeenConfirmed);
-            }
-            
-            return new SuccessDataResult<User>(user);
-        }
+
+
 
         public IResult Update(User entity)
         {
             userService.Update(entity);
             return new SuccessResult(Messages.UserMailConfirmSuccessfuly);
+        }
+
+        public IDataResult<User> GetById(int id)
+        {
+            return new SuccessDataResult<User>(userService.GetById(id).Data);
+        }
+
+
+
+
+
+
+
+
+
+
+        IResult IAuthService.SendConfirmEmail(User user)
+        {
+            if (user.MailConfirmDate.AddMinutes(1) <= DateTime.Now) // mail onayı isteğininden sonra 2dk geçmiş mi?
+            {
+                if (MailConfirm(user).Success)
+                {
+                    return SendConfirmEmail(user);
+                }
+                return MailConfirm(user); // mail confirm success değilse mesajını göster (kullanıcı bulunamadı vb.)
+            }
+            return new ErrorResult(Messages.MailConfirmNotExpired);
+
+
+        }
+        public IDataResult<User> GtByMailConfirmValue(string value)
+        {
+            var user = userService.GtByMailConfirmValue(value);
+            return MailConfirm(user);
+        }
+
+        IDataResult<User> MailConfirm(User user)
+        {
+            if (user is null)
+                return new ErrorDataResult<User>(user, Messages.UserNotFound); // kullanıcı bulunamadı
+            else if (user.MailConfirm == true)
+                return new ErrorDataResult<User>(user, Messages.MailHasAlreadyBeenConfirmed);// mail zaten gönderildi
+
+            return new SuccessDataResult<User>(user);
+        }
+
+        public IDataResult<UserCompany> GetUserCompanyByUserId(int userId)
+        {
+            var userCompany = userCompanyService.GetById(userId);
+            return new SuccessDataResult<UserCompany>(userCompany.Data);
         }
     }
 }

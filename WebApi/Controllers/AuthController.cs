@@ -33,8 +33,8 @@ namespace WebApi.Controllers
             }
 
 
-            var registerResult = authService.
-                 Register(dto.UserRegisterDto, dto.UserRegisterDto.Password, dto.Company);
+            var registerResult = authService.Register
+                (dto.UserRegisterDto, dto.UserRegisterDto.Password, dto.Company);
 
             var result = authService.CreateAccessToken(registerResult.Data, registerResult.Data.CompanyId);
             if (result.Success)
@@ -46,17 +46,18 @@ namespace WebApi.Controllers
         }
 
         [HttpPost("registerSecond")]
-        public ActionResult RegisterSecond(UserRegisterDto dto)
+        public ActionResult RegisterSecond(UserRegisterSecondDto dto)
         {
+            // öncesinde mevcut bir şirket bulun
             var userExists = authService.UserExists(dto.Email);
             if (!userExists.Success)
             {
                 return BadRequest(userExists.Message);
                 // return BadRequest(userExists); bu şekilde de çalışabilir
             }
-
-            var user = authService.RegisterSecond(dto, dto.Password);
-            var result = authService.CreateAccessToken(user.Data, 0);
+            
+            var user = authService.RegisterSecond(dto, dto.Password, dto.CompanyId);
+            var result = authService.CreateAccessToken(user.Data, dto.CompanyId);
             if (result.Success)
             {
                 return Ok(result);
@@ -74,7 +75,9 @@ namespace WebApi.Controllers
                 return BadRequest(userToLogin.Message);
             }
 
-            var result = authService.CreateAccessToken(userToLogin.Data, 0);
+            var userCompany = authService.GetUserCompanyByUserId(userToLogin.Data.Id).Data;
+            
+            var result = authService.CreateAccessToken(userToLogin.Data, userCompany.Id);
             if (result.Success)
             {
                 return Ok(result);
@@ -88,7 +91,6 @@ namespace WebApi.Controllers
         public IActionResult ConfirmUser(string value)
         {
             var user = authService.GtByMailConfirmValue(value);
-
             if (user.Success)
             {
                 user.Data.MailConfirm = true;
@@ -100,9 +102,21 @@ namespace WebApi.Controllers
                 }
                 return BadRequest(result.Message);
             }
-
             return BadRequest(user.Message);
+        }
 
+        [HttpGet("confirmUserAgain")]
+        public IActionResult ConfirmUserAgain(int id)
+        {
+            var user = authService.GetById(id).Data;
+            var result = authService.SendConfirmEmail(user);
+
+            
+            if (result.Success)
+            {
+                return Ok(result.Message);
+            }
+            return BadRequest(result.Message);
         }
 
     }

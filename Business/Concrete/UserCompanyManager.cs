@@ -1,4 +1,5 @@
 ﻿using Business.Abstract;
+using Business.Const;
 using Core.Entities.Concrete;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
@@ -24,9 +25,14 @@ namespace Business.Concrete
             throw new NotImplementedException();
         }
 
-        public IDataResult<UserCompany> Get(int id)
+        public IDataResult<UserCompany> GetById(int id)
         {
-            throw new NotImplementedException();
+            var result = userCompanyDal.Get(u => u.UserId == id);
+            if (result is null)
+            {
+                return new ErrorDataResult<UserCompany>(Messages.UserCompanyNotFound);
+            }
+            return new SuccessDataResult<UserCompany>(result);
         }
 
         public IDataResult<List<UserCompany>> GetAll()

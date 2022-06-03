@@ -26,9 +26,9 @@ namespace Business.Concrete
             throw new NotImplementedException();
         }
 
-        public IDataResult<User> Get(int id)
+        public IDataResult<User> GetById(int id)
         {
-            throw new NotImplementedException();
+            return new SuccessDataResult<User>(userDal.Get(u => u.Id == id));
         }
 
         public IDataResult<List<User>> GetAll()

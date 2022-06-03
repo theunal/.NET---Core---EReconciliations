@@ -22,6 +22,8 @@ namespace Business.Const
         public static string SuccessfulLogin = "Giriş başarılı.";
         public static string PasswordError = "Şifre hatalı.";
         public static string UserNotFound = "Kullanıcı bulunamadı.";
+        public static string UserNotActive = "Kullanıcı aktif değil.";
+        public static string UserCompanyNotFound = "Kullanıcının şirketi bulunamadı.";
 
         public static string MailUpdated = "Mail başarıyla güncellendi.";
         public static string MailSentSuccessfully = "Mail başarıyla gönderildi.";
@@ -30,8 +32,9 @@ namespace Business.Const
         public static string MailTemplateDeleted = "Mail şablonu başarıyla silindi.";
         public static string MailTemplateUpdated = "Mail şablonu başarıyla güncellendi.";
         public static string UserMailConfirmSuccessfuly = "Kullanıcı mail adresi onaylandı.";
-        public static string MailHasAlreadyBeenConfirmed = "Mail zaten onaylandı.";
-
+        public static string MailHasAlreadyBeenConfirmed = "Mail zaten onaylanmış.";
+        public static string SendConfirmMail = "Onay maili gönderildi";
+        public static string MailConfirmNotExpired = "Onay maili zaten gönderildi. Lütfen Bekleyin.";
 
 
 

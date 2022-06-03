@@ -6,7 +6,7 @@ namespace Business.Abstract
     public interface IUserService
     {
         IDataResult<List<User>> GetAll();
-        IDataResult<User> Get(int id);
+
 
 
         IResult Add(User entity);
@@ -20,6 +20,7 @@ namespace Business.Abstract
         User GetByEmail(string email);
         User GtByMailConfirmValue(string value);
         IDataResult<User> GetByValue(int id);
+        IDataResult<User> GetById(int id);
 
     }
 }

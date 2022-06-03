@@ -6,7 +6,7 @@ namespace Business.Abstract
     public interface IUserCompanyService
     {
         IDataResult<List<UserCompany>> GetAll();
-        IDataResult<UserCompany> Get(int id);
+        IDataResult<UserCompany> GetById(int id);
 
 
         IResult Add(UserCompany entity);
