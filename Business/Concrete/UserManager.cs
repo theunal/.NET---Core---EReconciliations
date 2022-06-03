@@ -1,5 +1,6 @@
 ﻿using Business.Abstract;
 using Business.Const;
+using Core.Aspects.Autofac.Transaction;
 using Core.Entities.Concrete;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
@@ -14,7 +15,7 @@ namespace Business.Concrete
             this.userDal = userDal;
         }
 
-        
+
         public IResult Add(User entity)
         {
             userDal.Add(entity);

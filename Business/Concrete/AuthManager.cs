@@ -1,6 +1,7 @@
 ﻿using Business.Abstract;
 using Business.Const;
 using Business.ValidationRules;
+using Core.Aspects.Autofac.Transaction;
 using Core.Aspects.Validation;
 using Core.CrossCuttingConcerns.Validaiton;
 using Core.Entities.Concrete;
@@ -74,8 +75,8 @@ namespace Business.Concrete
                        new ErrorDataResult<User>(Messages.PasswordError); // şifre yanlış
         }
 
-
         [ValidationAspect(typeof(UserRegisterAndCompanyValidator))]
+        // [TransactionScopeAspect] validationdan geçemediği için zaten buna gerek yok
         public IDataResult<UserCompanyDto> Register(UserRegisterAndCompanyDto dto)
         { 
             byte[] passwordHash, passwordSalt;
@@ -117,6 +118,35 @@ namespace Business.Concrete
             return new SuccessDataResult<UserCompanyDto>(userCompanyDto, Messages.UserRegistered);
         }
 
+        [ValidationAspect(typeof(UserRegisterSecondValidator))]
+        // [TransactionScopeAspect] validationdan geçemediği için zaten buna gerek yok
+        public IDataResult<User> RegisterSecond(UserRegisterSecondDto dto)
+        {
+            byte[] passwordHash, passwordSalt;
+            HashingHelper.CreatePasswordHash(dto.Password, out passwordHash, out passwordSalt);
+
+            var user = new User
+            {
+                Name = dto.Name,
+                Email = dto.Email,
+
+                AddedAt = DateTime.Now,
+                IsActive = true,
+                MailConfirm = false,
+                MailConfirmDate = DateTime.Now,
+                MailConfirmValue = Guid.NewGuid().ToString(),
+                PasswordHash = passwordHash,
+                PasswordSalt = passwordSalt
+            };
+
+            userService.Add(user);
+            companyService.AddUserCompany(user.Id, dto.CompanyId);
+            
+            SendConfirmEmail(user);
+            
+            return new SuccessDataResult<User>(user, Messages.UserRegistered);
+        }
+        
         IResult SendConfirmEmail(User user)
         {
             string link = "https://localhost:7154/api/Auth/confirmUser?value=" + user.MailConfirmValue;
@@ -145,35 +175,6 @@ namespace Business.Concrete
             userService.Update(user);
             return mailService.SendMail(sendMailDto);
         }
-
-        [ValidationAspect(typeof(UserRegisterSecondValidator))]
-        public IDataResult<User> RegisterSecond(UserRegisterSecondDto dto)
-        {
-            byte[] passwordHash, passwordSalt;
-            HashingHelper.CreatePasswordHash(dto.Password, out passwordHash, out passwordSalt);
-
-            var user = new User
-            {
-                Name = dto.Name,
-                Email = dto.Email,
-
-                AddedAt = DateTime.Now,
-                IsActive = true,
-                MailConfirm = false,
-                MailConfirmDate = DateTime.Now,
-                MailConfirmValue = Guid.NewGuid().ToString(),
-                PasswordHash = passwordHash,
-                PasswordSalt = passwordSalt
-            };
-
-            userService.Add(user);
-            companyService.AddUserCompany(user.Id, dto.CompanyId);
-            
-            SendConfirmEmail(user);
-            
-            return new SuccessDataResult<User>(user, Messages.UserRegistered);
-        }
-
 
 
 

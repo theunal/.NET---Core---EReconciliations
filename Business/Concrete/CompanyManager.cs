@@ -1,5 +1,6 @@
 ﻿using Business.Abstract;
 using Business.Const;
+using Core.Aspects.Autofac.Transaction;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
@@ -26,13 +27,9 @@ namespace Business.Concrete
 
 
 
-        
+
       
-        public IResult Add(Company entity)
-        {
-            companyDal.Add(entity);
-            return new SuccessResult(Messages.CompanyAdded);
-        }
+        
         public IResult Update(Company entity)
         {
             throw new NotImplementedException();
@@ -43,10 +40,23 @@ namespace Business.Concrete
             throw new NotImplementedException();
         }
 
+
+
+
+
+        
+
+        public IResult Add(Company entity)
+        {
+            companyDal.Add(entity);
+            return new SuccessResult(Messages.CompanyAdded);
+        }
+
         public IResult AddUserCompany(int userId, int companyId)
         {
             companyDal.AddUserCompany(userId, companyId);
             return new SuccessResult();
         }
+        
     }
 }

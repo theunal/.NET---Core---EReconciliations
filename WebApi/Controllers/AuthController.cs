@@ -40,6 +40,7 @@ namespace WebApi.Controllers
 
             return BadRequest(result.Message);
         }
+
         [HttpPost("register")]
         public ActionResult Register(UserRegisterAndCompanyDto dto)
         {
