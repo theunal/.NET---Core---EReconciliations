@@ -159,7 +159,7 @@ namespace Business.Concrete
             return new SuccessDataResult<CurrencyAccount>(result, Messages.CurrencyAccountHasBeenBrought);
             //return new SuccessDataResult<CurrencyAccount>(currencyAccountDal.Get(p => p.CompanyId == companyId));
         }
-
+        
         public IDataResult<CurrencyAccount> GetByCode(string code)
         {
             var result = currencyAccountDal.Get(c => c.Code == code);

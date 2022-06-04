@@ -12,9 +12,12 @@ namespace Business.Concrete
     public class AccountReconciliationDetailManager : IAccountReconciliationDetailService
     {
         private readonly IAccountReconciliationDetailDal accountReconciliationDetailDal;
-        public AccountReconciliationDetailManager(IAccountReconciliationDetailDal accountReconciliationDetailDal)
+        private readonly IAccountReconciliationService accountReconciliationService;
+        public AccountReconciliationDetailManager(IAccountReconciliationDetailDal accountReconciliationDetailDal,
+            IAccountReconciliationService accountReconciliationService)
         {
             this.accountReconciliationDetailDal = accountReconciliationDetailDal;
+            this.accountReconciliationService = accountReconciliationService;
         }
 
 
@@ -38,6 +41,11 @@ namespace Business.Concrete
 
         public IResult Add(AccountReconciliationDetail entity)
         {
+            var result = accountReconciliationService.GetById(entity.AccountReconciliationId);
+            entity.CurrencyId = result.Data.CurrencyId;
+            entity.CurrencyCredit = result.Data.CurrencyCredit;
+            entity.CurrencyDebit = result.Data.CurrencyDebit;
+
             accountReconciliationDetailDal.Add(entity);
             return new SuccessResult(Messages.AccountReconciliationDetailAdded);
         }
@@ -69,32 +77,30 @@ namespace Business.Concrete
                     while (reader.Read())
                     {
 
-                        String code = reader.GetValue(0) != null ? reader.GetValue(0).ToString() : null;
+                        var date = reader.GetValue(0) != null ? reader.GetValue(0).ToString() : null;
+                        // String description = reader.GetValue(1) != null ? reader.GetValue(0).ToString() : null;
 
-                        if (code is null) break;
-                        if (code == "Cari Kodu") continue;
+                        if (date is null) break;
+                        if (date == "Tarih") continue;
 
-                        DateTime startingDate = Convert.ToDateTime(reader.GetValue(1));
-                        DateTime endingDate = Convert.ToDateTime(reader.GetValue(2));
-                        int currencyId = Convert.ToInt32(reader.GetValue(3));
-                        decimal debit = Convert.ToDecimal(reader.GetValue(4));
-                        decimal credit = Convert.ToDecimal(reader.GetValue(5));
+                        // DateTime date = Convert.ToDateTime(reader.GetValue(0));
+                        string description = reader.GetString(1);
+                        int currencyId = Convert.ToInt32(reader.GetValue(2));
+                        decimal debit = Convert.ToDecimal(reader.GetValue(3));
+                        decimal credit = Convert.ToDecimal(reader.GetValue(4));
 
 
-                        if (code != "Cari Kodu") // ilk satırı okumaması için böyle yaptım
+                        if (date != "Tarih") // ilk satırı okumaması için böyle yaptım
                         {
-                            var currencyAccountId = currencyAccountService.GetByCompanyIdAndCode(code, dto.CompanyId).Data.Id;
-                            var x = currencyAccountId;
-                            AccountReconciliation accountReconciliation = new AccountReconciliation
+                            
+                            AccountReconciliationDetail accountReconciliation = new AccountReconciliationDetail
                             {
-                                CompanyId = dto.CompanyId,
-                                CurrencyAccountId = currencyAccountId,
-                                CurrencyCredit = credit,
+                                AccountReconciliationId = dto.AccountReconciliationId,
+                                Date = Convert.ToDateTime(date),
+                                CurrencyId = currencyId,
                                 CurrencyDebit = debit,
-                                CurrencyId = currencyId, // currency id TL USD
-                                StartingDate = startingDate,
-                                EndingDate = endingDate,
-                                IsSendEmail = true
+                                CurrencyCredit = credit,
+                                Description = description
                             };
 
                             accountReconciliationDetailDal.Add(accountReconciliation);
@@ -102,7 +108,7 @@ namespace Business.Concrete
                     }
                 }
             }
-            return new SuccessResult(Messages.AccountReconciliationsAdded);
+            return new SuccessResult(Messages.AccountReconciliationDetailsAdded);
         }
 
     }

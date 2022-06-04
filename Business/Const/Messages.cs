@@ -66,13 +66,13 @@ namespace Business.Const
         public static string AccountReconciliationNotFound = "Cari Mutabakat Kaydı Bulunamadı.";
 
 
-        public static string AccountReconciliationDetailAdded = "Cari Mutabakat Kaydı Eklendi.";
-        public static string AccountReconciliationDetailsAdded = "Cari Mutabakat Kayıtları Eklendi.";
-        public static string AccountReconciliationDetailUpdated = "Cari Mutabakat Güncelleni.";
-        public static string AccountReconciliationDetailDeleted = "Cari Mutabakat Silindi.";
-        public static string AccountReconciliationDetailHasBeenBrought = "Cari Mutabakat Kaydı Getirildi.";
-        public static string AccountReconciliationDetailsHasBeenBrought = "Cari Mutabakat Kayıtları Getirildi.";
-        public static string AccountReconciliationDetailNotFound = "Cari Mutabakat Kaydı Bulunamadı.";
+        public static string AccountReconciliationDetailAdded = "Cari Mutabakat Detay Kaydı Eklendi.";
+        public static string AccountReconciliationDetailsAdded = "Cari Mutabakat Detay Kayıtları Eklendi.";
+        public static string AccountReconciliationDetailUpdated = "Cari Mutabakat Detay Güncelleni.";
+        public static string AccountReconciliationDetailDeleted = "Cari Mutabakat Detay Silindi.";
+        public static string AccountReconciliationDetailHasBeenBrought = "Cari Mutabakat Detay Kaydı Getirildi.";
+        public static string AccountReconciliationDetailsHasBeenBrought = "Cari Mutabakat Detay Kayıtları Getirildi.";
+        public static string AccountReconciliationDetailNotFound = "Cari Mutabakat Detay Kaydı Bulunamadı.";
 
 
     }

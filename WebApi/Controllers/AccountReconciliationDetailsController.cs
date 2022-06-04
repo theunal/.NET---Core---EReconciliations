@@ -7,19 +7,20 @@ namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AccountReconciliationsController : ControllerBase
+    public class AccountReconciliationDetailsController : ControllerBase
     {
-        private readonly IAccountReconciliationService accountReconciliationService;
-        public AccountReconciliationsController(IAccountReconciliationService accountReconciliationService)
+        private readonly IAccountReconciliationDetailService accountReconciliationDetailService;
+        public AccountReconciliationDetailsController(IAccountReconciliationDetailService accountReconciliationDetailService)
         {
-            this.accountReconciliationService = accountReconciliationService;
+            this.accountReconciliationDetailService = accountReconciliationDetailService;
         }
-
-
+       
+        
+        
         [HttpPost("add")]
-        public IActionResult Add(AccountReconciliation accountReconciliation)
+        public IActionResult Add(AccountReconciliationDetail accountReconciliationDetail)
         {
-            var result = accountReconciliationService.Add(accountReconciliation);
+            var result = accountReconciliationDetailService.Add(accountReconciliationDetail);
             if (result.Success)
             {
                 return Ok(result);
@@ -28,9 +29,9 @@ namespace WebApi.Controllers
         }
 
         [HttpPost("update")]
-        public IActionResult Update(AccountReconciliation accountReconciliation)
+        public IActionResult Update(AccountReconciliationDetail accountReconciliationDetail)
         {
-            var result = accountReconciliationService.Update(accountReconciliation);
+            var result = accountReconciliationDetailService.Update(accountReconciliationDetail);
             if (result.Success)
             {
                 return Ok(result);
@@ -39,9 +40,9 @@ namespace WebApi.Controllers
         }
 
         [HttpPost("delete")]
-        public IActionResult Delete(AccountReconciliation accountReconciliation)
+        public IActionResult Delete(AccountReconciliationDetail accountReconciliationDetail)
         {
-            var result = accountReconciliationService.Delete(accountReconciliation);
+            var result = accountReconciliationDetailService.Delete(accountReconciliationDetail);
             if (result.Success)
             {
                 return Ok(result);
@@ -54,7 +55,7 @@ namespace WebApi.Controllers
         [HttpGet("getById")]
         public IActionResult GetById(int id)
         {
-            var result = accountReconciliationService.GetById(id);
+            var result = accountReconciliationDetailService.GetById(id);
             if (result.Success)
             {
                 return Ok(result);
@@ -62,10 +63,10 @@ namespace WebApi.Controllers
             return BadRequest(result.Message);
         }
 
-        [HttpGet("getAllByCompanyId")]
-        public IActionResult GetAll(int companyId)
+        [HttpGet("getAllByAccountReconciliationId")]
+        public IActionResult GetAll(int accountReconciliationId)
         {
-            var result = accountReconciliationService.GetAll(companyId);
+            var result = accountReconciliationDetailService.GetAll(accountReconciliationId);
             if (result.Success)
             {
                 return Ok(result);
@@ -76,7 +77,7 @@ namespace WebApi.Controllers
 
 
         [HttpPost("addByExcel")]
-        public IActionResult AddByExcel(IFormFile file, int companyId)
+        public IActionResult AddByExcel(IFormFile file, int accountReconciliationId)
         {
             if (file.Length > 0)
             {
@@ -88,12 +89,12 @@ namespace WebApi.Controllers
                     stream.Flush();
                 }
 
-                AccountReconciliationDto dto = new AccountReconciliationDto()
+                AccountReconciliationDetailDto dto = new AccountReconciliationDetailDto()
                 {
-                    CompanyId = companyId,
+                    AccountReconciliationId = accountReconciliationId,
                     filePath = path
                 };
-                var result = accountReconciliationService.AddByExcel(dto);
+                var result = accountReconciliationDetailService.AddByExcel(dto);
                 if (result.Success)
                 {
                     return Ok(result);
@@ -102,13 +103,5 @@ namespace WebApi.Controllers
             }
             return BadRequest("Dosya seçilmedi.");
         }
-
-
-
-
-
-
-
-
     }
 }

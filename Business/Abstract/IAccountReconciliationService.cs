@@ -17,5 +17,7 @@ namespace Business.Abstract
 
         
         IResult AddByExcel(AccountReconciliationDto dto);
+
+        
     }
 }

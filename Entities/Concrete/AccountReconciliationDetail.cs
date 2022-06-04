@@ -10,6 +10,6 @@ namespace Entities.Concrete
         public string Description { get; set; }
         public int CurrencyId { get; set; }
         public decimal CurrencyDebit { get; set; }
-        public decimal CurrencCredit { get; set; }
+        public decimal CurrencyCredit { get; set; }
     }
 }
