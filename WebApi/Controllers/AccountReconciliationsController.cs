@@ -1,50 +1,26 @@
 ﻿using Business.Abstract;
 using Entities.Concrete;
 using Entities.Dtos;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CurrencyAccountsController : ControllerBase
+    public class AccountReconciliationsController : ControllerBase
     {
-        private readonly ICurrencyAccountService currencyAccountService;
-        public CurrencyAccountsController(ICurrencyAccountService currencyAccountService)
+        private readonly IAccountReconciliationService accountReconciliationService;
+        public AccountReconciliationsController(IAccountReconciliationService accountReconciliationService)
         {
-            this.currencyAccountService = currencyAccountService;
+            this.accountReconciliationService = accountReconciliationService;
         }
-
-
-        [HttpGet("getAllByCompanyId")]
-        public IActionResult GetAll(int companyId)
-        {
-            var result = currencyAccountService.GetAll(companyId);
-            if (result.Success)
-            {
-                return Ok(result);
-            }
-            return BadRequest(result.Message);
-        }
-
-
-        [HttpGet("getByCurrencyAccountId")]
-        public IActionResult Get(int id)
-        {
-            var result = currencyAccountService.GetById(id);
-            if (result.Success)
-            {
-                return Ok(result);
-            }
-            return BadRequest(result.Message);
-        }
-
 
 
         [HttpPost("add")]
-        public IActionResult Add(CurrencyAccount currencyAccount)
+        public IActionResult Add(AccountReconciliation accountReconciliation)
         {
-            var result = currencyAccountService.Add(currencyAccount);
+            var result = accountReconciliationService.Add(accountReconciliation);
             if (result.Success)
             {
                 return Ok(result);
@@ -53,20 +29,20 @@ namespace WebApi.Controllers
         }
 
         [HttpPost("update")]
-        public IActionResult Update(CurrencyAccount currencyAccount)
+        public IActionResult Update(AccountReconciliation accountReconciliation)
         {
-            var result = currencyAccountService.Update(currencyAccount);
+            var result = accountReconciliationService.Update(accountReconciliation);
             if (result.Success)
             {
                 return Ok(result);
             }
             return BadRequest(result.Message);
         }
-        
+
         [HttpPost("delete")]
-        public IActionResult Delete(int id)
+        public IActionResult Delete(AccountReconciliation accountReconciliation)
         {
-            var result = currencyAccountService.Delete(id);
+            var result = accountReconciliationService.Delete(accountReconciliation);
             if (result.Success)
             {
                 return Ok(result);
@@ -74,9 +50,32 @@ namespace WebApi.Controllers
             return BadRequest(result.Message);
         }
 
-        
 
-        
+
+        [HttpGet("getById")]
+        public IActionResult GetById(int id)
+        {
+            var result = accountReconciliationService.GetById(id);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result.Message);
+        }
+
+        [HttpGet("getAllByCompanyId")]
+        public IActionResult GetAll(int companyId)
+        {
+            var result = accountReconciliationService.GetAll(companyId);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result.Message);
+        }
+
+
+
         [HttpPost("addByExcel")]
         public IActionResult AddByExcel(IFormFile file, int companyId)
         {
@@ -89,13 +88,13 @@ namespace WebApi.Controllers
                     file.CopyTo(stream);
                     stream.Flush();
                 }
-                
-                CurrencyAccountExcelDto dto = new CurrencyAccountExcelDto()
+
+                AccountReconciliationDto dto = new AccountReconciliationDto()
                 {
-                    filePath = path,
-                    CompanyId = companyId
+                    CompanyId = companyId,
+                    filePath = path
                 };
-                var result = currencyAccountService.AddByExcel(dto);
+                var result = accountReconciliationService.AddByExcel(dto);
                 if (result.Success)
                 {
                     return Ok(result);
@@ -106,19 +105,11 @@ namespace WebApi.Controllers
         }
 
 
-        [HttpGet("getByCode")]
-        public IActionResult GetByCode(string code)
-        {
-            var result = currencyAccountService.GetByCode(code);
-            if (result.Success)
-            {
-                return Ok(result);
-            }
-            return BadRequest(result.Message);
-        }
 
 
 
-        
+
+
+
     }
 }

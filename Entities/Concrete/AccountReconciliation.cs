@@ -6,10 +6,10 @@ namespace Entities.Concrete
     {
         public int Id { get; set; }
         public int CompanyId { get; set; }
+        public int CurrencyId { get; set; }
         public int CurrencyAccountId { get; set; }
         public DateTime StartingDate { get; set; }
         public DateTime EndingDate { get; set; }
-        public int CurrencyId { get; set; }
         public decimal CurrencyDebit { get; set; }
         public decimal CurrencyCredit { get; set; }
         public bool IsSendEmail { get; set; }

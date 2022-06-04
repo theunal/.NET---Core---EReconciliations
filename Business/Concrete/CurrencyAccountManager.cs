@@ -104,19 +104,19 @@ namespace Business.Concrete
         }
 
         
+        
         [ValidationAspect(typeof(CurrencyAccountValidator))]
         [TransactionScopeAspect]
         public IResult AddByExcel(CurrencyAccountExcelDto dto)
         {
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-
             using (var stream = File.Open(dto.filePath, FileMode.Open, FileAccess.Read))
             {
                 using (var reader = ExcelReaderFactory.CreateReader(stream))
                 {
                     while (reader.Read())
                     {
-                        string code = reader.GetString(0);
+                        string code = reader.GetValue(0).ToString();
                         string name = reader.GetString(1);
                         string adres = reader.GetString(2);
                         string taxDepartment = reader.GetString(3);
@@ -148,7 +148,26 @@ namespace Business.Concrete
                     }
                 }
             }
-            return new SuccessResult(Messages.CurrencyAccountAdded);
+            return new SuccessResult(Messages.CurrencyAccountsAdded);
+        }
+
+
+        
+        public IDataResult<CurrencyAccount> GetByCompanyIdAndCode(string code, int companyId)
+        {
+            var result = currencyAccountDal.Get(c => c.CompanyId == companyId && c.Code == code);
+            return new SuccessDataResult<CurrencyAccount>(result, Messages.CurrencyAccountHasBeenBrought);
+            //return new SuccessDataResult<CurrencyAccount>(currencyAccountDal.Get(p => p.CompanyId == companyId));
+        }
+
+        public IDataResult<CurrencyAccount> GetByCode(string code)
+        {
+            var result = currencyAccountDal.Get(c => c.Code == code);
+            if (result is not null)
+            {
+                return new SuccessDataResult<CurrencyAccount>(result, Messages.CurrencyAccountHasBeenBrought);
+            }
+            return new ErrorDataResult<CurrencyAccount>(Messages.CurrencyAccountNotFound);
         }
     }
 }

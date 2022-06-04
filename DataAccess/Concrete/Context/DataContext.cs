@@ -13,7 +13,7 @@ namespace DataAccess.Concrete.Context
         }
 
 
-        public DbSet<AccountReconciliation>? AccountReconciliation { get; set; }
+        public DbSet<AccountReconciliation>? AccountReconciliations { get; set; }
         public DbSet<AccountReconciliationDetail>? AccountReconciliationDetails { get; set; }
         public DbSet<BaBsReconciliation>? BaBsReconciliations { get; set; }
         public DbSet<BaBsReconciliationDetail>? BaBsReconciliationDetails { get; set; }

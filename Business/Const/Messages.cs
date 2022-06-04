@@ -47,6 +47,7 @@ namespace Business.Const
 
 
         public static string CurrencyAccountAdded = "Cari Hesap Eklendi.";
+        public static string CurrencyAccountsAdded = "Cari Hesaplar Eklendi.";
         public static string CurrencyAccountUpdated = "Cari Hesap Güncellendi.";
         public static string CurrencyAccountDeleted = "Cari Hesap Silindi.";
         public static string CurrencyAccountHasBeenBrought = "Cari Hesap Getirldi.";
@@ -56,9 +57,22 @@ namespace Business.Const
 
 
 
-        public static string AccountReconciliationAdded = "Cari Mutabakat Eklendi."; 
+        public static string AccountReconciliationAdded = "Cari Mutabakat Kaydı Eklendi.";
+        public static string AccountReconciliationsAdded = "Cari Mutabakat Kayıtları Eklendi.";
         public static string AccountReconciliationUpdated = "Cari Mutabakat Güncelleni.";
         public static string AccountReconciliationDeleted = "Cari Mutabakat Silindi.";
+        public static string AccountReconciliationHasBeenBrought = "Cari Mutabakat Kaydı Getirildi.";
+        public static string AccountReconciliationsHasBeenBrought = "Cari Mutabakat Kayıtları Getirildi.";
+        public static string AccountReconciliationNotFound = "Cari Mutabakat Kaydı Bulunamadı.";
+
+
+        public static string AccountReconciliationDetailAdded = "Cari Mutabakat Kaydı Eklendi.";
+        public static string AccountReconciliationDetailsAdded = "Cari Mutabakat Kayıtları Eklendi.";
+        public static string AccountReconciliationDetailUpdated = "Cari Mutabakat Güncelleni.";
+        public static string AccountReconciliationDetailDeleted = "Cari Mutabakat Silindi.";
+        public static string AccountReconciliationDetailHasBeenBrought = "Cari Mutabakat Kaydı Getirildi.";
+        public static string AccountReconciliationDetailsHasBeenBrought = "Cari Mutabakat Kayıtları Getirildi.";
+        public static string AccountReconciliationDetailNotFound = "Cari Mutabakat Kaydı Bulunamadı.";
 
 
     }
