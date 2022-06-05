@@ -83,10 +83,14 @@ namespace Business.Const
         public static string BaBsReconciliationNotFound = "BaBs Mutabakat Kaydı Bulunamadı.";
 
 
+        
+        
+
         public static string BaBsReconciliationDetailAdded = "BaBs Mutabakat Detay Kaydı Eklendi.";
         public static string BaBsReconciliationDetailsAdded = "BaBs Mutabakat Detay Kayıtları Eklendi.";
         public static string BaBsReconciliationDetailUpdated = "BaBs Mutabakat Detay Güncelleni.";
         public static string BaBsReconciliationDetailDeleted = "BaBs Mutabakat Detay Silindi.";
+        
         public static string BaBsReconciliationDetailHasBeenBrought = "BaBs Mutabakat Detay Kaydı Getirildi.";
         public static string BaBsReconciliationDetailsHasBeenBrought = "BaBs Mutabakat Detay Kayıtları Getirildi.";
         public static string BaBsReconciliationDetailNotFound = "BaBs Mutabakat Detay Kaydı Bulunamadı.";
