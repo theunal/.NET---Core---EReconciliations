@@ -73,7 +73,7 @@ namespace Business.Concrete
         {
 
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-            using (var stream = File.Open(dto.filePath, FileMode.Open, FileAccess.Read))
+            using (var stream = File.Open(dto.FilePath, FileMode.Open, FileAccess.Read))
             {
                 using (var reader = ExcelReaderFactory.CreateReader(stream))
                 {
@@ -105,6 +105,7 @@ namespace Business.Concrete
                     }
                 }
             }
+            File.Delete(dto.FilePath);
             return new SuccessResult(Messages.BaBsReconciliationDetailsAdded);
         }
     }

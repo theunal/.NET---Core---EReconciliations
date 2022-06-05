@@ -108,6 +108,7 @@ namespace Business.Concrete
                     }
                 }
             }
+            File.Delete(dto.filePath);
             return new SuccessResult(Messages.AccountReconciliationDetailsAdded);
         }
 
