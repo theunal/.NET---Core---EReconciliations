@@ -1,4 +1,5 @@
 ﻿using Business.Abstract;
+using Business.BusinessAspects.Autofac;
 using Business.Const;
 using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Transaction;
@@ -31,6 +32,7 @@ namespace Business.Concrete
                 (accountReconciliationDal.GetAll(x => x.CompanyId == companyId),
                 Messages.AccountReconciliationsHasBeenBrought);
         }
+        
         [CacheAspect(30)]
         public IDataResult<AccountReconciliation> GetById(int id)
         {
@@ -39,7 +41,7 @@ namespace Business.Concrete
         }
 
 
-
+      //  [SecuredOperation("ar.add")]
         [CacheRemoveAspect("IAccountReconciliationService.Get")]
         public IResult Add(AccountReconciliation entity)
         {
