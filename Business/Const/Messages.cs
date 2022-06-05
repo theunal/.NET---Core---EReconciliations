@@ -55,8 +55,6 @@ namespace Business.Const
         public static string CurrencyAccountsHasBeenBrought = "Cari Hesaplar Getirildi.";
 
 
-
-
         public static string AccountReconciliationAdded = "Cari Mutabakat Kaydı Eklendi.";
         public static string AccountReconciliationsAdded = "Cari Mutabakat Kayıtları Eklendi.";
         public static string AccountReconciliationUpdated = "Cari Mutabakat Güncelleni.";
@@ -75,5 +73,22 @@ namespace Business.Const
         public static string AccountReconciliationDetailNotFound = "Cari Mutabakat Detay Kaydı Bulunamadı.";
 
 
+        public static string BaBsReconciliationAdded = "BaBs Mutabakat Kaydı Eklendi.";
+        public static string BaBsReconciliationsAdded = "BaBs Mutabakat Kayıtları Eklendi.";
+        public static string BaBsReconciliationUpdated = "BaBs Mutabakat Güncelleni.";
+        public static string BaBsReconciliationDeleted = "BaBs Mutabakat Silindi.";
+        
+        public static string BaBsReconciliationHasBeenBrought = "BaBs Mutabakat Kaydı Getirildi.";
+        public static string BaBsReconciliationsHasBeenBrought = "BaBs Mutabakat Kayıtları Getirildi.";
+        public static string BaBsReconciliationNotFound = "BaBs Mutabakat Kaydı Bulunamadı.";
+
+
+        public static string BaBsReconciliationDetailAdded = "BaBs Mutabakat Detay Kaydı Eklendi.";
+        public static string BaBsReconciliationDetailsAdded = "BaBs Mutabakat Detay Kayıtları Eklendi.";
+        public static string BaBsReconciliationDetailUpdated = "BaBs Mutabakat Detay Güncelleni.";
+        public static string BaBsReconciliationDetailDeleted = "BaBs Mutabakat Detay Silindi.";
+        public static string BaBsReconciliationDetailHasBeenBrought = "BaBs Mutabakat Detay Kaydı Getirildi.";
+        public static string BaBsReconciliationDetailsHasBeenBrought = "BaBs Mutabakat Detay Kayıtları Getirildi.";
+        public static string BaBsReconciliationDetailNotFound = "BaBs Mutabakat Detay Kaydı Bulunamadı.";
     }
 }
