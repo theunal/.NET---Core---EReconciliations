@@ -1,5 +1,6 @@
 ﻿using Business.Abstract;
 using Business.Const;
+using Core.Aspects.Autofac.Caching;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
@@ -20,14 +21,14 @@ namespace Business.Concrete
             this.accountReconciliationService = accountReconciliationService;
         }
 
-
+        [CacheAspect(30)]
         public IDataResult<List<AccountReconciliationDetail>> GetAll(int accountReconciliationId)
         {
             return new SuccessDataResult<List<AccountReconciliationDetail>>
                 (accountReconciliationDetailDal.GetAll(x => x.AccountReconciliationId == accountReconciliationId),
                 Messages.AccountReconciliationDetailsHasBeenBrought);
         }
-
+        [CacheAspect(30)]
         public IDataResult<AccountReconciliationDetail> GetById(int id)
         {
             return new SuccessDataResult<AccountReconciliationDetail>
@@ -38,7 +39,7 @@ namespace Business.Concrete
 
 
 
-
+        [CacheRemoveAspect("IAccountReconciliationDetailService.Get")]
         public IResult Add(AccountReconciliationDetail entity)
         {
             var result = accountReconciliationService.GetById(entity.AccountReconciliationId);
@@ -49,13 +50,13 @@ namespace Business.Concrete
             accountReconciliationDetailDal.Add(entity);
             return new SuccessResult(Messages.AccountReconciliationDetailAdded);
         }
-
+        [CacheRemoveAspect("IAccountReconciliationDetailService.Get")]
         public IResult Delete(AccountReconciliationDetail entity)
         {
             accountReconciliationDetailDal.Delete(entity);
             return new SuccessResult(Messages.AccountReconciliationDetailDeleted);
         }
-
+        [CacheRemoveAspect("IAccountReconciliationDetailService.Get")]
         public IResult Update(AccountReconciliationDetail entity)
         {
             accountReconciliationDetailDal.Update(entity);
@@ -65,7 +66,7 @@ namespace Business.Concrete
 
 
 
-
+        [CacheRemoveAspect("IAccountReconciliationDetailService.Get")]
         public IResult AddByExcel(AccountReconciliationDetailDto dto)
         {
 

@@ -1,6 +1,7 @@
 ﻿using Business.Abstract;
 using Business.Const;
 using Business.ValidationRules;
+using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Transaction;
 using Core.Aspects.Validation;
 using Core.Utilities.Results;
@@ -22,6 +23,71 @@ namespace Business.Concrete
             this.companyService = companyService;
         }
 
+
+        [CacheAspect(30)]
+        public IDataResult<List<CurrencyAccount>> GetAll(int companyId)
+        {
+            var result = companyService.GetById(companyId);
+            if (result.Success)
+            {
+                var currencyAccounts = currencyAccountDal.GetAll(c => c.CompanyId == result.Data.Id).ToList();
+                return new SuccessDataResult<List<CurrencyAccount>>
+                    (currencyAccounts, Messages.CurrencyAccountsHasBeenBrought);
+            }
+            return new ErrorDataResult<List<CurrencyAccount>>(result.Message);
+        }
+        
+        [CacheAspect(30)]
+        public IDataResult<CurrencyAccount> GetById(int id)
+        {
+            var result = currencyAccountDal.Get(c => c.Id == id);
+            if (result is not null)
+            {
+                return new SuccessDataResult<CurrencyAccount>(result, Messages.CurrencyAccountHasBeenBrought);
+            }
+            return new ErrorDataResult<CurrencyAccount>(Messages.CurrencyAccountNotFound);
+        }
+        
+        [CacheAspect(30)]
+        public IDataResult<CurrencyAccount> GetByCompanyIdAndCode(string code, int companyId)
+        {
+            var result = currencyAccountDal.Get(c => c.CompanyId == companyId && c.Code == code);
+            return new SuccessDataResult<CurrencyAccount>(result, Messages.CurrencyAccountHasBeenBrought);
+            //return new SuccessDataResult<CurrencyAccount>(currencyAccountDal.Get(p => p.CompanyId == companyId));
+        }
+        
+        [CacheAspect(30)]
+        public IDataResult<CurrencyAccount> GetByCode(string code)
+        {
+            var result = currencyAccountDal.Get(c => c.Code == code);
+            if (result is not null)
+            {
+                return new SuccessDataResult<CurrencyAccount>(result, Messages.CurrencyAccountHasBeenBrought);
+            }
+            return new ErrorDataResult<CurrencyAccount>(Messages.CurrencyAccountNotFound);
+        }
+        
+        [CacheAspect(30)]
+        public IDataResult<CurrencyAccount> GetByCompanyId(int companyId)
+        {
+            var result = currencyAccountDal.Get(c => c.CompanyId == companyId);
+            if (result is not null)
+            {
+                return new SuccessDataResult<CurrencyAccount>(result, Messages.CurrencyAccountHasBeenBrought);
+            }
+            return new ErrorDataResult<CurrencyAccount>(Messages.CurrencyAccountNotFound);
+        }
+
+
+
+
+
+
+
+
+
+
+        [CacheRemoveAspect("ICurrencyAccountService.Get")]
         [ValidationAspect(typeof(CurrencyAccountValidator))]
         public IResult Add(CurrencyAccount entity)
         {
@@ -33,7 +99,8 @@ namespace Business.Concrete
             }
             return result;
         }
-
+        
+        [CacheRemoveAspect("ICurrencyAccountService.Get")]
         public IResult Delete(int id)
         {
             var result = GetById(id);
@@ -44,7 +111,8 @@ namespace Business.Concrete
             }
             return GetById(id);
         }
-
+        
+        [CacheRemoveAspect("ICurrencyAccountService.Get")]
         [ValidationAspect(typeof(CurrencyAccountValidator))]
         public IResult Update(CurrencyAccount entity)
         {
@@ -69,42 +137,16 @@ namespace Business.Concrete
             return result;
         }
 
-        public IDataResult<CurrencyAccount> GetById(int id)
-        {
-            var result = currencyAccountDal.Get(c => c.Id == id);
-            if (result is not null)
-            {
-                return new SuccessDataResult<CurrencyAccount>(result, Messages.CurrencyAccountHasBeenBrought);
-            }
-            return new ErrorDataResult<CurrencyAccount>(Messages.CurrencyAccountNotFound);
-        }
 
-        
-        
-        public IDataResult<List<CurrencyAccount>> GetAll(int companyId)
-        {
-            var result = companyService.GetById(companyId);
-            if (result.Success)
-            {
-                var currencyAccounts = currencyAccountDal.GetAll(c => c.CompanyId == result.Data.Id).ToList();
-                return new SuccessDataResult<List<CurrencyAccount>>
-                    (currencyAccounts, Messages.CurrencyAccountsHasBeenBrought);
-            }
-            return new ErrorDataResult<List<CurrencyAccount>>(result.Message);
-        }
 
-        public IDataResult<CurrencyAccount> GetByCompanyId(int companyId)
-        {
-            var result = currencyAccountDal.Get(c => c.CompanyId == companyId);
-            if (result is not null)
-            {
-                return new SuccessDataResult<CurrencyAccount>(result, Messages.CurrencyAccountHasBeenBrought);
-            }
-            return new ErrorDataResult<CurrencyAccount>(Messages.CurrencyAccountNotFound);
-        }
 
-        
-        
+
+
+
+
+
+
+        [CacheRemoveAspect("ICurrencyAccountService.Get")]
         [ValidationAspect(typeof(CurrencyAccountValidator))]
         [TransactionScopeAspect]
         public IResult AddByExcel(CurrencyAccountExcelDto dto)
@@ -153,21 +195,6 @@ namespace Business.Concrete
 
 
         
-        public IDataResult<CurrencyAccount> GetByCompanyIdAndCode(string code, int companyId)
-        {
-            var result = currencyAccountDal.Get(c => c.CompanyId == companyId && c.Code == code);
-            return new SuccessDataResult<CurrencyAccount>(result, Messages.CurrencyAccountHasBeenBrought);
-            //return new SuccessDataResult<CurrencyAccount>(currencyAccountDal.Get(p => p.CompanyId == companyId));
-        }
         
-        public IDataResult<CurrencyAccount> GetByCode(string code)
-        {
-            var result = currencyAccountDal.Get(c => c.Code == code);
-            if (result is not null)
-            {
-                return new SuccessDataResult<CurrencyAccount>(result, Messages.CurrencyAccountHasBeenBrought);
-            }
-            return new ErrorDataResult<CurrencyAccount>(Messages.CurrencyAccountNotFound);
-        }
     }
 }

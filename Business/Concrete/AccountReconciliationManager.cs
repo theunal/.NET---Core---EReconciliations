@@ -1,5 +1,6 @@
 ﻿using Business.Abstract;
 using Business.Const;
+using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Transaction;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
@@ -19,17 +20,18 @@ namespace Business.Concrete
             this.accountReconciliationDal = accountReconciliationDal;
             this.currencyAccountService = currencyAccountService;
         }
-        
 
 
-        
-        
+
+
+        [CacheAspect(30)]
         public IDataResult<List<AccountReconciliation>> GetAll(int companyId)
         {
             return new SuccessDataResult<List<AccountReconciliation>>
                 (accountReconciliationDal.GetAll(x => x.CompanyId == companyId),
                 Messages.AccountReconciliationsHasBeenBrought);
         }
+        [CacheAspect(30)]
         public IDataResult<AccountReconciliation> GetById(int id)
         {
             return new SuccessDataResult<AccountReconciliation>
@@ -38,17 +40,21 @@ namespace Business.Concrete
 
 
 
-
+        [CacheRemoveAspect("IAccountReconciliationService.Get")]
         public IResult Add(AccountReconciliation entity)
         {
             accountReconciliationDal.Add(entity);
             return new SuccessResult(Messages.AccountReconciliationAdded);
         }
+        
+        [CacheRemoveAspect("IAccountReconciliationService.Get")]        
         public IResult Delete(AccountReconciliation entity)
         {
             accountReconciliationDal.Delete(entity);
             return new SuccessResult(Messages.AccountReconciliationDeleted);
         }
+        
+        [CacheRemoveAspect("IAccountReconciliationService.Get")]
         public IResult Update(AccountReconciliation entity)
         {
             accountReconciliationDal.Update(entity);
@@ -57,8 +63,8 @@ namespace Business.Concrete
 
 
 
-     
 
+        [CacheRemoveAspect("IAccountReconciliationService.Get")]
         public IResult AddByExcel(AccountReconciliationDto dto)
         {
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
@@ -106,7 +112,6 @@ namespace Business.Concrete
             return new SuccessResult(Messages.AccountReconciliationsAdded);
         }
 
-  
     }
 
 

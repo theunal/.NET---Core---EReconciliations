@@ -1,5 +1,6 @@
 ﻿using Business.Abstract;
 using Business.Const;
+using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Transaction;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
@@ -22,14 +23,14 @@ namespace Business.Concrete
         }
 
 
-
+        [CacheAspect(30)]
         public IDataResult<List<BaBsReconciliationDetail>> GetAll(int babsReconciliationId)
         {
             return new SuccessDataResult<List<BaBsReconciliationDetail>>
                 (baBsReconciliationDetailDal.GetAll(x => x.BaBsReconciliationId == babsReconciliationId),
                 Messages.BaBsReconciliationDetailsHasBeenBrought);
         }
-
+        [CacheAspect(30)]
         public IDataResult<BaBsReconciliationDetail> GetById(int id)
         {
             var result = baBsReconciliationDetailDal.Get(x => x.Id == id);
@@ -46,19 +47,21 @@ namespace Business.Concrete
 
 
 
-
+        [CacheRemoveAspect("IBaBsReconciliationDetailService.Get")]
         public IResult Add(BaBsReconciliationDetail entity) { 
 
             baBsReconciliationDetailDal.Add(entity);
             return new SuccessResult(Messages.BaBsReconciliationDetailAdded);
         }
-
+        
+        [CacheRemoveAspect("IBaBsReconciliationDetailService.Get")]
         public IResult Delete(BaBsReconciliationDetail entity)
         {
             baBsReconciliationDetailDal.Delete(entity);
             return new SuccessResult(Messages.BaBsReconciliationDetailDeleted);
         }
-
+        
+        [CacheRemoveAspect("IBaBsReconciliationDetailService.Get")]
         public IResult Update(BaBsReconciliationDetail entity)
         {
             baBsReconciliationDetailDal.Update(entity);
@@ -66,8 +69,8 @@ namespace Business.Concrete
         }
 
 
-        
 
+        [CacheRemoveAspect("IBaBsReconciliationDetailService.Get")]
         [TransactionScopeAspect]
         public IResult AddByExcel(BaBsReconciliationDetailDto dto)
         {
