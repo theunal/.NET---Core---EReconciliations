@@ -4,6 +4,7 @@ using Business.Const;
 using Business.ValidationRules;
 using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Transaction;
+using Core.Aspects.Performance;
 using Core.Aspects.Validation;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
@@ -86,12 +87,13 @@ namespace Business.Concrete
 
 
 
-
-        [SecuredOperation("Admin,admin")]
-        [CacheRemoveAspect("ICurrencyAccountService.Get")]
-        [ValidationAspect(typeof(CurrencyAccountValidator))]
+        [PerformanceAspect(2)]
+       // [SecuredOperation("admin")]
+       // [CacheRemoveAspect("ICurrencyAccountService.Get")]
+       // [ValidationAspect(typeof(CurrencyAccountValidator))]
         public IResult Add(CurrencyAccount entity)
         {
+            Thread.Sleep(2000);
             var result = companyService.GetById(entity.CompanyId);
             if (result.Success)
             {

@@ -10,7 +10,7 @@ namespace Business.Abstract
         IResult Delete(MailTemplate mailTemplate);
         
         IDataResult<MailTemplate> Get(int id);
-        IDataResult<MailTemplate> GetByTemplateName(string name, int companyId);
+        IDataResult<MailTemplate> GetByTemplateName(string type, int companyId);
         IDataResult<List<MailTemplate>> GetAll(int companyId);
 
 

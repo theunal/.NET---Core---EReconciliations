@@ -1,7 +1,7 @@
 ﻿namespace Core.Aspects.Performance
 {
     public class SendMailDto
-    {   
+    {
         public string Email { get; set; }
         public string Password { get; set; }
         public string SMTP { get; set; }

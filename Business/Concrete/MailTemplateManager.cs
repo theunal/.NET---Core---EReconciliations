@@ -21,10 +21,10 @@ namespace Business.Concrete
                 (mailTemplateDal.Get(m => m.Id == id));
         }
 
-        public IDataResult<MailTemplate> GetByTemplateName(string name, int companyId)
+        public IDataResult<MailTemplate> GetByTemplateName(string type, int companyId)
         {
             return new SuccessDataResult<MailTemplate>
-              (mailTemplateDal.Get(m => m.Type == name && m.CompanyId == companyId));
+              (mailTemplateDal.Get(m => m.Type == type && m.CompanyId == companyId));
         }
 
         public IDataResult<List<MailTemplate>> GetAll(int companyId)

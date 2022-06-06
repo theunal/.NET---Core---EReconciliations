@@ -27,8 +27,10 @@ namespace Core.Aspects.Performance
         {
             if (_stopwatch.Elapsed.TotalSeconds > _interval)
             {
-                string body = $"Performance : {invocation.Method.DeclaringType.FullName}" +
-                    $".{invocation.Method.Name}--> {_stopwatch.Elapsed.TotalSeconds}" +" saniye sürdü.";
+                string body = $"Performance <br/>" +
+                    $"{invocation.Method.DeclaringType.FullName}" +
+                    $".{invocation.Method.Name} --> <span style='color:red;'>{_stopwatch.Elapsed.TotalSeconds}</span> saniye sürdü. " +
+                    $"<br/>Geçmemesi gereken süre:  <span style='color:blue;'>{_interval}</span> sn.";
                 SendConfirmEmail(body);
             }
             _stopwatch.Reset();
@@ -36,8 +38,8 @@ namespace Core.Aspects.Performance
 
         void SendConfirmEmail(string body)
         {
-            string subject = "Performans Maili";                     
-            
+            string subject = "Performans Maili";
+
             SendMailDto sendMailDto = new SendMailDto()
             {
                 Email = "emutabakat@zohomail.eu",
@@ -45,7 +47,7 @@ namespace Core.Aspects.Performance
                 Port = 587,
                 SMTP = "smtp.zoho.eu",
                 SSL = true,
-                email = "kyaka144@gmail.com",
+                email = "kyaka144@gmail.com", // perfomans için bilgi gödnderilecek mail
                 subject = subject,
                 body = body
             };
@@ -64,9 +66,10 @@ namespace Core.Aspects.Performance
                     smtp.UseDefaultCredentials = false;
                     smtp.Credentials = new NetworkCredential(sendMailDto.Email, sendMailDto.Password);
                     smtp.EnableSsl = sendMailDto.SSL;
+                    smtp.Port = 587;
                     smtp.Send(mail);
                 }
-            }                        
+            }
         }
     }
 }

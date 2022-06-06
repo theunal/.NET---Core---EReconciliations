@@ -130,7 +130,6 @@ namespace Business.Concrete
             {
                 Name = dto.Name,
                 Email = dto.Email,
-
                 AddedAt = DateTime.Now,
                 IsActive = true,
                 MailConfirm = false,
