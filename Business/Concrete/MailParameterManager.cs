@@ -1,5 +1,7 @@
 ﻿using Business.Abstract;
+using Business.BusinessAcpects;
 using Business.Const;
+using Core.Aspects.Performance;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
@@ -25,7 +27,9 @@ namespace Business.Concrete
         }
 
 
-       // [SecuredOperation("Admin,admin")]
+
+        [PerformanceAspect(3)]
+        [SecuredOperation("admin")]
         public IResult Update(MailParameter mailParameter)
         {
             var result = Get(mailParameter.CompanyId);

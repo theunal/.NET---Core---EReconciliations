@@ -1,6 +1,8 @@
 ﻿using Business.Abstract;
+using Business.BusinessAcpects;
 using Business.Const;
 using Core.Aspects.Autofac.Caching;
+using Core.Aspects.Performance;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
@@ -20,7 +22,12 @@ namespace Business.Concrete
             this.accountReconciliationDetailDal = accountReconciliationDetailDal;
             this.accountReconciliationService = accountReconciliationService;
         }
+        
 
+
+        
+        [PerformanceAspect(3)]
+        [SecuredOperation("admin")]
         [CacheAspect(30)]
         public IDataResult<List<AccountReconciliationDetail>> GetAll(int accountReconciliationId)
         {
@@ -28,6 +35,9 @@ namespace Business.Concrete
                 (accountReconciliationDetailDal.GetAll(x => x.AccountReconciliationId == accountReconciliationId),
                 Messages.AccountReconciliationDetailsHasBeenBrought);
         }
+        
+        [PerformanceAspect(3)]
+        [SecuredOperation("admin")]
         [CacheAspect(30)]
         public IDataResult<AccountReconciliationDetail> GetById(int id)
         {
@@ -38,7 +48,8 @@ namespace Business.Concrete
 
 
 
-
+        [PerformanceAspect(3)]
+        [SecuredOperation("admin")]
         [CacheRemoveAspect("IAccountReconciliationDetailService.Get")]
         public IResult Add(AccountReconciliationDetail entity)
         {
@@ -50,12 +61,18 @@ namespace Business.Concrete
             accountReconciliationDetailDal.Add(entity);
             return new SuccessResult(Messages.AccountReconciliationDetailAdded);
         }
+
+        [PerformanceAspect(3)]
+        [SecuredOperation("admin")]
         [CacheRemoveAspect("IAccountReconciliationDetailService.Get")]
         public IResult Delete(AccountReconciliationDetail entity)
         {
             accountReconciliationDetailDal.Delete(entity);
             return new SuccessResult(Messages.AccountReconciliationDetailDeleted);
         }
+        
+        [PerformanceAspect(3)]
+        [SecuredOperation("admin")]
         [CacheRemoveAspect("IAccountReconciliationDetailService.Get")]
         public IResult Update(AccountReconciliationDetail entity)
         {
@@ -65,7 +82,8 @@ namespace Business.Concrete
 
 
 
-
+        [PerformanceAspect(3)]
+      //  [SecuredOperation("admin")]
         [CacheRemoveAspect("IAccountReconciliationDetailService.Get")]
         public IResult AddByExcel(AccountReconciliationDetailDto dto)
         {

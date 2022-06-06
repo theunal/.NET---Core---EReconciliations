@@ -16,6 +16,73 @@ namespace WebApi.Controllers
         }
 
 
+        [HttpGet("getAllByCompanyId")]
+        public IActionResult GetAll(int companyId)
+        {
+            var result = accountReconciliationService.GetAll(companyId);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result.Message);
+        }
+
+        [HttpGet("getAllDto")]
+        public IActionResult GetAllDto(int companyId)
+        {
+            var result = accountReconciliationService.GetAllDto(companyId);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result.Message);
+        }
+
+        [HttpPost("sendReconciliationMail")]
+        public IActionResult SendReconciliationMail(AccountReconciliationDto dto)
+        {
+            var result = accountReconciliationService.SendReconciliationMail(dto);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result.Message);
+        }
+        
+        [HttpGet("getById")]
+        public IActionResult GetById(int id)
+        {
+            var result = accountReconciliationService.GetById(id);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result.Message);
+        }
+
+        [HttpGet("getByCode")] // guidi gönderiyoruz ama onaylandıktan sonra db de true ya çevirmedim düzelticem
+        public IActionResult getByCode(string code)
+        {
+            var result = accountReconciliationService.GetByCode(code);
+            if (result.Success)
+            {
+                return Ok(result.Message);
+            }
+            return BadRequest(result.Message);
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
         [HttpPost("add")]
         public IActionResult Add(AccountReconciliation accountReconciliation)
         {
@@ -51,28 +118,7 @@ namespace WebApi.Controllers
 
 
 
-        [HttpGet("getById")]
-        public IActionResult GetById(int id)
-        {
-            var result = accountReconciliationService.GetById(id);
-            if (result.Success)
-            {
-                return Ok(result);
-            }
-            return BadRequest(result.Message);
-        }
-
-        [HttpGet("getAllByCompanyId")]
-        public IActionResult GetAll(int companyId)
-        {
-            var result = accountReconciliationService.GetAll(companyId);
-            if (result.Success)
-            {
-                return Ok(result);
-            }
-            return BadRequest(result.Message);
-        }
-
+     
 
 
         [HttpPost("addByExcel")]
@@ -88,7 +134,7 @@ namespace WebApi.Controllers
                     stream.Flush();
                 }
 
-                AccountReconciliationDto dto = new AccountReconciliationDto()
+                AccountReconciliationExcelDto dto = new AccountReconciliationExcelDto()
                 {
                     CompanyId = companyId,
                     filePath = path
@@ -102,13 +148,5 @@ namespace WebApi.Controllers
             }
             return BadRequest("Dosya seçilmedi.");
         }
-
-
-
-
-
-
-
-
     }
 }

@@ -7,6 +7,7 @@ namespace Business.Abstract
     {
         IDataResult<List<OperationClaim>> GetAll();
         IDataResult<OperationClaim> GetById(int id);
+        IResult GetByOperationClaimName(string name);
 
 
         IResult Add(OperationClaim entity);

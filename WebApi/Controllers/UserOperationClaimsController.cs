@@ -16,6 +16,8 @@ namespace WebApi.Controllers
         }
 
 
+
+
         [HttpGet("getAll")]
         public IActionResult GetAll(int userId, int companyId)
         {
@@ -37,16 +39,6 @@ namespace WebApi.Controllers
             }
             return BadRequest(result.Message);
         }
-
-
-
-
-
-
-
-
-
-
 
 
 

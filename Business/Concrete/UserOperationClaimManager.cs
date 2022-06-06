@@ -1,4 +1,5 @@
 ﻿using Business.Abstract;
+using Business.BusinessAcpects;
 using Business.Const;
 using Core.Entities.Concrete;
 using Core.Utilities.Results;
@@ -17,18 +18,22 @@ namespace Business.Concrete
 
 
 
-        // [SecuredOperation("Admin")]
+        [SecuredOperation("userOperationClaim.getall,admin")]
         public IDataResult<List<UserOperationClaim>> GetAll(int userId, int companyId)
         {
             var result = userOperationClaimDal.GetAll(u => u.UserId == userId && u.CompanyId == companyId);
             return new SuccessDataResult<List<UserOperationClaim>>(result, Messages.UserOperationClaimsHasBeenBrought);
         }
-
-        // [SecuredOperation("Admin")]
+        
+        [SecuredOperation("userOperationClaim.get,admin")]
         public IDataResult<UserOperationClaim> GetById(int id)
         {
             var result = userOperationClaimDal.Get(x => x.Id == id);
-            return new SuccessDataResult<UserOperationClaim>(result, Messages.UserOperationClaimHasBeenBrought);
+            if (result is not null)
+            {
+                return new SuccessDataResult<UserOperationClaim>(result, Messages.UserOperationClaimsHasBeenBrought);
+            }
+            return new ErrorDataResult<UserOperationClaim>(Messages.UserOperationClaimsNotFound);
         }
 
 
@@ -37,26 +42,36 @@ namespace Business.Concrete
 
 
 
-
-        // [SecuredOperation("Admin")]
+        [SecuredOperation("userOperationClaim.add,admin")]
         public IResult Add(UserOperationClaim entity)
         {
             userOperationClaimDal.Add(entity);
             return new SuccessResult(Messages.UserOperationClaimAdded);
         }
-
-        // [SecuredOperation("Admin")]
+        
+        [SecuredOperation("userOperationClaim.update,admin")]
         public IResult Update(UserOperationClaim entity)
         {
-            userOperationClaimDal.Update(entity);
-            return new SuccessResult(Messages.UserOperationClaimUpdated);
+            var result = GetById(entity.Id);
+            if (result.Success)
+            {
+                userOperationClaimDal.Update(entity);
+                return new SuccessResult(Messages.UserOperationClaimUpdated);
+            }
+            return result;
         }
 
-        // [SecuredOperation("Admin")]
+        [SecuredOperation("userOperationClaim.delete,admin")]
         public IResult Delete(UserOperationClaim entity)
         {
-            userOperationClaimDal.Delete(entity);
-            return new SuccessResult(Messages.UserOperationClaimDeleted);
+            var result = GetById(entity.Id);
+            if (result.Success)
+            {
+                userOperationClaimDal.Delete(entity);
+                return new SuccessResult(Messages.UserOperationClaimDeleted);
+            }
+            return result;
+         
         }
 
      

@@ -26,6 +26,8 @@ namespace Business.Concrete
         }
 
 
+        [PerformanceAspect(3)]
+        [SecuredOperation("admin")]
         [CacheAspect(30)]
         public IDataResult<List<CurrencyAccount>> GetAll(int companyId)
         {
@@ -39,6 +41,9 @@ namespace Business.Concrete
             return new ErrorDataResult<List<CurrencyAccount>>(result.Message);
         }
 
+
+        [PerformanceAspect(3)]
+        [SecuredOperation("admin")]
         [CacheAspect(30)]
         public IDataResult<CurrencyAccount> GetById(int id)
         {
@@ -50,6 +55,9 @@ namespace Business.Concrete
             return new ErrorDataResult<CurrencyAccount>(Messages.CurrencyAccountNotFound);
         }
 
+
+        [PerformanceAspect(3)]
+        [SecuredOperation("admin")]
         [CacheAspect(30)]
         public IDataResult<CurrencyAccount> GetByCompanyIdAndCode(string code, int companyId)
         {
@@ -58,6 +66,9 @@ namespace Business.Concrete
             //return new SuccessDataResult<CurrencyAccount>(currencyAccountDal.Get(p => p.CompanyId == companyId));
         }
 
+
+        [PerformanceAspect(3)]
+        [SecuredOperation("admin")]
         [CacheAspect(30)]
         public IDataResult<CurrencyAccount> GetByCode(string code)
         {
@@ -69,6 +80,9 @@ namespace Business.Concrete
             return new ErrorDataResult<CurrencyAccount>(Messages.CurrencyAccountNotFound);
         }
 
+
+        [PerformanceAspect(3)]
+        [SecuredOperation("admin")]
         [CacheAspect(30)]
         public IDataResult<CurrencyAccount> GetByCompanyId(int companyId)
         {
@@ -87,13 +101,13 @@ namespace Business.Concrete
 
 
 
-        [PerformanceAspect(2)]
-       // [SecuredOperation("admin")]
-       // [CacheRemoveAspect("ICurrencyAccountService.Get")]
-       // [ValidationAspect(typeof(CurrencyAccountValidator))]
+
+        [PerformanceAspect(3)]
+        [SecuredOperation("admin")]
+        [CacheRemoveAspect("ICurrencyAccountService.Get")]
+        [ValidationAspect(typeof(CurrencyAccountValidator))]
         public IResult Add(CurrencyAccount entity)
         {
-            Thread.Sleep(2000);
             var result = companyService.GetById(entity.CompanyId);
             if (result.Success)
             {
@@ -103,6 +117,9 @@ namespace Business.Concrete
             return result;
         }
 
+
+        [PerformanceAspect(3)]
+        [SecuredOperation("admin")]
         [CacheRemoveAspect("ICurrencyAccountService.Get")]
         public IResult Delete(int id)
         {
@@ -115,6 +132,9 @@ namespace Business.Concrete
             return GetById(id);
         }
 
+
+        [PerformanceAspect(3)]
+        [SecuredOperation("admin")]
         [CacheRemoveAspect("ICurrencyAccountService.Get")]
         [ValidationAspect(typeof(CurrencyAccountValidator))]
         public IResult Update(CurrencyAccount entity)
@@ -149,6 +169,8 @@ namespace Business.Concrete
 
 
 
+        [PerformanceAspect(3)]
+       // [SecuredOperation("admin")]
         [CacheRemoveAspect("ICurrencyAccountService.Get")]
         [ValidationAspect(typeof(CurrencyAccountValidator))]
         [TransactionScopeAspect]
@@ -195,9 +217,5 @@ namespace Business.Concrete
             }
             return new SuccessResult(Messages.CurrencyAccountsAdded);
         }
-
-
-
-
     }
 }

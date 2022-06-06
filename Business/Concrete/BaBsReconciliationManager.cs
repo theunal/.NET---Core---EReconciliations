@@ -1,6 +1,8 @@
 ﻿using Business.Abstract;
+using Business.BusinessAcpects;
 using Business.Const;
 using Core.Aspects.Autofac.Caching;
+using Core.Aspects.Performance;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
@@ -22,6 +24,8 @@ namespace Business.Concrete
         }
 
 
+        [PerformanceAspect(3)]
+        [SecuredOperation("admin")]
         [CacheAspect(30)]
         public IDataResult<List<BaBsReconciliation>> GetAll(int companyId)
         {
@@ -29,7 +33,10 @@ namespace Business.Concrete
                 (baBsReconciliationDal.GetAll(x => x.CompanyId == companyId),
                 Messages.BaBsReconciliationsHasBeenBrought);
         }
-        
+
+
+        [PerformanceAspect(3)]
+        [SecuredOperation("admin")]
         [CacheAspect(30)]
         public IDataResult<BaBsReconciliation> GetById(int id)
         {
@@ -45,20 +52,28 @@ namespace Business.Concrete
 
 
 
+        [PerformanceAspect(3)]
+        [SecuredOperation("admin")]
         [CacheRemoveAspect("IBaBsReconciliationService.Get")]
         public IResult Add(BaBsReconciliation entity)
         {
             baBsReconciliationDal.Add(entity);
             return new SuccessResult(Messages.BaBsReconciliationAdded);
         }
-        
+
+
+        [PerformanceAspect(3)]
+        [SecuredOperation("admin")]
         [CacheRemoveAspect("IBaBsReconciliationService.Get")]
         public IResult Delete(BaBsReconciliation entity)
         {
             baBsReconciliationDal.Delete(entity);
             return new SuccessResult(Messages.BaBsReconciliationDeleted);
         }
-        
+
+
+        [PerformanceAspect(3)]
+        [SecuredOperation("admin")]
         [CacheRemoveAspect("IBaBsReconciliationService.Get")]
         public IResult Update(BaBsReconciliation entity)
         {
@@ -69,6 +84,10 @@ namespace Business.Concrete
 
 
 
+        
+
+        [PerformanceAspect(3)]
+        [SecuredOperation("admin")]
         [CacheRemoveAspect("IBaBsReconciliationService.Get")]
         public IResult AddByExcel(BaBsReconciliationDto dto)
         {
@@ -115,7 +134,5 @@ namespace Business.Concrete
             File.Delete(dto.filePath);
             return new SuccessResult(Messages.BaBsReconciliationsAdded);
         }
-
-
     }
 }

@@ -27,9 +27,6 @@ namespace DataAccess.Concrete
                     smtp.Send(mail);
                 }
             }
-
-            // emutabakat@zohomail.eu
-            // iTezvGfJqZFYqMD
             
         }
     }

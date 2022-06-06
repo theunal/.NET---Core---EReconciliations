@@ -1,7 +1,9 @@
 ﻿using Business.Abstract;
+using Business.BusinessAcpects;
 using Business.Const;
 using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Transaction;
+using Core.Aspects.Performance;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
@@ -42,6 +44,8 @@ namespace Business.Concrete
 
 
 
+        [PerformanceAspect(3)]
+        [SecuredOperation("company.update,admin")]
         [CacheRemoveAspect("ICompanyService.Get")]
         public IResult Update(Company entity)
         {
@@ -53,6 +57,7 @@ namespace Business.Concrete
             }
             return new ErrorResult(Messages.CompanyNotFound);
         }
+        
         [CacheRemoveAspect("ICompanyService.Get")]
         public IResult Delete(Company entity)
         {
@@ -63,14 +68,15 @@ namespace Business.Concrete
 
 
 
-
+        [TransactionScopeAspect]
         [CacheRemoveAspect("ICompanyService.Get")]
         public IResult Add(Company entity)
         {
             companyDal.Add(entity);
             return new SuccessResult(Messages.CompanyAdded);
         }
-        
+
+        [TransactionScopeAspect] // burada direkt dalı çağırıp ekledik sonra düzelticem
         [CacheRemoveAspect("ICompanyService.Get")]
         public IResult AddUserCompany(int userId, int companyId) // userCompany tablosuna user ve company id sini ekler
         { 

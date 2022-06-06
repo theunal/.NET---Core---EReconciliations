@@ -106,6 +106,7 @@ namespace Business.Const
         public static string OperationClaimHasBeenBrought = "İşlem Yetki Kaydı Getirildi.";
         public static string OperationClaimsHasBeenBrought = "İşlem Yetki Kayıtları Getirildi.";
         public static string OperationClaimNotFound = "İşlem Yetki Kaydı Bulunamadı.";
+        public static string OperationClaimAlreadyExists = "İşlem Yetki Kaydı Zaten Var.";
 
 
 
@@ -116,7 +117,7 @@ namespace Business.Const
 
         public static string UserOperationClaimHasBeenBrought = "Kullanıcının İşlem Yetki Kaydı Getirildi.";
         public static string UserOperationClaimsHasBeenBrought = "Kullanıcının İşlem Yetki Kayıtları Getirildi.";
-        public static string UserOperationClaimNotFound = "Kullanıcının İşlem Yetki Kaydı Bulunamadı.";
+        public static string UserOperationClaimsNotFound = "Kullanıcının İşlem Yetki Kaydı Bulunamadı.";
 
 
     }

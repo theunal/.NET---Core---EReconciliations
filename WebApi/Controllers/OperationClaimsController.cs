@@ -44,14 +44,6 @@ namespace WebApi.Controllers
 
 
 
-
-
-
-
-
-
-
-
         [HttpPost("add")]
         public IActionResult Add(OperationClaim operationClaim)
         {
@@ -84,22 +76,6 @@ namespace WebApi.Controllers
             }
             return BadRequest(result.Message);
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     }
 }

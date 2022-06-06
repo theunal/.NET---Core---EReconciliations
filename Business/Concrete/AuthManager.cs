@@ -42,16 +42,45 @@ namespace Business.Concrete
         }
 
 
-
-        public IDataResult<AccessToken> CreateAccessToken(User user, int companyId)
+        public IDataResult<User> GetById(int id)
         {
-            var claims = userService.GetClaims(user, companyId);
-            var company = companyService.GetById(companyId).Data;
-            var accessToken = tokenHelper.CreateToken(user, claims, companyId);
-            return new SuccessDataResult<AccessToken>(accessToken, Messages.SuccessfulLogin);
+            return new SuccessDataResult<User>(userService.GetById(id).Data);
+        }
+
+        
+        
+        public IDataResult<User> GtByMailConfirmValue(string value)
+        {
+            var user = userService.GtByMailConfirmValue(value);
+            return MailConfirm(user);
+        }
+        public IDataResult<UserCompany> GetUserCompanyByUserId(int userId)
+        {
+            var userCompany = userCompanyService.GetById(userId);
+            return new SuccessDataResult<UserCompany>(userCompany.Data);
         }
 
 
+        
+        public IResult UserExists(string email)
+        {
+            if (userService.GetByEmail(email) is not null)
+            {
+                return new ErrorResult(Messages.UserAlreadyExists);
+            }
+            return new SuccessResult();
+        }
+
+        public IResult CompanyExists(Company company)
+        {
+            var result = companyService.Get(company);
+
+            if (result.Success is false)
+            {
+                return new ErrorResult(Messages.CompanyAlreadyExists);
+            }
+            return new SuccessResult();
+        }
 
 
 
@@ -147,6 +176,37 @@ namespace Business.Concrete
             return new SuccessDataResult<User>(user, Messages.UserRegistered);
         }
         
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        public IResult Update(User entity)
+        {
+            userService.Update(entity);
+            return new SuccessResult(Messages.UserMailConfirmSuccessfuly);
+        }
+
+
+
+
+
+
+
+
+
+
+
         IResult SendConfirmEmail(User user)
         {
             string link = "https://localhost:7154/api/Auth/confirmUser?value=" + user.MailConfirmValue;
@@ -175,59 +235,6 @@ namespace Business.Concrete
             userService.Update(user);
             return mailService.SendMail(sendMailDto);
         }
-
-
-
-
-
-
-
-
-
-
-
-        public IResult UserExists(string email)
-        {
-            if (userService.GetByEmail(email) is not null)
-            {
-                return new ErrorResult(Messages.UserAlreadyExists);
-            }
-            return new SuccessResult();
-        }
-
-        public IResult CompanyExists(Company company)
-        {
-            var result = companyService.Get(company);
-
-            if (result.Success is false)
-            {
-                return new ErrorResult(Messages.CompanyAlreadyExists);
-            }
-            return new SuccessResult();
-        }
-
-
-
-        public IResult Update(User entity)
-        {
-            userService.Update(entity);
-            return new SuccessResult(Messages.UserMailConfirmSuccessfuly);
-        }
-
-        public IDataResult<User> GetById(int id)
-        {
-            return new SuccessDataResult<User>(userService.GetById(id).Data);
-        }
-
-
-
-
-
-
-
-
-
-
         IResult IAuthService.SendConfirmEmail(User user)
         {
             if (user.MailConfirmDate.AddMinutes(1) <= DateTime.Now) // mail onayı isteğininden sonra 2dk geçmiş mi?
@@ -242,11 +249,6 @@ namespace Business.Concrete
 
 
         }
-        public IDataResult<User> GtByMailConfirmValue(string value)
-        {
-            var user = userService.GtByMailConfirmValue(value);
-            return MailConfirm(user);
-        }
 
         IDataResult<User> MailConfirm(User user)
         {
@@ -257,11 +259,12 @@ namespace Business.Concrete
 
             return new SuccessDataResult<User>(user);
         }
-
-        public IDataResult<UserCompany> GetUserCompanyByUserId(int userId)
+        public IDataResult<AccessToken> CreateAccessToken(User user, int companyId)
         {
-            var userCompany = userCompanyService.GetById(userId);
-            return new SuccessDataResult<UserCompany>(userCompany.Data);
+            var claims = userService.GetClaims(user, companyId);
+            var company = companyService.GetById(companyId).Data;
+            var accessToken = tokenHelper.CreateToken(user, claims, companyId);
+            return new SuccessDataResult<AccessToken>(accessToken, Messages.SuccessfulLogin);
         }
     }
 }
