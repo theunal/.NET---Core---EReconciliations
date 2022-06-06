@@ -1,6 +1,7 @@
 ﻿using Business.Abstract;
 using Entities.Concrete;
 using Entities.Dtos;
+using Entities.Dtos.Excel;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers
@@ -49,6 +50,17 @@ namespace WebApi.Controllers
             return BadRequest(result.Message);
         }
         
+        [HttpGet("getByCode")] // guidi gönderiyoruz ama onaylandıktan sonra db de true ya çevirmedim düzelticem
+        public IActionResult getByCode(string code)
+        {
+            var result = accountReconciliationService.GetByCode(code);
+            if (result.Success)
+            {
+                return Ok(result.Message);
+            }
+            return BadRequest(result.Message);
+        }
+        
         [HttpGet("getById")]
         public IActionResult GetById(int id)
         {
@@ -60,16 +72,7 @@ namespace WebApi.Controllers
             return BadRequest(result.Message);
         }
 
-        [HttpGet("getByCode")] // guidi gönderiyoruz ama onaylandıktan sonra db de true ya çevirmedim düzelticem
-        public IActionResult getByCode(string code)
-        {
-            var result = accountReconciliationService.GetByCode(code);
-            if (result.Success)
-            {
-                return Ok(result.Message);
-            }
-            return BadRequest(result.Message);
-        }
+      
 
 
 
@@ -137,7 +140,7 @@ namespace WebApi.Controllers
                 AccountReconciliationExcelDto dto = new AccountReconciliationExcelDto()
                 {
                     CompanyId = companyId,
-                    filePath = path
+                    FilePath = path
                 };
                 var result = accountReconciliationService.AddByExcel(dto);
                 if (result.Success)

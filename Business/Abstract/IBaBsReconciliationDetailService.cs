@@ -1,6 +1,7 @@
 ﻿using Core.Utilities.Results;
 using Entities.Concrete;
 using Entities.Dtos;
+using Entities.Dtos.Excel;
 
 namespace Business.Abstract
 {
@@ -17,6 +18,6 @@ namespace Business.Abstract
 
 
 
-        IResult AddByExcel(BaBsReconciliationDetailDto dto);
+        IResult AddByExcel(BaBsReconciliationDetailExcelDto dto);
     }
 }

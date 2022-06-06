@@ -1,6 +1,8 @@
 ﻿using Business.Abstract;
+using Entities;
 using Entities.Concrete;
 using Entities.Dtos;
+using Entities.Dtos.Excel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -89,7 +91,7 @@ namespace WebApi.Controllers
                     stream.Flush();
                 }
 
-                BaBsReconciliationDetailDto dto = new BaBsReconciliationDetailDto()
+                BaBsReconciliationDetailExcelDto dto = new BaBsReconciliationDetailExcelDto()
                 {
                     BabsReconciliationId = babsReconciliationId,
                     FilePath = path

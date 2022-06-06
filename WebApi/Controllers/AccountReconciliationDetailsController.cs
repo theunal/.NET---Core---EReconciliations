@@ -1,6 +1,7 @@
 ﻿using Business.Abstract;
+using Entities;
 using Entities.Concrete;
-using Entities.Dtos;
+using Entities.Dtos.Excel;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers
@@ -89,10 +90,10 @@ namespace WebApi.Controllers
                     stream.Flush();
                 }
 
-                AccountReconciliationDetailDto dto = new AccountReconciliationDetailDto()
+                AccountReconciliationDetailExcelDto dto = new AccountReconciliationDetailExcelDto()
                 {
                     AccountReconciliationId = accountReconciliationId,
-                    filePath = path
+                    FilePath = path
                 };
                 var result = accountReconciliationDetailService.AddByExcel(dto);
                 if (result.Success)

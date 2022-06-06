@@ -1,6 +1,7 @@
 ﻿using Business.Abstract;
+using Entities;
 using Entities.Concrete;
-using Entities.Dtos;
+using Entities.Dtos.Excel;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers
@@ -92,7 +93,7 @@ namespace WebApi.Controllers
 
                 CurrencyAccountExcelDto dto = new CurrencyAccountExcelDto()
                 {
-                    filePath = path,
+                    FilePath = path,
                     CompanyId = companyId
                 };
                 var result = currencyAccountService.AddByExcel(dto);

@@ -11,7 +11,7 @@ namespace DataAccess.Concrete
         public List<AccountReconciliationDto> GetAllDto(int companyId)
         {
             using var context = new DataContext();
-            var result = from recoinciliation in context.AccountReconciliations
+            var result = from recoinciliation in context.AccountReconciliations.Where(p => p.CompanyId == companyId)
                          join company in context.Companies 
                          on recoinciliation.CompanyId equals company.Id
                          
@@ -59,5 +59,6 @@ namespace DataAccess.Concrete
             
             return result.ToList();
         }
+        
     }
 }

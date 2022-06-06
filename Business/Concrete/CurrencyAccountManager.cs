@@ -9,7 +9,7 @@ using Core.Aspects.Validation;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
-using Entities.Dtos;
+using Entities.Dtos.Excel;
 using ExcelDataReader;
 using System.Text;
 
@@ -57,7 +57,7 @@ namespace Business.Concrete
 
 
         [PerformanceAspect(3)]
-        [SecuredOperation("admin")]
+       // [SecuredOperation("admin")]
         [CacheAspect(30)]
         public IDataResult<CurrencyAccount> GetByCompanyIdAndCode(string code, int companyId)
         {
@@ -177,7 +177,7 @@ namespace Business.Concrete
         public IResult AddByExcel(CurrencyAccountExcelDto dto)
         {
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-            using (var stream = File.Open(dto.filePath, FileMode.Open, FileAccess.Read))
+            using (var stream = File.Open(dto.FilePath, FileMode.Open, FileAccess.Read))
             {
                 using (var reader = ExcelReaderFactory.CreateReader(stream))
                 {

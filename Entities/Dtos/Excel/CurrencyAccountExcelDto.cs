@@ -1,10 +1,14 @@
 ﻿using Core.Entities.Abstract;
 
-namespace Entities.Dtos
+
+
+namespace Entities.Dtos.Excel
 {
     public class CurrencyAccountExcelDto : IDto
     {
-        public string filePath { get; set; }
+        public string FilePath { get; set; }
         public int CompanyId { get; set; }
+
     }
 }
+

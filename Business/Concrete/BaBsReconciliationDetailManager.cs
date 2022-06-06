@@ -8,6 +8,7 @@ using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using Entities.Dtos;
+using Entities.Dtos.Excel;
 using ExcelDataReader;
 using System.Text;
 
@@ -90,7 +91,7 @@ namespace Business.Concrete
         [SecuredOperation("admin")]
         [CacheRemoveAspect("IBaBsReconciliationDetailService.Get")]
         [TransactionScopeAspect]
-        public IResult AddByExcel(BaBsReconciliationDetailDto dto)
+        public IResult AddByExcel(BaBsReconciliationDetailExcelDto dto)
         {
 
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);

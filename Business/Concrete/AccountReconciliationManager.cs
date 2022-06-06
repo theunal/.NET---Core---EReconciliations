@@ -7,6 +7,7 @@ using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using Entities.Dtos;
+using Entities.Dtos.Excel;
 using ExcelDataReader;
 using System.Text;
 
@@ -116,7 +117,7 @@ namespace Business.Concrete
         public IResult AddByExcel(AccountReconciliationExcelDto dto)
         {
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-            using (var stream = File.Open(dto.filePath, FileMode.Open, FileAccess.Read))
+            using (var stream = File.Open(dto.FilePath, FileMode.Open, FileAccess.Read))
             {
                 using (var reader = ExcelReaderFactory.CreateReader(stream))
                 {
@@ -159,7 +160,7 @@ namespace Business.Concrete
                     }
                 }
             }
-            File.Delete(dto.filePath);
+            File.Delete(dto.FilePath);
             return new SuccessResult(Messages.AccountReconciliationsAdded);
         }
 
@@ -177,15 +178,8 @@ namespace Business.Concrete
                 $"Borç: {dto.CurrencyDebit} {dto.CurrencyCode} <br />" +
                 $"Alacak: {dto.CurrencyCredit} {dto.CurrencyCode} <br />";
 
-             string link = "https://localhost:7154/api/AccountReconciliations/getByCode?code=" + dto.Guid;
-
-
-            // string link = "http://localhost:4200/account-reconciliation-result/" + accountReconciliationDto.Guid;
+            string link = "https://localhost:7154/api/AccountReconciliations/getByCode?code=" + dto.Guid;
             string linkDescription = "Mutabakatı Cevaplamak için Tıklayın";
-
-            
-           // string link = "https://localhost:7154/api/Auth/confirmUser?value=" + user.MailConfirmValue;
-
 
             var mailTemplate = mailTemplateService.GetByTemplateName("string", 9028);
 
@@ -204,7 +198,7 @@ namespace Business.Concrete
                 Subject = "Mutabakat Maili",
                 Body = templateBody
             };
-            return mailService.SendMail(sendMailDto);
+            mailService.SendMail(sendMailDto);
             return new SuccessResult(Messages.MailSentSuccessfully);
         }
 

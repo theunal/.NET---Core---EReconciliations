@@ -6,7 +6,7 @@ using Core.Aspects.Performance;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
-using Entities.Dtos;
+using Entities.Dtos.Excel;
 using ExcelDataReader;
 using System.Text;
 
@@ -85,11 +85,11 @@ namespace Business.Concrete
         [PerformanceAspect(3)]
       //  [SecuredOperation("admin")]
         [CacheRemoveAspect("IAccountReconciliationDetailService.Get")]
-        public IResult AddByExcel(AccountReconciliationDetailDto dto)
+        public IResult AddByExcel(AccountReconciliationDetailExcelDto dto)
         {
-
+            AccountReconciliationDetailExcelDto dtot = new AccountReconciliationDetailExcelDto();
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-            using (var stream = File.Open(dto.filePath, FileMode.Open, FileAccess.Read))
+            using (var stream = File.Open(dto.FilePath, FileMode.Open, FileAccess.Read))
             {
                 using (var reader = ExcelReaderFactory.CreateReader(stream))
                 {
@@ -127,7 +127,7 @@ namespace Business.Concrete
                     }
                 }
             }
-            File.Delete(dto.filePath);
+            File.Delete(dto.FilePath);
             return new SuccessResult(Messages.AccountReconciliationDetailsAdded);
         }
 
