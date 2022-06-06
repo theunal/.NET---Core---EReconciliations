@@ -28,7 +28,7 @@ namespace Business.DependencyResolvers
 
             builder.RegisterType<CompanyManager>().As<ICompanyService>().SingleInstance();
             builder.RegisterType<CompanyDal>().As<ICompanyDal>().SingleInstance();
-
+                        
             builder.RegisterType<CurrencyAccountManager>().As<ICurrencyAccountService>().SingleInstance();
             builder.RegisterType<CurrencyAccountDal>().As<ICurrencyAccountDal>().SingleInstance();
 
@@ -63,11 +63,12 @@ namespace Business.DependencyResolvers
 
             // autofac config
             var assembly = System.Reflection.Assembly.GetExecutingAssembly();
+
             builder.RegisterAssemblyTypes(assembly).AsImplementedInterfaces()
                 .EnableInterfaceInterceptors(new ProxyGenerationOptions()
-                {
-                    Selector = new AspectInterceptorSelector()
-                }).SingleInstance();
+            {
+                Selector = new AspectInterceptorSelector()
+            }).SingleInstance();
 
         }
     }

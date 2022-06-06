@@ -1,4 +1,5 @@
 ﻿using Business.Abstract;
+using Business.Const;
 using Core.Entities.Concrete;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
@@ -12,29 +13,54 @@ namespace Business.Concrete
         {
             this.operationClaimDal = operationClaimDal;
         }
-        public IResult Add(OperationClaim entity)
-        {
-            throw new NotImplementedException();
-        }
 
-        public IResult Delete(OperationClaim entity)
-        {
-            throw new NotImplementedException();
-        }
 
-        public IDataResult<OperationClaim> Get(int id)
-        {
-            throw new NotImplementedException();
-        }
 
+
+        // [SecuredOperation("Admin")]
         public IDataResult<List<OperationClaim>> GetAll()
         {
-            throw new NotImplementedException();
+            var result = operationClaimDal.GetAll();
+            return new SuccessDataResult<List<OperationClaim>>(result, Messages.OperationClaimsHasBeenBrought);
         }
 
+        // [SecuredOperation("Admin")]
+        public IDataResult<OperationClaim> GetById(int id)
+        {
+            var result = operationClaimDal.Get(x => x.Id == id);
+            return new SuccessDataResult<OperationClaim>(result, Messages.OperationClaimHasBeenBrought);
+        }
+
+
+
+
+
+
+
+
+        // [SecuredOperation("Admin")]
+        public IResult Add(OperationClaim entity)
+        {
+            operationClaimDal.Add(entity);
+            return new SuccessResult(Messages.OperationClaimAdded);
+        }
+
+        // [SecuredOperation("Admin")]
         public IResult Update(OperationClaim entity)
         {
-            throw new NotImplementedException();
+            operationClaimDal.Update(entity);
+            return new SuccessResult(Messages.OperationClaimUpdated);
         }
+
+        // [SecuredOperation("Admin")]
+        public IResult Delete(OperationClaim entity)
+        {
+            operationClaimDal.Delete(entity);
+            return new SuccessResult(Messages.OperationClaimDeleted);
+        }
+
+     
+        
+
     }
 }

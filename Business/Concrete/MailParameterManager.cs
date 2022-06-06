@@ -23,7 +23,9 @@ namespace Business.Concrete
             return new SuccessDataResult<MailParameter>
                 (mailParameterDal.Get(x => x.CompanyId == companyId));
         }
-        
+
+
+       // [SecuredOperation("Admin,admin")]
         public IResult Update(MailParameter mailParameter)
         {
             var result = Get(mailParameter.CompanyId);

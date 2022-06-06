@@ -62,7 +62,7 @@ namespace WebApi.Controllers
             }
             return BadRequest(result.Message);
         }
-        
+
         [HttpPost("delete")]
         public IActionResult Delete(int id)
         {
@@ -74,9 +74,9 @@ namespace WebApi.Controllers
             return BadRequest(result.Message);
         }
 
-        
 
-        
+
+
         [HttpPost("addByExcel")]
         public IActionResult AddByExcel(IFormFile file, int companyId)
         {
@@ -89,7 +89,7 @@ namespace WebApi.Controllers
                     file.CopyTo(stream);
                     stream.Flush();
                 }
-                
+
                 CurrencyAccountExcelDto dto = new CurrencyAccountExcelDto()
                 {
                     filePath = path,
@@ -119,6 +119,6 @@ namespace WebApi.Controllers
 
 
 
-        
+
     }
 }

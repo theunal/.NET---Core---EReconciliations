@@ -1,4 +1,5 @@
 ﻿using Business.Abstract;
+using Business.BusinessAcpects;
 using Business.Const;
 using Business.ValidationRules;
 using Core.Aspects.Autofac.Caching;
@@ -36,7 +37,7 @@ namespace Business.Concrete
             }
             return new ErrorDataResult<List<CurrencyAccount>>(result.Message);
         }
-        
+
         [CacheAspect(30)]
         public IDataResult<CurrencyAccount> GetById(int id)
         {
@@ -47,7 +48,7 @@ namespace Business.Concrete
             }
             return new ErrorDataResult<CurrencyAccount>(Messages.CurrencyAccountNotFound);
         }
-        
+
         [CacheAspect(30)]
         public IDataResult<CurrencyAccount> GetByCompanyIdAndCode(string code, int companyId)
         {
@@ -55,7 +56,7 @@ namespace Business.Concrete
             return new SuccessDataResult<CurrencyAccount>(result, Messages.CurrencyAccountHasBeenBrought);
             //return new SuccessDataResult<CurrencyAccount>(currencyAccountDal.Get(p => p.CompanyId == companyId));
         }
-        
+
         [CacheAspect(30)]
         public IDataResult<CurrencyAccount> GetByCode(string code)
         {
@@ -66,7 +67,7 @@ namespace Business.Concrete
             }
             return new ErrorDataResult<CurrencyAccount>(Messages.CurrencyAccountNotFound);
         }
-        
+
         [CacheAspect(30)]
         public IDataResult<CurrencyAccount> GetByCompanyId(int companyId)
         {
@@ -86,7 +87,7 @@ namespace Business.Concrete
 
 
 
-
+        [SecuredOperation("Admin,admin")]
         [CacheRemoveAspect("ICurrencyAccountService.Get")]
         [ValidationAspect(typeof(CurrencyAccountValidator))]
         public IResult Add(CurrencyAccount entity)
@@ -99,7 +100,7 @@ namespace Business.Concrete
             }
             return result;
         }
-        
+
         [CacheRemoveAspect("ICurrencyAccountService.Get")]
         public IResult Delete(int id)
         {
@@ -111,7 +112,7 @@ namespace Business.Concrete
             }
             return GetById(id);
         }
-        
+
         [CacheRemoveAspect("ICurrencyAccountService.Get")]
         [ValidationAspect(typeof(CurrencyAccountValidator))]
         public IResult Update(CurrencyAccount entity)
@@ -121,7 +122,7 @@ namespace Business.Concrete
             {
                 result.Data.Code = entity.Code;
                 result.Data.Name = entity.Name;
-                result.Data.Adres = entity.Adres;
+                result.Data.Address = entity.Address;
                 result.Data.TaxDepartment = entity.TaxDepartment;
                 result.Data.TaxIdNumber = entity.TaxIdNumber;
                 result.Data.IdentityNumber = entity.IdentityNumber;
@@ -172,9 +173,9 @@ namespace Business.Concrete
                             var x = new Random().Next(1, 100000000);
                             CurrencyAccount currencyAccount = new CurrencyAccount
                             {
-                              
+
                                 Name = name,
-                                Adres = adres,
+                                Address = adres,
                                 TaxDepartment = taxDepartment,
                                 TaxIdNumber = new Random().Next(1, 100000000).ToString() + new Random().Next(1, 100).ToString(),
                                 IdentityNumber = new Random().Next(1, 100000000).ToString() + new Random().Next(1, 1000).ToString(),
@@ -194,7 +195,7 @@ namespace Business.Concrete
         }
 
 
-        
-        
+
+
     }
 }

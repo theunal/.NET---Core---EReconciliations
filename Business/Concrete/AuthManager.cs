@@ -46,8 +46,9 @@ namespace Business.Concrete
         public IDataResult<AccessToken> CreateAccessToken(User user, int companyId)
         {
             var claims = userService.GetClaims(user, companyId);
+            var company = companyService.GetById(companyId).Data;
             var accessToken = tokenHelper.CreateToken(user, claims, companyId);
-            return new SuccessDataResult<AccessToken>(accessToken, Messages.AccessTokenCreated);
+            return new SuccessDataResult<AccessToken>(accessToken, Messages.SuccessfulLogin);
         }
 
 
@@ -119,7 +120,7 @@ namespace Business.Concrete
         }
 
         [ValidationAspect(typeof(UserRegisterSecondValidator))]
-        // [TransactionScopeAspect] validationdan geçemediği için zaten buna gerek yok
+        [TransactionScopeAspect] // validationdan geçemediği için zaten buna gerek yok
         public IDataResult<User> RegisterSecond(UserRegisterSecondDto dto)
         {
             byte[] passwordHash, passwordSalt;
@@ -152,7 +153,7 @@ namespace Business.Concrete
             string link = "https://localhost:7154/api/Auth/confirmUser?value=" + user.MailConfirmValue;
             string linkDescription = "Onayla";
 
-            var mailTemplate = mailTemplateService.GetByTemplateName("string", 2002);
+            var mailTemplate = mailTemplateService.GetByTemplateName("string", 9028);
 
             string templateBody = mailTemplate.Data.Value;
             templateBody = templateBody.Replace("{{title}}", "Kullanıcı Onay Maili");
@@ -161,7 +162,7 @@ namespace Business.Concrete
             templateBody = templateBody.Replace("{{linkDescription}}", linkDescription);
 
 
-            var mailPamareter = mailParameterService.Get(2002);
+            var mailPamareter = mailParameterService.Get(9028);
             SendMailDto sendMailDto = new SendMailDto()
             {
                 MailParameter = mailPamareter.Data,

@@ -13,9 +13,9 @@ namespace Business.ValidationRules
             RuleFor(c => c.Name).NotNull().WithMessage("Firma adı boş geçilemez.");
             RuleFor(c => c.Name).MinimumLength(4).WithMessage("Firma adı en az 4 karakter olmalıdır.");
 
-            RuleFor(c => c.Adres).NotEmpty().WithMessage("Adres alanı boş geçilemez.");
-            RuleFor(c => c.Adres).NotNull().WithMessage("Adres alanı boş geçilemez.");
-            RuleFor(c => c.Adres).MinimumLength(10).WithMessage("Adres alanı en az 10 karakter olmalıdır.");
+            RuleFor(c => c.Address).NotEmpty().WithMessage("Adres alanı boş geçilemez.");
+            RuleFor(c => c.Address).NotNull().WithMessage("Adres alanı boş geçilemez.");
+            RuleFor(c => c.Address).MinimumLength(10).WithMessage("Adres alanı en az 10 karakter olmalıdır.");
 
         }
 

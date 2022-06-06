@@ -4,11 +4,12 @@
 
 namespace Core.Extensions
 {
-    public static class ClaimsPrincipalExtensions
+    public static class ClaimPrincipalExtensions
     {
         public static List<string> Claims(this ClaimsPrincipal claimsPrincipal, string claimType)
         {
-            return claimsPrincipal?.FindAll(claimType)?.Select(x => x.Value).ToList();
+            var result = claimsPrincipal?.FindAll(claimType)?.Select(x => x.Value).ToList();
+            return result;
         }
 
         public static List<string> ClaimRoles(this ClaimsPrincipal claimsPrincipal)

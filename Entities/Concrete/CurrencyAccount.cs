@@ -8,7 +8,7 @@ namespace Entities.Concrete
         public int CompanyId { get; set; }
         public string Code { get; set; }
         public string Name { get; set; }
-        public string Adres { get; set; }
+        public string Address { get; set; }
         public string? TaxDepartment { get; set; } 
         public string? TaxIdNumber { get; set; }
         public string? IdentityNumber { get; set; }

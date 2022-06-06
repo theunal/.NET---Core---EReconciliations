@@ -25,13 +25,13 @@ namespace Business.ValidationRules
             RuleFor(x => x.Company.Name).NotNull().WithMessage("Şirket adı boş olamaz.");
             RuleFor(x => x.Company.Name).MinimumLength(3).WithMessage("Şirket adı en az 3 karakter olmalıdır.");
 
-            RuleFor(x => x.Company.Adres).NotEmpty().WithMessage("Şirket adı boş olamaz.");
-            RuleFor(x => x.Company.Adres).NotNull().WithMessage("Şirket adı boş olamaz.");
-            RuleFor(x => x.Company.Adres).MinimumLength(3).WithMessage("Şirket adı en az 3 karakter olmalıdır.");
+            RuleFor(x => x.Company.Address).NotEmpty().WithMessage("Şirket adı boş olamaz.");
+            RuleFor(x => x.Company.Address).NotNull().WithMessage("Şirket adı boş olamaz.");
+            RuleFor(x => x.Company.Address).MinimumLength(3).WithMessage("Şirket adı en az 3 karakter olmalıdır.");
 
-            RuleFor(x => x.Company.Adres).NotEmpty().WithMessage("Şirket adres alanı boş olamaz.");
-            RuleFor(x => x.Company.Adres).NotNull().WithMessage("Şirket adres alanı boş olamaz.");
-            RuleFor(x => x.Company.Adres).MinimumLength(10).WithMessage("Şirket adresi en az 10 karakter olmalıdır.");
+            RuleFor(x => x.Company.Address).NotEmpty().WithMessage("Şirket adres alanı boş olamaz.");
+            RuleFor(x => x.Company.Address).NotNull().WithMessage("Şirket adres alanı boş olamaz.");
+            RuleFor(x => x.Company.Address).MinimumLength(10).WithMessage("Şirket adresi en az 10 karakter olmalıdır.");
 
             RuleFor(x => x.Company.TaxDepartment).NotEmpty().WithMessage("Vergi dairesi alanı boş olamaz.");
             RuleFor(x => x.Company.TaxDepartment).NotNull().WithMessage("Vergi dairesi alanı boş olamaz.");

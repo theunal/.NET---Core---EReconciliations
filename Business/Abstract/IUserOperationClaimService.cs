@@ -5,8 +5,8 @@ namespace Business.Abstract
 {
     public interface IUserOperationClaimService
     {
-        IDataResult<List<UserOperationClaim>> GetAll();
-        IDataResult<UserOperationClaim> Get(int id);
+        IDataResult<List<UserOperationClaim>> GetAll(int userId, int companyId);
+        IDataResult<UserOperationClaim> GetById(int id);
 
 
         IResult Add(UserOperationClaim entity);

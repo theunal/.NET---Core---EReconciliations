@@ -4,8 +4,6 @@ namespace Core.Utilities.IoC
 {
     public interface ICoreModule
     {
-        void Load(IServiceCollection serviceColection);
-
-
+        void Load(IServiceCollection services);
     }
 }

@@ -6,7 +6,7 @@ namespace Business.Abstract
     public interface IOperationClaimService
     {
         IDataResult<List<OperationClaim>> GetAll();
-        IDataResult<OperationClaim> Get(int id);
+        IDataResult<OperationClaim> GetById(int id);
 
 
         IResult Add(OperationClaim entity);

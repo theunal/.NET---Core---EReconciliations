@@ -1,5 +1,4 @@
-﻿using Business.Const;
-using Castle.DynamicProxy;
+﻿using Castle.DynamicProxy;
 using Core.Extensions;
 using Core.Utilities.Interceptors;
 using Core.Utilities.IoC;
@@ -8,9 +7,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Net.Http.Headers;
 using System.IdentityModel.Tokens.Jwt;
 
-namespace Business.BusinessAspects.Autofac
+namespace Business.BusinessAcpects
 {
-    // jwt için aspect
     public class SecuredOperation : MethodInterception
     {
         private string[] _roles;
@@ -24,16 +22,36 @@ namespace Business.BusinessAspects.Autofac
 
         protected override void OnBefore(IInvocation invocation)
         {
-            var roleClaims = _httpContextAccessor.HttpContext.User.ClaimRoles();
-            foreach (var role in _roles)
+            //var roleClaims = _httpContextAccessor.HttpContext.User.ClaimRoles();
+            //foreach (var role in _roles)
+            //{
+            //    if (roleClaims.Contains(role))
+            //    {
+            //        return;
+            //    }
+            //}
+
+            var token = _httpContextAccessor.HttpContext.Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+            if (token != "")
             {
-                if (roleClaims.Contains(role))
+                var handler = new JwtSecurityTokenHandler();
+                var jwtSecurityToken = handler.ReadJwtToken(token);
+                var decodeToken = jwtSecurityToken.Claims;
+                //yetkileri göndermemişsin token ile
+                foreach (var claim in decodeToken)
                 {
-                    return;
+                    foreach (var role in _roles)
+                    {
+                        if (claim.ToString().Contains(role))
+                        {
+                            //tmmdır sorun çözdül ü:) var mı başka bir şey yok hocam çok teşekkü ederim
+                            //lafı olmaz takılırsan yaz tekrardan tmmdır hocam çok teşeşkürler
+                            return;
+                        }
+                    }
                 }
             }
-            throw new Exception(Messages.AuthorizationDenied); // yetkiniz yok
+            throw new Exception("İşlem yapmaya yetkiniz yok");
         }
-        
     }
 }

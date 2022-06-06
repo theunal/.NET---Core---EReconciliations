@@ -94,5 +94,30 @@ namespace Business.Const
         public static string BaBsReconciliationDetailHasBeenBrought = "BaBs Mutabakat Detay Kaydı Getirildi.";
         public static string BaBsReconciliationDetailsHasBeenBrought = "BaBs Mutabakat Detay Kayıtları Getirildi.";
         public static string BaBsReconciliationDetailNotFound = "BaBs Mutabakat Detay Kaydı Bulunamadı.";
+
+
+
+
+        // operation claim
+        public static string OperationClaimAdded = "İşlem Yetkisi Eklendi.";
+        public static string OperationClaimUpdated = "İşlem Yetkisi Eklendi.";
+        public static string OperationClaimDeleted = "İşlem Yetkisi Eklendi.";
+
+        public static string OperationClaimHasBeenBrought = "İşlem Yetki Kaydı Getirildi.";
+        public static string OperationClaimsHasBeenBrought = "İşlem Yetki Kayıtları Getirildi.";
+        public static string OperationClaimNotFound = "İşlem Yetki Kaydı Bulunamadı.";
+
+
+
+        // user operation claim 
+        public static string UserOperationClaimAdded = "Kullanıcıya İşlem Yetkisi Eklendi.";
+        public static string UserOperationClaimUpdated = "Kullanıcıya İşlem Yetkisi Eklendi.";
+        public static string UserOperationClaimDeleted = "Kullanıcıya İşlem Yetkisi Eklendi.";
+
+        public static string UserOperationClaimHasBeenBrought = "Kullanıcının İşlem Yetki Kaydı Getirildi.";
+        public static string UserOperationClaimsHasBeenBrought = "Kullanıcının İşlem Yetki Kayıtları Getirildi.";
+        public static string UserOperationClaimNotFound = "Kullanıcının İşlem Yetki Kaydı Bulunamadı.";
+
+
     }
 }

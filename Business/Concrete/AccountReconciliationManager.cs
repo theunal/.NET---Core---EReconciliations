@@ -1,8 +1,6 @@
 ﻿using Business.Abstract;
-using Business.BusinessAspects.Autofac;
 using Business.Const;
 using Core.Aspects.Autofac.Caching;
-using Core.Aspects.Autofac.Transaction;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
@@ -72,43 +70,44 @@ namespace Business.Concrete
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             using (var stream = File.Open(dto.filePath, FileMode.Open, FileAccess.Read))
             {
-                using (var reader = ExcelReaderFactory.CreateReader(stream))
-                {
-                    while (reader.Read())
-                    {
+                //using (var reader = ExcelReaderFactory.CreateReader(stream))
+                //{
+                //    while (reader.Read())
+                //    {
                         
-                        String code = reader.GetValue(0) != null ? reader.GetValue(0).ToString() : null;
+                //        String code = reader.GetValue(0) != null ? reader.GetValue(0).ToString() : null;
 
-                        if (code is null) break;
-                        if (code == "Cari Kodu") continue;
+                //        if (code is null) break;
+                //        if (code == "Cari Kodu") continue;
 
-                        DateTime startingDate = Convert.ToDateTime(reader.GetValue(1));
-                        DateTime endingDate = Convert.ToDateTime(reader.GetValue(2));
-                        int currencyId = Convert.ToInt32(reader.GetValue(3));
-                        decimal debit = Convert.ToDecimal(reader.GetValue(4));
-                        decimal credit = Convert.ToDecimal(reader.GetValue(5));
+                //        DateTime startingDate = Convert.ToDateTime(reader.GetValue(1));
+                //        DateTime endingDate = Convert.ToDateTime(reader.GetValue(2));
+                //        int currencyId = Convert.ToInt32(reader.GetValue(3));
+                //        decimal debit = Convert.ToDecimal(reader.GetValue(4));
+                //        decimal credit = Convert.ToDecimal(reader.GetValue(5));
 
+                    
 
-                        if (code != "Cari Kodu") // ilk satırı okumaması için böyle yaptım
-                        {
-                            var currencyAccountId = currencyAccountService.GetByCompanyIdAndCode(code, dto.CompanyId).Data.Id;
-                            var x = currencyAccountId;
-                            AccountReconciliation accountReconciliation = new AccountReconciliation
-                            {
-                                CompanyId = dto.CompanyId,
-                                CurrencyAccountId = currencyAccountId,
-                                CurrencyCredit = credit,
-                                CurrencyDebit = debit,
-                                CurrencyId = currencyId, // currency id TL USD
-                                StartingDate = startingDate,
-                                EndingDate = endingDate,
-                                IsSendEmail = true
-                            };
+                //        if (code != "Cari Kodu") // ilk satırı okumaması ociçin böyle yaptım
+                //        {
+                //            var currencyAccountId = currencyAccountService.GetByCompanyIdAndCode(code, dto.CompanyId).Data.Id;
+                //            var x = currencyAccountId;AuthManager
+                //            AccountReconciliation accountReconciliation = new AccountReconciliation
+                //            {
+                //                CompanyId = dto.CompanyId,
+                //                CurrencyAccountId = currencyAccountId,
+                //                CurrencyCredit = credit,
+                //                CurrencyDebit = debit,
+                //                CurrencyId = currencyId, // currency id TL USD
+                //                StartingDate = startingDate,
+                //                EndingDate = endingDate,
+                //                IsSendEmail = true
+                //            };
                             
-                            accountReconciliationDal.Add(accountReconciliation);
-                        }
-                    }
-                }
+                //            accountReconciliationDal.Add(accountReconciliation);
+                //        }
+                //    }
+                //}
             }
             File.Delete(dto.filePath);
             return new SuccessResult(Messages.AccountReconciliationsAdded);

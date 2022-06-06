@@ -13,10 +13,6 @@ namespace WebApi.Controllers
         {
             this.authService = authService;
         }
-
-
-
-
         
 
         [HttpPost("login")]
@@ -30,7 +26,7 @@ namespace WebApi.Controllers
 
             var userCompany = authService.GetUserCompanyByUserId(userToLogin.Data.Id).Data;
 
-            var result = authService.CreateAccessToken(userToLogin.Data, userCompany.Id);
+            var result = authService.CreateAccessToken(userToLogin.Data, userCompany.CompanyId);
             if (result.Success)
             {
                 return Ok(result);
