@@ -22,7 +22,15 @@ namespace Business.Abstract
 
         
         IDataResult<User> GetById(int id);
-        IResult SendConfirmEmail(User user);
+        IDataResult<User> GetByEmail(string email);
+        IResult SendConfirmEmail2(User user);
+        IResult ForgotPassword(User user);
+        IResult UpdatePassword(User entity);
+        IDataResult<User> GtByMailConfirmValueForPasswordReset(string value);
+
+
+
+
         IDataResult<UserCompany> GetUserCompanyByUserId(int userId);
     }
 }

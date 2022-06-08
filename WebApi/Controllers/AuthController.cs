@@ -1,4 +1,5 @@
 ﻿using Business.Abstract;
+using Core.Utilities.Security.Hashing;
 using Entities.Dtos;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,7 +14,7 @@ namespace WebApi.Controllers
         {
             this.authService = authService;
         }
-        
+
 
         [HttpPost("login")]
         public ActionResult Login(UserLoginDto dto)
@@ -50,7 +51,7 @@ namespace WebApi.Controllers
                 return BadRequest(companyExists.Message);
             }
 
-       
+
 
             var registerResult = authService.Register(dto);
 
@@ -73,7 +74,7 @@ namespace WebApi.Controllers
                 return BadRequest(userExists.Message);
                 // return BadRequest(userExists); bu şekilde de çalışabilir
             }
-            
+
             var user = authService.RegisterSecond(dto);
             var result = authService.CreateAccessToken(user.Data, dto.CompanyId);
             if (result.Success)
@@ -83,13 +84,6 @@ namespace WebApi.Controllers
 
             return BadRequest(result.Message);
         }
-
-
-
-
-
-
-
 
         
         [HttpGet("confirmUser")]
@@ -103,26 +97,88 @@ namespace WebApi.Controllers
                 var result = authService.Update(user.Data);
                 if (result.Success)
                 {
-                    return Ok(result.Message);
+                    return Ok(result);
                 }
-                return BadRequest(result.Message);
+                return BadRequest(result);
             }
-            return BadRequest(user.Message);
+            return BadRequest(user);
         }
+
+
 
         [HttpGet("confirmUserAgain")]
-        public IActionResult ConfirmUserAgain(int id)
+        public IActionResult ConfirmUserAgain(string email)
         {
-            var user = authService.GetById(id).Data;
-            var result = authService.SendConfirmEmail(user);
-
-            
-            if (result.Success)
+            var get = authService.GetByEmail(email); // kullanıcı var mı?
+            if (get.Success)
             {
-                return Ok(result.Message);
+                var result = authService.SendConfirmEmail2(get.Data);
+                if (result.Success)
+                {
+                    return Ok(result);
+                }
+                return BadRequest(result);
             }
-            return BadRequest(result.Message);
+            return BadRequest(get);
         }
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        [HttpPost("forgotPassword")]
+        public IActionResult ForgotPassword(string email)
+        {
+            var get = authService.GetByEmail(email); //  kullanıcı yı getir
+            if (get.Success)
+            {
+                var result = authService.ForgotPassword(get.Data);
+                if (result.Success)
+                {
+                    return Ok(result);
+                }
+                return BadRequest(result);
+            }
+            return BadRequest(get);
+        }
+        
+        [HttpGet("passwordReset")]
+        public IActionResult ConfirmUser(string value, string password)
+        {
+            var user = authService.GtByMailConfirmValueForPasswordReset(value);
+            if (user.Success)
+            {
+                byte[] passwordHash, passwordSalt;
+                HashingHelper.CreatePasswordHash(password, out passwordHash, out passwordSalt);
+                user.Data.PasswordHash = passwordHash;
+                user.Data.PasswordSalt = passwordSalt;
+
+                var result = authService.UpdatePassword(user.Data);
+                if (result.Success)
+                {
+                    return Ok(result);
+                }
+                return BadRequest(result);
+            }
+            return BadRequest(user);
+        }
+
+
+
+
+
+
+
 
     }
 }

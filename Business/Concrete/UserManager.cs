@@ -31,9 +31,20 @@ namespace Business.Concrete
         {
             throw new NotImplementedException();
         }
+
         public User GetByEmail(string email)
         {
             return userDal.Get(u => u.Email == email);
+        }
+
+        public IDataResult<User> GetByEmailAddress(string email)
+        {
+            var user = userDal.Get(u => u.Email == email);
+            if (user is not null)
+            {
+                return new SuccessDataResult<User>(user, Messages.UserHasBeenBrought);
+            }
+            return new ErrorDataResult<User>(Messages.UserNotFound);
         }
 
         public List<OperationClaim> GetClaims(User user, int companyId)
@@ -47,7 +58,6 @@ namespace Business.Concrete
         }
 
 
-        [TransactionScopeAspect]
         public IResult Add(User entity)
         {
             userDal.Add(entity);
@@ -63,13 +73,11 @@ namespace Business.Concrete
 
 
 
-        void IUserService.Update(User entity)
+        public void Update(User entity)
         {
+            var result = GetById(entity.Id);
             userDal.Update(entity);
         }
 
-       
-
-  
     }
 }

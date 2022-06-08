@@ -19,8 +19,10 @@ namespace Business.Const
         public static string AccessTokenCreated = "Access Token başarıyla oluşturuldu.";
         public static string UserAlreadyExists = "Bu kullanıcı zaten mevcut.";
         public static string SuccessfulLogin = "Giriş başarılı.";
+        public static string YouHaveSuccessfullyRegistered = "Başarıyla Kayıt Oldun.";
         public static string PasswordError = "Şifre hatalı.";
         public static string UserNotFound = "Kullanıcı bulunamadı.";
+        public static string UserHasBeenBrought = "Kullanıcı Getirildi.";
         public static string UserNotActive = "Kullanıcı aktif değil.";
 
 
@@ -42,8 +44,11 @@ namespace Business.Const
         public static string MailTemplateUpdated = "Mail şablonu başarıyla güncellendi.";
         public static string UserMailConfirmSuccessfuly = "Kullanıcı mail adresi onaylandı.";
         public static string MailHasAlreadyBeenConfirmed = "Mail zaten onaylanmış.";
+        public static string MailNotConfirmed = "Mail onaylanmamış.";
         public static string SendConfirmMail = "Onay maili gönderildi";
         public static string MailConfirmNotExpired = "Onay maili zaten gönderildi. Lütfen Bekleyin.";
+        public static string PasswordReset = "Şifre sıfırlama e-postası gönderildi";
+        public static string PasswordUpdated = "Şifreniz yenilendi.";
 
 
         public static string CurrencyAccountAdded = "Cari Hesap Eklendi.";

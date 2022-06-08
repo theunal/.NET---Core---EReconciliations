@@ -6,6 +6,7 @@ namespace Business.Abstract
     public interface IUserService
     {
         IDataResult<List<User>> GetAll();
+        IDataResult<User> GetByEmailAddress(string email);
 
 
 
@@ -16,6 +17,7 @@ namespace Business.Abstract
         
 
         void Update(User entity);
+
         List<OperationClaim> GetClaims(User user, int companyId);
         User GetByEmail(string email);
         User GtByMailConfirmValue(string value);

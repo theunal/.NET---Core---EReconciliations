@@ -3,14 +3,12 @@ using Business.Const;
 using Business.ValidationRules;
 using Core.Aspects.Autofac.Transaction;
 using Core.Aspects.Validation;
-using Core.CrossCuttingConcerns.Validaiton;
 using Core.Entities.Concrete;
 using Core.Utilities.Results;
 using Core.Utilities.Security.Hashing;
 using Core.Utilities.Security.JWT;
 using Entities.Concrete;
 using Entities.Dtos;
-using FluentValidation;
 
 namespace Business.Concrete
 {
@@ -47,8 +45,16 @@ namespace Business.Concrete
             return new SuccessDataResult<User>(userService.GetById(id).Data);
         }
 
-        
-        
+        public IDataResult<User> GetByEmail(string email)
+        {
+            var user = userService.GetByEmailAddress(email);
+            if (user.Success)
+            {
+                return new SuccessDataResult<User>(user.Data);
+            }
+            return new ErrorDataResult<User>(user.Data, Messages.UserNotFound);
+        }
+
         public IDataResult<User> GtByMailConfirmValue(string value)
         {
             var user = userService.GtByMailConfirmValue(value);
@@ -90,9 +96,6 @@ namespace Business.Concrete
         [ValidationAspect(typeof(UserLoginValidator))]
         public IDataResult<User> Login(UserLoginDto dto)
         {
-            ///* validation */
-            //ValidationTool.Validate(new UserLoginValidator(), dto);
-            ///* validation */
 
             var userToCheck = userService.GetByEmail(dto.Email);
 
@@ -100,13 +103,15 @@ namespace Business.Concrete
 
             if (userToCheck.IsActive == false) return new ErrorDataResult<User>(Messages.UserNotActive); //aktif değil
 
+            if (userToCheck.MailConfirm == false) return new ErrorDataResult<User>(Messages.MailNotConfirmed);
+
             return HashingHelper.VerifyPasswordHash(dto.Password, userToCheck.PasswordHash, userToCheck.PasswordSalt) ?
                        new SuccessDataResult<User>(userToCheck, Messages.SuccessfulLogin) : // giriş başarılı
                        new ErrorDataResult<User>(Messages.PasswordError); // şifre yanlış
         }
 
         [ValidationAspect(typeof(UserRegisterAndCompanyValidator))]
-        // [TransactionScopeAspect] validationdan geçemediği için zaten buna gerek yok
+  
         public IDataResult<UserCompanyDto> Register(UserRegisterAndCompanyDto dto)
         { 
             byte[] passwordHash, passwordSalt;
@@ -135,7 +140,7 @@ namespace Business.Concrete
                 Email = user.Email,
                 AddedAt = user.AddedAt,
                 CompanyId = dto.Company.Id,
-                IsActive = user.IsActive,
+                IsActive = true,
                 MailConfirm = false,
                 MailConfirmDate = user.MailConfirmDate,
                 MailConfirmValue = user.MailConfirmValue,
@@ -148,8 +153,9 @@ namespace Business.Concrete
             return new SuccessDataResult<UserCompanyDto>(userCompanyDto, Messages.UserRegistered);
         }
 
+
+
         [ValidationAspect(typeof(UserRegisterSecondValidator))]
-        [TransactionScopeAspect] // validationdan geçemediği için zaten buna gerek yok
         public IDataResult<User> RegisterSecond(UserRegisterSecondDto dto)
         {
             byte[] passwordHash, passwordSalt;
@@ -197,20 +203,19 @@ namespace Business.Concrete
             return new SuccessResult(Messages.UserMailConfirmSuccessfuly);
         }
 
-
-
-
-
-
-
-
-
-
-
-        IResult SendConfirmEmail(User user)
+        public IResult UpdatePassword(User entity)
         {
-            string link = "https://localhost:7154/api/Auth/confirmUser?value=" + user.MailConfirmValue;
-            string linkDescription = "Onayla";
+            userService.Update(entity);
+            return new SuccessResult(Messages.PasswordUpdated);
+        }
+
+
+        void SendConfirmEmail(User user)
+        {
+               string link = "https://localhost:7154/api/Auth/confirmUser?value=" + user.MailConfirmValue;
+
+            //string link = "http://localhost:4200/mailConfirm/" + user.MailConfirmValue;
+        
 
             var mailTemplate = mailTemplateService.GetByTemplateName("string", 9028);
 
@@ -218,7 +223,7 @@ namespace Business.Concrete
             templateBody = templateBody.Replace("{{title}}", "Kullanıcı Onay Maili");
             templateBody = templateBody.Replace("{{message}}", "Maili onaylamak için aşağıdaki butona tıklayın.");
             templateBody = templateBody.Replace("{{link}}", link);
-            templateBody = templateBody.Replace("{{linkDescription}}", linkDescription);
+            templateBody = templateBody.Replace("{{linkDescription}}", "Onayla");
 
 
             var mailPamareter = mailParameterService.Get(9028);
@@ -229,25 +234,26 @@ namespace Business.Concrete
                 Subject = "Kullanıcı Onay Maili",
                 Body = templateBody
             };
-
+            
+            mailService.SendMail(sendMailDto);
 
             user.MailConfirmDate = DateTime.Now;
             userService.Update(user);
-            return mailService.SendMail(sendMailDto);
+         
         }
-        IResult IAuthService.SendConfirmEmail(User user)
+        
+        public IResult SendConfirmEmail2(User user)
         {
-            if (user.MailConfirmDate.AddMinutes(1) <= DateTime.Now) // mail onayı isteğininden sonra 2dk geçmiş mi?
+            if (MailConfirm(user).Success)
             {
-                if (MailConfirm(user).Success)
+                if (user.MailConfirmDate.AddMinutes(1) <= DateTime.Now) // mail onayı isteğininden sonra 2dk geçmiş mi?
                 {
-                    return SendConfirmEmail(user);
+                    SendConfirmEmail(user);
+                    return new SuccessResult(Messages.MailSentSuccessfully); // mail başarıyla gönderildi
                 }
-                return MailConfirm(user); // mail confirm success değilse mesajını göster (kullanıcı bulunamadı vb.)
+                return new ErrorResult(Messages.MailConfirmNotExpired);
             }
-            return new ErrorResult(Messages.MailConfirmNotExpired);
-
-
+            return MailConfirm(user);
         }
 
         IDataResult<User> MailConfirm(User user)
@@ -265,6 +271,52 @@ namespace Business.Concrete
             var company = companyService.GetById(companyId).Data;
             var accessToken = tokenHelper.CreateToken(user, claims, companyId);
             return new SuccessDataResult<AccessToken>(accessToken, Messages.SuccessfulLogin);
+        }
+
+        public IResult ForgotPassword(User user)
+        {
+            ForgotPasswordEmail(user);
+            return new SuccessResult(Messages.PasswordReset);
+        }
+        void ForgotPasswordEmail(User user)
+        {
+
+            string link = "http://localhost:4200/passwordReset/" + user.MailConfirmValue;
+
+
+            var mailTemplate = mailTemplateService.GetByTemplateName("string", 9028);
+
+            string templateBody = mailTemplate.Data.Value;
+            templateBody = templateBody.Replace("{{title}}", "Şifre Yenileme Maili");
+            templateBody = templateBody.Replace("{{message}}", "Şifrenizi yenilemek için aşağıdaki butona tıklayın.");
+            templateBody = templateBody.Replace("{{link}}", link);
+            templateBody = templateBody.Replace("{{linkDescription}}", "Onayla");
+
+
+            var mailPamareter = mailParameterService.Get(9028);
+            SendMailDto sendMailDto = new SendMailDto()
+            {
+                MailParameter = mailPamareter.Data,
+                Email = user.Email,
+                Subject = "Şifre Yenileme Maili",
+                Body = templateBody
+            };
+
+            mailService.SendMail(sendMailDto);
+
+            user.MailConfirmDate = DateTime.Now;
+            userService.Update(user);
+
+        }
+
+        public IDataResult<User> GtByMailConfirmValueForPasswordReset(string value)
+        {
+            var user = userService.GtByMailConfirmValue(value);
+            if (user is not null)
+            {
+                return new SuccessDataResult<User>(user, Messages.UserHasBeenBrought);
+            }
+            return new ErrorDataResult<User>(Messages.UserNotFound);
         }
     }
 }

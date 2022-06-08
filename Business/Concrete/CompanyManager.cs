@@ -68,7 +68,7 @@ namespace Business.Concrete
 
 
 
-        [TransactionScopeAspect]
+    
         [CacheRemoveAspect("ICompanyService.Get")]
         public IResult Add(Company entity)
         {
@@ -76,7 +76,7 @@ namespace Business.Concrete
             return new SuccessResult(Messages.CompanyAdded);
         }
 
-        [TransactionScopeAspect] // burada direkt dalı çağırıp ekledik sonra düzelticem
+        // burada direkt dalı çağırıp ekledik sonra düzelticem
         [CacheRemoveAspect("ICompanyService.Get")]
         public IResult AddUserCompany(int userId, int companyId) // userCompany tablosuna user ve company id sini ekler
         { 
