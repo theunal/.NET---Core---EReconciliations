@@ -32,5 +32,12 @@ namespace Business.Abstract
 
 
         IDataResult<UserCompany> GetUserCompanyByUserId(int userId);
+
+        /* ikinci şifremi unuttum kısmı */
+        IDataResult<ForgotPassword> GetForgotPasswordByValue(string value);
+        IDataResult<ForgotPassword> AddForgotPassword(User user);
+        IResult PasswordReset(User user, string value);
+
+        /* ikinci şifremi unuttum kısmı */
     }
 }

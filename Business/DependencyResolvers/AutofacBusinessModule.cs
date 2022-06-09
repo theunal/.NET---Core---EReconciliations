@@ -60,6 +60,9 @@ namespace Business.DependencyResolvers
             builder.RegisterType<MailTemplateManager>().As<IMailTemplateService>();
             builder.RegisterType<MailTemplateDal>().As<IMailTemplateDal>();
 
+            builder.RegisterType<ForgotPasswordManager>().As<IForgotPasswordService>();
+            builder.RegisterType<ForgotPasswordDal>().As<IForgotPasswordDal>();
+
 
             // autofac config
             var assembly = System.Reflection.Assembly.GetExecutingAssembly();

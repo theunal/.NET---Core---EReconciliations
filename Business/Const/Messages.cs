@@ -47,7 +47,7 @@ namespace Business.Const
         public static string MailNotConfirmed = "Mail onaylanmamış.";
         public static string SendConfirmMail = "Onay maili gönderildi";
         public static string MailConfirmNotExpired = "Onay maili zaten gönderildi. Lütfen Bekleyin.";
-        public static string PasswordReset = "Şifre sıfırlama e-postası gönderildi";
+        public static string PasswordReset = "Şifre sıfırlama e-postası gönderildi.";
         public static string PasswordUpdated = "Şifreniz yenilendi.";
 
 

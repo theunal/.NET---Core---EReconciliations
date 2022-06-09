@@ -278,12 +278,10 @@ namespace Business.Concrete
             ForgotPasswordEmail(user);
             return new SuccessResult(Messages.PasswordReset);
         }
+        
         void ForgotPasswordEmail(User user)
         {
-
             string link = "http://localhost:4200/passwordReset/" + user.MailConfirmValue;
-
-
             var mailTemplate = mailTemplateService.GetByTemplateName("string", 9028);
 
             string templateBody = mailTemplate.Data.Value;
@@ -291,7 +289,6 @@ namespace Business.Concrete
             templateBody = templateBody.Replace("{{message}}", "Şifrenizi yenilemek için aşağıdaki butona tıklayın.");
             templateBody = templateBody.Replace("{{link}}", link);
             templateBody = templateBody.Replace("{{linkDescription}}", "Onayla");
-
 
             var mailPamareter = mailParameterService.Get(9028);
             SendMailDto sendMailDto = new SendMailDto()
@@ -303,10 +300,8 @@ namespace Business.Concrete
             };
 
             mailService.SendMail(sendMailDto);
-
             user.MailConfirmDate = DateTime.Now;
             userService.Update(user);
-
         }
 
         public IDataResult<User> GtByMailConfirmValueForPasswordReset(string value)
@@ -318,6 +313,48 @@ namespace Business.Concrete
             }
             return new ErrorDataResult<User>(Messages.UserNotFound);
         }
+
+        public IDataResult<ForgotPassword> GetForgotPasswordByValue(string value)
+        {
+            // bunu kullanmadım sonra silcem
+            return new SuccessDataResult<ForgotPassword>();
+        }
+
+        public IDataResult<ForgotPassword> AddForgotPassword(User user)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IResult PasswordReset(User user, string value)
+        {
+            ForgotPasswordEmail2(user, value);
+            return new SuccessResult(Messages.PasswordReset);
+        }
+        void ForgotPasswordEmail2(User user, string value)
+        {
+            string link = "http://localhost:4200/forgotPasswordLinkCheck/" + value;
+            var mailTemplate = mailTemplateService.GetByTemplateName("string", 9028);
+
+            string templateBody = mailTemplate.Data.Value;
+            templateBody = templateBody.Replace("{{title}}", "Şifre Yenileme Maili");
+            templateBody = templateBody.Replace("{{titleMessage}}", "Şifrenizi yenilemek için aşağıdaki butona tıklayın.");
+            templateBody = templateBody.Replace("{{link}}", link);
+            templateBody = templateBody.Replace("{{linkDescription}}", "Onayla");
+
+            var mailPamareter = mailParameterService.Get(9028);
+            SendMailDto sendMailDto = new SendMailDto()
+            {
+                MailParameter = mailPamareter.Data,
+                Email = user.Email,
+                Subject = "Şifre Yenileme Maili",
+                Body = templateBody
+            };
+
+            mailService.SendMail(sendMailDto);
+            user.MailConfirmDate = DateTime.Now;
+            userService.Update(user);
+        }
+
     }
 }
 

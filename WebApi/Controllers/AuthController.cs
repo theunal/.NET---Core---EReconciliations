@@ -10,9 +10,11 @@ namespace WebApi.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthService authService;
-        public AuthController(IAuthService authService)
+        private readonly IForgotPasswordService forgotPasswordService;
+        public AuthController(IAuthService authService, IForgotPasswordService forgotPasswordService)
         {
             this.authService = authService;
+            this.forgotPasswordService = forgotPasswordService;
         }
 
 
@@ -85,7 +87,7 @@ namespace WebApi.Controllers
             return BadRequest(result.Message);
         }
 
-        
+
         [HttpGet("confirmUser")]
         public IActionResult ConfirmUser(string value)
         {
@@ -122,7 +124,6 @@ namespace WebApi.Controllers
             return BadRequest(get);
         }
 
-        
 
 
 
@@ -135,46 +136,122 @@ namespace WebApi.Controllers
 
 
 
-        
+
+        /* ilk yaptıgım şifremi unuttum kısmı */
+        //[HttpPost("forgotPassword")]
+        //public IActionResult ForgotPassword(string email)
+        //{
+        //    var get = authService.GetByEmail(email); //  kullanıcı yı getir
+        //    if (get.Success)
+        //    {
+        //        var result = authService.ForgotPassword(get.Data);
+        //        if (result.Success)
+        //        {
+        //            return Ok(result);
+        //        }
+        //        return BadRequest(result);
+        //    }
+        //    return BadRequest(get);
+        //}
+
+        //[HttpGet("passwordReset")]
+        //public IActionResult PasswordReset(string value, string password)
+        //{
+        //    var user = authService.GtByMailConfirmValueForPasswordReset(value);
+        //    if (user.Success)
+        //    {
+        //        byte[] passwordHash, passwordSalt;
+        //        HashingHelper.CreatePasswordHash(password, out passwordHash, out passwordSalt);
+        //        user.Data.PasswordHash = passwordHash;
+        //        user.Data.PasswordSalt = passwordSalt;
+
+        //        var result = authService.UpdatePassword(user.Data);
+        //        if (result.Success)
+        //        {
+        //            return Ok(result);
+        //        }
+        //        return BadRequest(result);
+        //    }
+        //    return BadRequest(user);
+        //}
+        /* ilk yaptıgım şifremi unuttum kısmı */
+
+
+
+        /* ikinci şifremi unuttum */
         [HttpPost("forgotPassword")]
-        public IActionResult ForgotPassword(string email)
+        public IActionResult ForgotPassword2(string email)
         {
-            var get = authService.GetByEmail(email); //  kullanıcı yı getir
-            if (get.Success)
+            var user = authService.GetByEmail(email); //  kullanıcı yı getir
+
+            if (!user.Success)
             {
-                var result = authService.ForgotPassword(get.Data);
-                if (result.Success)
-                {
-                    return Ok(result);
-                }
-                return BadRequest(result);
+                return BadRequest(user);
             }
-            return BadRequest(get);
-        }
-        
-        [HttpGet("passwordReset")]
-        public IActionResult ConfirmUser(string value, string password)
-        {
-            var user = authService.GtByMailConfirmValueForPasswordReset(value);
-            if (user.Success)
+
+            var list = forgotPasswordService.GetAllById(user.Data.Id).Data;
+            foreach (var item in list)
             {
+                item.IsActive = false;
+                forgotPasswordService.Update(item);
+            }
+
+            var forgotPassword = forgotPasswordService.Add(user.Data).Data;
+
+            var result = authService.PasswordReset(user.Data, forgotPassword.Value);
+
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+
+        }
+
+        [HttpGet("forgotPasswordLinkCheck")]
+        public IActionResult ForgotPasswordLinkCheck(string value)
+        {
+            var result = forgotPasswordService.GetForgotPasswordByValue(value);
+            if (result.Data is null) return BadRequest("Şifre Sıfırlama linki Geçersiz.");
+
+            var date = DateTime.Now.AddHours(-1);
+            var now = DateTime.Now;
+
+            if (result.Data.SendDate <= now && result.Data.SendDate >= date)
+                return Ok(true);
+
+            return BadRequest("Şifre Sıfırlama linki Geçersiz.");
+        }
+
+        [HttpGet("passwordReset2")]
+        public IActionResult PasswordReset2(string value, string password)
+        {
+            var result = forgotPasswordService.GetForgotPasswordByValue(value);
+           
+            if (result.Success)
+            {
+                result.Data.IsActive = false; // kullanıcı email linkine tıkladıysa artık linki pasif oldu
+                forgotPasswordService.Update(result.Data);
+
+
+
+                var user = authService.GetById(result.Data.UserId).Data;
+                
                 byte[] passwordHash, passwordSalt;
                 HashingHelper.CreatePasswordHash(password, out passwordHash, out passwordSalt);
-                user.Data.PasswordHash = passwordHash;
-                user.Data.PasswordSalt = passwordSalt;
+                user.PasswordHash = passwordHash;
+                user.PasswordSalt = passwordSalt;
 
-                var result = authService.UpdatePassword(user.Data);
-                if (result.Success)
+                var updated = authService.UpdatePassword(user);
+                if (updated.Success)
                 {
-                    return Ok(result);
+                    return Ok(updated);
                 }
-                return BadRequest(result);
+                return BadRequest(updated);
             }
-            return BadRequest(user);
+            return BadRequest("Şifre sıfırlama linkinin süresi dolmuş.");
         }
-
-
-
+        /* ikinci şifremi unuttum */
 
 
 
