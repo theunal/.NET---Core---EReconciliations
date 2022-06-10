@@ -29,8 +29,8 @@ namespace Business.DependencyResolvers
             builder.RegisterType<CompanyManager>().As<ICompanyService>().SingleInstance();
             builder.RegisterType<CompanyDal>().As<ICompanyDal>().SingleInstance();
                         
-            builder.RegisterType<CurrencyAccountManager>().As<ICurrencyAccountService>().SingleInstance();
-            builder.RegisterType<CurrencyAccountDal>().As<ICurrencyAccountDal>().SingleInstance();
+            builder.RegisterType<CurrentAccountManager>().As<ICurrentAccountService>().SingleInstance();
+            builder.RegisterType<CurrentAccountDal>().As<ICurrentAccountDal>().SingleInstance();
 
             builder.RegisterType<CurrencyManager>().As<ICurrencyService>().SingleInstance();
             builder.RegisterType<CurrencyDal>().As<ICurrencyDal>().SingleInstance();

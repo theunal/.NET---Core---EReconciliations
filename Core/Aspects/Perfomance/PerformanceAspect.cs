@@ -67,7 +67,7 @@ namespace Core.Aspects.Performance
                     smtp.Credentials = new NetworkCredential(sendMailDto.Email, sendMailDto.Password);
                     smtp.EnableSsl = sendMailDto.SSL;
                     smtp.Port = 587;
-                    smtp.Send(mail);
+                  smtp.Send(mail);
                 }
             }
         }

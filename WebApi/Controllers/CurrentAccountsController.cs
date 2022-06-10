@@ -8,19 +8,19 @@ namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CurrencyAccountsController : ControllerBase
+    public class CurrentAccountsController : ControllerBase
     {
-        private readonly ICurrencyAccountService currencyAccountService;
-        public CurrencyAccountsController(ICurrencyAccountService currencyAccountService)
+        private readonly ICurrentAccountService currentAccountService;
+        public CurrentAccountsController(ICurrentAccountService currentAccountService)
         {
-            this.currencyAccountService = currencyAccountService;
+            this.currentAccountService = currentAccountService;
         }
 
 
         [HttpGet("getAllByCompanyId")]
         public IActionResult GetAll(int companyId)
         {
-            var result = currencyAccountService.GetAll(companyId);
+            var result = currentAccountService.GetAll(companyId);
             if (result.Success)
             {
                 return Ok(result);
@@ -29,45 +29,45 @@ namespace WebApi.Controllers
         }
 
 
-        [HttpGet("getByCurrencyAccountId")]
+        [HttpGet("getById")]
         public IActionResult Get(int id)
         {
-            var result = currencyAccountService.GetById(id);
+            var result = currentAccountService.GetById(id);
             if (result.Success)
             {
                 return Ok(result);
             }
-            return BadRequest(result.Message);
+            return BadRequest(result);
         }
 
 
 
         [HttpPost("add")]
-        public IActionResult Add(CurrencyAccount currencyAccount)
+        public IActionResult Add(CurrentAccount currencyAccount)
         {
-            var result = currencyAccountService.Add(currencyAccount);
+            var result = currentAccountService.Add(currencyAccount);
             if (result.Success)
             {
                 return Ok(result);
             }
-            return BadRequest(result.Message);
+            return BadRequest(result);
         }
 
         [HttpPost("update")]
-        public IActionResult Update(CurrencyAccount currencyAccount)
+        public IActionResult Update(CurrentAccount currencyAccount)
         {
-            var result = currencyAccountService.Update(currencyAccount);
+            var result = currentAccountService.Update(currencyAccount);
             if (result.Success)
             {
                 return Ok(result);
             }
-            return BadRequest(result.Message);
+            return BadRequest(result);
         }
 
         [HttpPost("delete")]
         public IActionResult Delete(int id)
         {
-            var result = currencyAccountService.Delete(id);
+            var result = currentAccountService.Delete(id);
             if (result.Success)
             {
                 return Ok(result);
@@ -96,7 +96,7 @@ namespace WebApi.Controllers
                     FilePath = path,
                     CompanyId = companyId
                 };
-                var result = currencyAccountService.AddByExcel(dto);
+                var result = currentAccountService.AddByExcel(dto);
                 if (result.Success)
                 {
                     return Ok(result);
@@ -110,7 +110,7 @@ namespace WebApi.Controllers
         [HttpGet("getByCode")]
         public IActionResult GetByCode(string code)
         {
-            var result = currencyAccountService.GetByCode(code);
+            var result = currentAccountService.GetByCode(code);
             if (result.Success)
             {
                 return Ok(result);

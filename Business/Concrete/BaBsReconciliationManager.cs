@@ -16,13 +16,13 @@ namespace Business.Concrete
     public class BaBsReconciliationManager : IBaBsReconciliationService
     {
         private readonly IBaBsReconciliationDal baBsReconciliationDal;
-        private readonly ICurrencyAccountService currencyAccountService;
+        private readonly ICurrentAccountService currencyAccountService;
         private readonly IMailService mailService;
         private readonly IMailTemplateService mailTemplateService;
         private readonly IMailParameterService mailParameterService;
 
         public BaBsReconciliationManager(IBaBsReconciliationDal baBsReconciliationDal,
-            ICurrencyAccountService currencyAccountService, IMailService mailService, 
+            ICurrentAccountService currencyAccountService, IMailService mailService, 
             IMailTemplateService mailTemplateService, IMailParameterService mailParameterService)
         {
             this.baBsReconciliationDal = baBsReconciliationDal;
@@ -62,9 +62,6 @@ namespace Business.Concrete
             }
             return new ErrorDataResult<BaBsReconciliation>(Messages.BaBsReconciliationNotFound);
         }
-
-
-
 
         //[PerformanceAspect(3)]
         //[SecuredOperation("admin")]
@@ -199,5 +196,6 @@ namespace Business.Concrete
             mailService.SendMail(sendMailDto);
             return new SuccessResult(Messages.MailSentSuccessfully);
         }
+
     }
 }

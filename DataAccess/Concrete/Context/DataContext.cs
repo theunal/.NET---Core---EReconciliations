@@ -19,7 +19,7 @@ namespace DataAccess.Concrete.Context
         public DbSet<BaBsReconciliationDetail>? BaBsReconciliationDetails { get; set; }
         public DbSet<Company>? Companies { get; set; }
         public DbSet<Currency>? Currencies { get; set; }
-        public DbSet<CurrencyAccount>? CurrencyAccounts { get; set; }
+        public DbSet<CurrentAccount>? CurrentAccounts { get; set; }
         public DbSet<MailParameter>? MailParameters { get; set; }
 
 

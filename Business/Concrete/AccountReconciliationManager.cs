@@ -16,12 +16,12 @@ namespace Business.Concrete
     public class AccountReconciliationManager : IAccountReconciliationService
     {
         private readonly IAccountReconciliationDal accountReconciliationDal;
-        private readonly ICurrencyAccountService currencyAccountService;
+        private readonly ICurrentAccountService currencyAccountService;
         private readonly IMailService mailService;
         private readonly IMailTemplateService mailTemplateService;
         private readonly IMailParameterService mailParameterService;
         public AccountReconciliationManager(IAccountReconciliationDal accountReconciliationDal,
-            ICurrencyAccountService currencyAccountService,
+            ICurrentAccountService currencyAccountService,
             IMailService mailService, IMailTemplateService mailTemplateService,
             IMailParameterService mailParameterService)
         {
@@ -57,9 +57,9 @@ namespace Business.Concrete
 
 
 
-        [PerformanceAspect(3)]
-        [SecuredOperation("admin")]
-        [CacheAspect(30)]
+        //[PerformanceAspect(3)]
+        //[SecuredOperation("admin")]
+        //[CacheAspect(30)]
         public IDataResult<AccountReconciliation> GetById(int id)
         {
             return new SuccessDataResult<AccountReconciliation>
@@ -76,9 +76,9 @@ namespace Business.Concrete
 
 
 
-        [PerformanceAspect(3)]
-        [SecuredOperation("admin")]
-        [CacheRemoveAspect("IAccountReconciliationService.Get")]
+        //[PerformanceAspect(3)]
+        //[SecuredOperation("admin")]
+        //[CacheRemoveAspect("IAccountReconciliationService.Get")]
         public IResult Add(AccountReconciliation entity)
         {
             entity.Guid = new Guid().ToString();
@@ -140,7 +140,7 @@ namespace Business.Concrete
                         if (code != "Cari Kodu") // ilk satırı okumaması ociçin böyle yaptım
                         {
                             var currencyAccountId = currencyAccountService.GetByCompanyIdAndCode(code, dto.CompanyId).Data.Id;
-                           
+
 
                             AccountReconciliation accountReconciliation = new AccountReconciliation()
                             {
@@ -153,7 +153,7 @@ namespace Business.Concrete
                                 EndingDate = endingDate,
                                 IsSendEmail = true,
                                 Guid = Guid.NewGuid().ToString()
-                        };
+                            };
 
                             accountReconciliationDal.Add(accountReconciliation);
                         }
@@ -202,7 +202,7 @@ namespace Business.Concrete
             return new SuccessResult(Messages.MailSentSuccessfully);
         }
 
-
+     
     }
 
 

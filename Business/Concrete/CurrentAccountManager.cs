@@ -15,54 +15,55 @@ using System.Text;
 
 namespace Business.Concrete
 {
-    public class CurrencyAccountManager : ICurrencyAccountService
+    public class CurrentAccountManager : ICurrentAccountService
     {
-        private readonly ICurrencyAccountDal currencyAccountDal;
+        private readonly ICurrentAccountDal currencyAccountDal;
         private readonly ICompanyService companyService;
-        public CurrencyAccountManager(ICurrencyAccountDal currencyAccountDal, ICompanyService companyService)
+        public CurrentAccountManager(ICurrentAccountDal currencyAccountDal, ICompanyService companyService)
         {
             this.currencyAccountDal = currencyAccountDal;
             this.companyService = companyService;
         }
 
 
-        [PerformanceAspect(3)]
-        [SecuredOperation("admin")]
-        [CacheAspect(30)]
-        public IDataResult<List<CurrencyAccount>> GetAll(int companyId)
+
+        //[PerformanceAspect(3)]
+        //[SecuredOperation("admin")]
+        //[CacheAspect(30)]
+        public IDataResult<List<CurrentAccount>> GetAll(int companyId)
         {
             var result = companyService.GetById(companyId);
             if (result.Success)
             {
                 var currencyAccounts = currencyAccountDal.GetAll(c => c.CompanyId == result.Data.Id).ToList();
-                return new SuccessDataResult<List<CurrencyAccount>>
+                return new SuccessDataResult<List<CurrentAccount>>
                     (currencyAccounts, Messages.CurrencyAccountsHasBeenBrought);
             }
-            return new ErrorDataResult<List<CurrencyAccount>>(result.Message);
+            return new ErrorDataResult<List<CurrentAccount>>(result.Message);
         }
 
 
-        [PerformanceAspect(3)]
-        [SecuredOperation("admin")]
-        [CacheAspect(30)]
-        public IDataResult<CurrencyAccount> GetById(int id)
+       // [PerformanceAspect(3)]
+        //[SecuredOperation("admin")]
+        //[CacheAspect(30)]
+        public IDataResult<CurrentAccount> GetById(int id)
         {
             var result = currencyAccountDal.Get(c => c.Id == id);
             if (result is not null)
             {
-                return new SuccessDataResult<CurrencyAccount>(result, Messages.CurrencyAccountHasBeenBrought);
+                return new SuccessDataResult<CurrentAccount>(result, Messages.CurrencyAccountHasBeenBrought);
             }
-            return new ErrorDataResult<CurrencyAccount>(Messages.CurrencyAccountNotFound);
+            return new ErrorDataResult<CurrentAccount>(Messages.CurrencyAccountNotFound);
         }
 
 
-        [PerformanceAspect(3)]
-       // [SecuredOperation("admin")]
-        [CacheAspect(30)]
-        public IDataResult<CurrencyAccount> GetByCompanyIdAndCode(string code, int companyId)
+        // [PerformanceAspect(3)]
+        // [SecuredOperation("admin")]
+        //[CacheAspect(30)]
+        public IDataResult<CurrentAccount> GetByCompanyIdAndCode(string code, int companyId)
         {
             var result = currencyAccountDal.Get(c => c.CompanyId == companyId && c.Code == code);
-            return new SuccessDataResult<CurrencyAccount>(result, Messages.CurrencyAccountHasBeenBrought);
+            return new SuccessDataResult<CurrentAccount>(result, Messages.CurrencyAccountHasBeenBrought);
             //return new SuccessDataResult<CurrencyAccount>(currencyAccountDal.Get(p => p.CompanyId == companyId));
         }
 
@@ -70,28 +71,28 @@ namespace Business.Concrete
         [PerformanceAspect(3)]
         [SecuredOperation("admin")]
         [CacheAspect(30)]
-        public IDataResult<CurrencyAccount> GetByCode(string code)
+        public IDataResult<CurrentAccount> GetByCode(string code)
         {
             var result = currencyAccountDal.Get(c => c.Code == code);
             if (result is not null)
             {
-                return new SuccessDataResult<CurrencyAccount>(result, Messages.CurrencyAccountHasBeenBrought);
+                return new SuccessDataResult<CurrentAccount>(result, Messages.CurrencyAccountHasBeenBrought);
             }
-            return new ErrorDataResult<CurrencyAccount>(Messages.CurrencyAccountNotFound);
+            return new ErrorDataResult<CurrentAccount>(Messages.CurrencyAccountNotFound);
         }
 
 
         [PerformanceAspect(3)]
         [SecuredOperation("admin")]
         [CacheAspect(30)]
-        public IDataResult<CurrencyAccount> GetByCompanyId(int companyId)
+        public IDataResult<CurrentAccount> GetByCompanyId(int companyId)
         {
             var result = currencyAccountDal.Get(c => c.CompanyId == companyId);
             if (result is not null)
             {
-                return new SuccessDataResult<CurrencyAccount>(result, Messages.CurrencyAccountHasBeenBrought);
+                return new SuccessDataResult<CurrentAccount>(result, Messages.CurrencyAccountHasBeenBrought);
             }
-            return new ErrorDataResult<CurrencyAccount>(Messages.CurrencyAccountNotFound);
+            return new ErrorDataResult<CurrentAccount>(Messages.CurrencyAccountNotFound);
         }
 
 
@@ -102,11 +103,11 @@ namespace Business.Concrete
 
 
 
-        [PerformanceAspect(3)]
-        [SecuredOperation("admin")]
+        //[PerformanceAspect(3)]
+        //[SecuredOperation("admin")]
         [CacheRemoveAspect("ICurrencyAccountService.Get")]
         [ValidationAspect(typeof(CurrencyAccountValidator))]
-        public IResult Add(CurrencyAccount entity)
+        public IResult Add(CurrentAccount entity)
         {
             var result = companyService.GetById(entity.CompanyId);
             if (result.Success)
@@ -118,14 +119,17 @@ namespace Business.Concrete
         }
 
 
-        [PerformanceAspect(3)]
-        [SecuredOperation("admin")]
+        //[PerformanceAspect(3)]
+        //[SecuredOperation("admin")]
         [CacheRemoveAspect("ICurrencyAccountService.Get")]
         public IResult Delete(int id)
         {
             var result = GetById(id);
             if (result.Success)
             {
+                if (currencyAccountDal.ReconciliationCheck(id))
+                    return new ErrorResult(Messages.CurrentAccountHasAccountReconciliation);
+
                 currencyAccountDal.Delete(result.Data);
                 return new SuccessResult(Messages.CurrencyAccountDeleted);
             }
@@ -133,13 +137,13 @@ namespace Business.Concrete
         }
 
 
-        [PerformanceAspect(3)]
-        [SecuredOperation("admin")]
+        //[PerformanceAspect(3)]
+       // [SecuredOperation("admin")]
         [CacheRemoveAspect("ICurrencyAccountService.Get")]
         [ValidationAspect(typeof(CurrencyAccountValidator))]
-        public IResult Update(CurrencyAccount entity)
+        public IResult Update(CurrentAccount entity)
         {
-            var result = GetByCompanyId(entity.CompanyId);
+            var result = GetById(entity.Id);
             if (result.Success)
             {
                 result.Data.Code = entity.Code;
@@ -170,7 +174,7 @@ namespace Business.Concrete
 
 
         [PerformanceAspect(3)]
-       // [SecuredOperation("admin")]
+        // [SecuredOperation("admin")]
         [CacheRemoveAspect("ICurrencyAccountService.Get")]
         [ValidationAspect(typeof(CurrencyAccountValidator))]
         [TransactionScopeAspect]
@@ -195,7 +199,7 @@ namespace Business.Concrete
                         if (code != "Cari Kodu") // ilk satırı okumaması için böyle yaptım
                         {
                             var x = new Random().Next(1, 100000000);
-                            CurrencyAccount currencyAccount = new CurrencyAccount
+                            CurrentAccount currencyAccount = new CurrentAccount
                             {
 
                                 Name = name,

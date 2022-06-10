@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace Business.ValidationRules
 {
-    public class CurrencyAccountValidator : AbstractValidator<CurrencyAccount>
+    public class CurrencyAccountValidator : AbstractValidator<CurrentAccount>
     {
         public CurrencyAccountValidator()
         {

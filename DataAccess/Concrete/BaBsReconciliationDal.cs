@@ -16,7 +16,7 @@ namespace DataAccess.Concrete
                          join company in context.Companies
                          on recoinciliation.CompanyId equals company.Id
 
-                         join account in context.CurrencyAccounts
+                         join account in context.CurrentAccounts
                          on recoinciliation.CurrencyAccountId equals account.Id
 
                          select new BaBsReconciliationDto

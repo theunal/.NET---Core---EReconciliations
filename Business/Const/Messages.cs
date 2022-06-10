@@ -58,6 +58,7 @@ namespace Business.Const
         public static string CurrencyAccountHasBeenBrought = "Cari Hesap Getirldi.";
         public static string CurrencyAccountNotFound = "Cari Hesap Bulunamadı.";
         public static string CurrencyAccountsHasBeenBrought = "Cari Hesaplar Getirildi.";
+        public static string CurrentAccountHasAccountReconciliation = "Cari hesaba ait mutabakat kayıtları var. Silinemez.";
 
 
         public static string AccountReconciliationAdded = "Cari Mutabakat Kaydı Eklendi.";
