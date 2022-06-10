@@ -24,7 +24,8 @@ namespace Core.Extensions
         {
             roles.ToList().ForEach(role => claims.Add(new Claim(ClaimTypes.Role, role)));
         }
-        public static void AddCompany(this ICollection<Claim> claims, string company)
+
+        public static void AddCompanyId(this ICollection<Claim> claims, string company)
         {
             claims.Add(new Claim(ClaimTypes.Anonymous, company));
         }
@@ -33,6 +34,7 @@ namespace Core.Extensions
         {
             claims.Add(new Claim(ClaimTypes.IsPersistent, companyName));
         }
+
 
     }
 }
