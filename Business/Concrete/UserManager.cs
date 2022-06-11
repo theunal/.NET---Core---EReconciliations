@@ -6,6 +6,7 @@ using Core.Aspects.Performance;
 using Core.Entities.Concrete;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
+using Entities.Dtos;
 
 namespace Business.Concrete
 {
@@ -21,6 +22,13 @@ namespace Business.Concrete
         public IDataResult<List<User>> GetAll()
         {
             return new SuccessDataResult<List<User>>(userDal.GetAll(), Messages.CompanyAdded);
+        }
+
+        [SecuredOperation("admin,user.getall")]
+        public IDataResult<List<UsersByCompanyDto>> GetUsersByCompanyId(int companyId)
+        {
+            var users = userDal.GetUsersByCompanyId(companyId);
+            return new SuccessDataResult<List<UsersByCompanyDto>>(users, Messages.CompanyAdded);
         }
 
         public IDataResult<User> GetById(int id)
@@ -79,5 +87,6 @@ namespace Business.Concrete
             userDal.Update(entity);
         }
 
+       
     }
 }

@@ -22,9 +22,9 @@ namespace DataAccess.Concrete
                              UserId = userId,
                              CompanyId = companyId,
                              OperationClaimId = operationClaim.Id,
-                             
-                             OperationName = operationClaim.Name,
-                             OperationDescription = operationClaim.Description,
+
+                             OperationClaimName = operationClaim.Name,
+                             OperationClaimDescription = operationClaim.Description,
                          };
             return result.ToList();
         }

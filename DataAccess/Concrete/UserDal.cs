@@ -2,6 +2,7 @@
 using Core.Entities.Concrete;
 using DataAccess.Abstract;
 using DataAccess.Concrete.Context;
+using Entities.Dtos;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess.Concrete
@@ -35,6 +36,27 @@ namespace DataAccess.Concrete
 
             //    return result.ToList();
             //}
+        }
+
+        public List<UsersByCompanyDto> GetUsersByCompanyId(int companyId)
+        {
+            using var context = new DataContext();
+            var result = from userCompany in context.UserCompanies.Where(u => u.CompanyId == companyId && u.IsActive == true)
+                         join user in context.Users
+                         on userCompany.UserId equals user.Id
+                         select new UsersByCompanyDto
+                         {
+                             Id = userCompany.Id,
+                             UserId = userCompany.UserId,
+                             
+                             CompanyId = companyId,
+                             
+                             Email = user.Email,
+                             Name = user.Name,
+                             UserAddedAt = userCompany.AddedAt,
+                             UserIsActive = userCompany.IsActive
+                         };
+            return result.OrderBy(r => r.Name).ToList();
         }
     }
 }

@@ -101,9 +101,9 @@ namespace WebApi.Controllers
                 {
                     return Ok(result);
                 }
-                return BadRequest(result);
+                return BadRequest(result.Message);
             }
-            return BadRequest(user);
+            return BadRequest(user.Message);
         }
 
 

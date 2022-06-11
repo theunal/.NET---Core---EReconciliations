@@ -49,7 +49,7 @@ namespace Business.Concrete
 
 
 
-        [SecuredOperation("userOperationClaim.add,admin")]
+       // [SecuredOperation("userOperationClaim.add,admin")]
         public IResult Add(UserOperationClaim entity)
         {
             userOperationClaimDal.Add(entity);

@@ -21,6 +21,8 @@ namespace Business.Concrete
         private readonly IMailParameterService mailParameterService;
         private readonly IMailService mailService;
         private readonly IMailTemplateService mailTemplateService;
+        private readonly IOperationClaimService operationClaimService;
+        private readonly IUserOperationClaimService userOperationClaimService;
         public AuthManager(
             IUserService userService,
             IUserCompanyService userCompanyService,
@@ -28,7 +30,9 @@ namespace Business.Concrete
             ITokenHelper tokenHelper,
             IMailParameterService mailParameterService,
             IMailService mailService,
-            IMailTemplateService mailTemplateService)
+            IMailTemplateService mailTemplateService,
+            IOperationClaimService operationClaimService,
+            IUserOperationClaimService userOperationClaimService)
         {
             this.userService = userService;
             this.userCompanyService = userCompanyService;
@@ -37,6 +41,8 @@ namespace Business.Concrete
             this.mailParameterService = mailParameterService;
             this.mailService = mailService;
             this.mailTemplateService = mailTemplateService;
+            this.operationClaimService = operationClaimService;
+            this.userOperationClaimService = userOperationClaimService;
         }
 
 
@@ -67,7 +73,7 @@ namespace Business.Concrete
         }
 
 
-        
+
         public IResult UserExists(string email)
         {
             if (userService.GetByEmail(email) is not null)
@@ -110,10 +116,12 @@ namespace Business.Concrete
                        new ErrorDataResult<User>(Messages.PasswordError); // şifre yanlış
         }
 
+
+
+        [TransactionScopeAspect]
         [ValidationAspect(typeof(UserRegisterAndCompanyValidator))]
-  
         public IDataResult<UserCompanyDto> Register(UserRegisterAndCompanyDto dto)
-        { 
+        {
             byte[] passwordHash, passwordSalt;
             HashingHelper.CreatePasswordHash(dto.UserRegisterDto.Password, out passwordHash, out passwordSalt);
             var user = new User
@@ -148,13 +156,31 @@ namespace Business.Concrete
                 PasswordSalt = user.PasswordSalt,
             };
 
-            SendConfirmEmail(user);
+            var operationClaims = operationClaimService.GetAll();
+            foreach (var operationClaim in operationClaims.Data)
+            {
+                if (operationClaim.Name != "admin" && !operationClaim.Name.Contains("mail") &&
+                    !operationClaim.Name.Contains("Claim"))
+                {
+                    UserOperationClaim userOperationClaim = new UserOperationClaim
+                    {
+                        CompanyId = dto.Company.Id,
+                        UserId = user.Id,
+                        OperationClaimId = operationClaim.Id,
+                        AddedAt = DateTime.Now,
+                        IsActive = true
+                    };
+                    userOperationClaimService.Add(userOperationClaim);
+                }
+            }
 
+            SendConfirmEmail(user);
             return new SuccessDataResult<UserCompanyDto>(userCompanyDto, Messages.UserRegistered);
         }
 
 
 
+        [TransactionScopeAspect]
         [ValidationAspect(typeof(UserRegisterSecondValidator))]
         public IDataResult<User> RegisterSecond(UserRegisterSecondDto dto)
         {
@@ -176,13 +202,30 @@ namespace Business.Concrete
 
             userService.Add(user);
             companyService.AddUserCompany(user.Id, dto.CompanyId);
-            
+
+            var operationClaims = operationClaimService.GetAll();
+            foreach (var operationClaim in operationClaims.Data)
+            {
+                if (operationClaim.Name != "admin" && !operationClaim.Name.Contains("mail") &&
+                    !operationClaim.Name.Contains("Claim"))
+                {
+                    UserOperationClaim userOperationClaim = new UserOperationClaim
+                    {
+                        CompanyId = dto.CompanyId,
+                        UserId = user.Id,
+                        OperationClaimId = operationClaim.Id,
+                        AddedAt = DateTime.Now,
+                        IsActive = true
+                    };
+                    userOperationClaimService.Add(userOperationClaim);
+                }
+            }
+
             SendConfirmEmail(user);
-            
             return new SuccessDataResult<User>(user, Messages.UserRegistered);
         }
-        
-   
+
+
 
 
 
@@ -212,10 +255,10 @@ namespace Business.Concrete
 
         void SendConfirmEmail(User user)
         {
-               string link = "https://localhost:7154/api/Auth/confirmUser?value=" + user.MailConfirmValue;
+           // string link = "https://localhost:7154/api/Auth/confirmUser?value=" + user.MailConfirmValue;
 
-            //string link = "http://localhost:4200/mailConfirm/" + user.MailConfirmValue;
-        
+            string link = "http://localhost:4200/mailConfirm/" + user.MailConfirmValue;
+
 
             var mailTemplate = mailTemplateService.GetByTemplateName("string", 9028);
 
@@ -234,14 +277,14 @@ namespace Business.Concrete
                 Subject = "Kullanıcı Onay Maili",
                 Body = templateBody
             };
-            
+
             mailService.SendMail(sendMailDto);
 
             user.MailConfirmDate = DateTime.Now;
             userService.Update(user);
-         
+
         }
-        
+
         public IResult SendConfirmEmail2(User user)
         {
             if (MailConfirm(user).Success)
@@ -278,7 +321,7 @@ namespace Business.Concrete
             ForgotPasswordEmail(user);
             return new SuccessResult(Messages.PasswordReset);
         }
-        
+
         void ForgotPasswordEmail(User user)
         {
             string link = "http://localhost:4200/passwordReset/" + user.MailConfirmValue;

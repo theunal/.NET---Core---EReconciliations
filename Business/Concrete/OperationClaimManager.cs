@@ -53,8 +53,8 @@ namespace Business.Concrete
 
 
 
-        [PerformanceAspect(3)]
-        [SecuredOperation("admin")]
+        //[PerformanceAspect(3)]
+       // [SecuredOperation("admin")]
         public IResult Add(OperationClaim entity)
         {
             var result = GetByOperationClaimName(entity.Name);

@@ -10,8 +10,8 @@ namespace Entities.Dtos
         public int UserId { get; set; }
         public int CompanyId { get; set; }
         public int OperationClaimId { get; set; }
-        public string OperationName { get; set; }
-        public string OperationDescription { get; set; }
+        public string OperationClaimName { get; set; }
+        public string OperationClaimDescription { get; set; }
                 
     }
 }

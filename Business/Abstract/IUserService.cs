@@ -1,11 +1,13 @@
 ﻿using Core.Entities.Concrete;
 using Core.Utilities.Results;
+using Entities.Dtos;
 
 namespace Business.Abstract
 {
     public interface IUserService
     {
         IDataResult<List<User>> GetAll();
+        IDataResult<List<UsersByCompanyDto>> GetUsersByCompanyId(int companyId);
         IDataResult<User> GetByEmailAddress(string email);
 
 
