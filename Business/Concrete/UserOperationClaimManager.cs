@@ -4,6 +4,7 @@ using Business.Const;
 using Core.Entities.Concrete;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
+using Entities.Dtos;
 
 namespace Business.Concrete
 {
@@ -24,7 +25,13 @@ namespace Business.Concrete
             var result = userOperationClaimDal.GetAll(u => u.UserId == userId && u.CompanyId == companyId);
             return new SuccessDataResult<List<UserOperationClaim>>(result, Messages.UserOperationClaimsHasBeenBrought);
         }
-        
+
+        public IDataResult<List<UserOperationClaimDto>> GetAllDto(int userId, int companyId)
+        {
+            var result = userOperationClaimDal.GetAllDto(userId, companyId);
+            return new SuccessDataResult<List<UserOperationClaimDto>>(result);
+        }        
+
         [SecuredOperation("userOperationClaim.get,admin")]
         public IDataResult<UserOperationClaim> GetById(int id)
         {
@@ -74,7 +81,7 @@ namespace Business.Concrete
          
         }
 
-     
+       
     }
 
 }

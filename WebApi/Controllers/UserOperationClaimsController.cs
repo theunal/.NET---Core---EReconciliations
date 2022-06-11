@@ -29,6 +29,17 @@ namespace WebApi.Controllers
             return BadRequest(result.Message);
         }
 
+        [HttpGet("getAllDto")]
+        public IActionResult GetAllDto(int userId, int companyId)
+        {
+            var result = userOperationClaimService.GetAllDto(userId, companyId);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result.Message);
+        }
+
         [HttpGet("getById")]
         public IActionResult GetById(int id)
         {

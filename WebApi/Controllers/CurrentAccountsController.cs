@@ -101,7 +101,7 @@ namespace WebApi.Controllers
                 {
                     return Ok(result);
                 }
-                return BadRequest(result.Message);
+                return BadRequest(result);
             }
             return BadRequest("Dosya seçilmedi.");
         }

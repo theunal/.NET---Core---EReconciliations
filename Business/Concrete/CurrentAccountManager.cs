@@ -43,7 +43,7 @@ namespace Business.Concrete
         }
 
 
-       // [PerformanceAspect(3)]
+        // [PerformanceAspect(3)]
         //[SecuredOperation("admin")]
         //[CacheAspect(30)]
         public IDataResult<CurrentAccount> GetById(int id)
@@ -138,7 +138,7 @@ namespace Business.Concrete
 
 
         //[PerformanceAspect(3)]
-       // [SecuredOperation("admin")]
+        // [SecuredOperation("admin")]
         [CacheRemoveAspect("ICurrencyAccountService.Get")]
         [ValidationAspect(typeof(CurrencyAccountValidator))]
         public IResult Update(CurrentAccount entity)
@@ -174,7 +174,7 @@ namespace Business.Concrete
 
 
         [PerformanceAspect(3)]
-        // [SecuredOperation("admin")]
+        [SecuredOperation("admin")]
         [CacheRemoveAspect("ICurrencyAccountService.Get")]
         [ValidationAspect(typeof(CurrencyAccountValidator))]
         [TransactionScopeAspect]
