@@ -5,6 +5,7 @@ using Core.Aspects.Autofac.Transaction;
 using Core.Aspects.Performance;
 using Core.Entities.Concrete;
 using Core.Utilities.Results;
+using Core.Utilities.Security.Hashing;
 using DataAccess.Abstract;
 using Entities.Dtos;
 
@@ -77,7 +78,7 @@ namespace Business.Concrete
             throw new NotImplementedException();
         }
 
- 
+
 
 
 
@@ -87,6 +88,32 @@ namespace Business.Concrete
             userDal.Update(entity);
         }
 
-       
+        public IResult UpdateByDto(UserUpdateDto entity)
+        {
+            var user = userDal.Get(u => u.Id == entity.UserId);
+
+            if (entity.Email != user.Email)
+            {
+                var users = GetAll();
+                foreach (var u in users.Data)
+                {
+                    if (u.Email == entity.Email)
+                        return new ErrorResult(Messages.UserAlreadyExists);
+                }
+            }
+
+            if (entity.Password != "")
+            {
+                byte[] PasswordHash, PasswordSalt;
+                HashingHelper.CreatePasswordHash(entity.Password, out PasswordHash, out PasswordSalt);
+                user.PasswordHash = PasswordHash;
+                user.PasswordSalt = PasswordSalt;
+            }
+            user.Name = entity.Name;
+            user.Email = entity.Email;
+            user.IsActive = entity.IsActive;
+            userDal.Update(user);
+            return new SuccessResult(Messages.UserUpdated);
+        }
     }
 }

@@ -19,6 +19,7 @@ namespace Business.Abstract
         
 
         void Update(User entity);
+        IResult UpdateByDto(UserUpdateDto dto);
 
         List<OperationClaim> GetClaims(User user, int companyId);
         User GetByEmail(string email);

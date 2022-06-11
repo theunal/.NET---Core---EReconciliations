@@ -24,6 +24,7 @@ namespace Business.Const
         public static string UserNotFound = "Kullanıcı bulunamadı.";
         public static string UserHasBeenBrought = "Kullanıcı Getirildi.";
         public static string UserNotActive = "Kullanıcı aktif değil.";
+        public static string UserUpdated = "Kullanıcı Başarıyla Güncellendi";
 
 
         public static string CompanyAdded = "Şirket Eklendi.";

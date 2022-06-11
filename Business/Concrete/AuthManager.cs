@@ -48,7 +48,7 @@ namespace Business.Concrete
 
         public IDataResult<User> GetById(int id)
         {
-            return new SuccessDataResult<User>(userService.GetById(id).Data);
+             return new SuccessDataResult<User>(userService.GetById(id).Data);
         }
 
         public IDataResult<User> GetByEmail(string email)

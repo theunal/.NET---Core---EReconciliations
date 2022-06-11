@@ -48,15 +48,16 @@ namespace DataAccess.Concrete
                          {
                              Id = userCompany.Id,
                              UserId = userCompany.UserId,
-                             
+
                              CompanyId = companyId,
-                             
-                             Email = user.Email,
+
                              Name = user.Name,
-                             UserAddedAt = userCompany.AddedAt,
-                             UserIsActive = userCompany.IsActive
+                             Email = user.Email,
+                             MailConfirm = user.MailConfirm,
+                             UserAddedAt = user.AddedAt,
+                             UserIsActive = user.IsActive
                          };
-            return result.OrderBy(r => r.Name).ToList();
+            return result.OrderBy(r => r.UserAddedAt).ToList();
         }
     }
 }
