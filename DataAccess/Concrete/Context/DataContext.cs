@@ -32,5 +32,7 @@ namespace DataAccess.Concrete.Context
         public DbSet<MailTemplate>? MailTemplates { get; set; }
         public DbSet<ForgotPassword>? ForgotPassword { get; set; }
 
+        public DbSet<UserRelationship> UserRelationships { get; set; }
+
     }
 }

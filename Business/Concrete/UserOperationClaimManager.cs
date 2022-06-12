@@ -52,6 +52,7 @@ namespace Business.Concrete
         }
         public void UserOperationClaimUpdate(UserOperationClaimUpdateDto dto)
         {
+            // durumu aktifmi diye kontrol ediyor true ise false yapıyor
             var result = userOperationClaimDal.Get
                 (u => u.UserId == dto.UserId && u.OperationClaimId == dto.OperationClaimId && u.CompanyId == dto.CompanyId);
             result.IsActive = result.IsActive ? false : true;
@@ -95,7 +96,14 @@ namespace Business.Concrete
 
         }
 
-     
+        public void DeleteByUserIdAndCompanyId(int userId, int companyId)
+        {
+            var Claims = userOperationClaimDal.GetAll(u => u.UserId == userId && u.CompanyId == companyId);
+            foreach (var Claim in Claims)
+            {
+                userOperationClaimDal.Delete(Claim);
+            }
+        }
     }
 
 }

@@ -12,5 +12,8 @@ namespace Business.Abstract
         IResult Add(UserCompany entity);
         IResult Update(UserCompany entity);
         IResult Delete(UserCompany entity);
+
+
+        IResult DeleteByUserIdAndCompanyId(int userId, int companyId);
     }
 }

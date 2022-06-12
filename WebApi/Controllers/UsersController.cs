@@ -10,10 +10,18 @@ namespace WebApi.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUserService userService;
-        public UsersController(IUserService userService)
+        private readonly IUserRelationshipService userRelationshipService;
+        private readonly IUserOperationClaimService userOperationClaimService;
+        private readonly IUserCompanyService userCompanyService;
+        public UsersController(IUserService userService, IUserRelationshipService userRelationshipService, IUserOperationClaimService userOperationClaimService, IUserCompanyService userCompanyService)
         {
             this.userService = userService;
+            this.userRelationshipService = userRelationshipService;
+            this.userOperationClaimService = userOperationClaimService;
+            this.userCompanyService = userCompanyService;
         }
+
+
 
 
         [HttpGet("getAllByCompanyId")]
@@ -25,6 +33,17 @@ namespace WebApi.Controllers
                 return Ok(result);
             }
             return BadRequest(result.Message);
+        }
+
+        [HttpGet("getAllUserRelationshipByAdminUserId")]
+        public IActionResult GetAllUserRelationshipByAdminUserId(int adminUserId)
+        {
+            var result = userRelationshipService.GetAllByAdminUserId(adminUserId);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
         }
 
         [HttpGet("getById")]
@@ -63,6 +82,19 @@ namespace WebApi.Controllers
             {
                 return Ok(result);
             }
+            return BadRequest(result);
+        }
+
+
+
+        [HttpPost("deleteByUserIdAndCompanyId")]
+        public IActionResult DeleteByUserIdAndCompanyId(DeleteRelationshipBetweenUserAndCompanyDto dto)
+        {
+            // operation claimleri siliyor sonra user company ilişkisini siliyor
+            userOperationClaimService.DeleteByUserIdAndCompanyId(dto.UserId, dto.CompanyId);
+            var result = userCompanyService.DeleteByUserIdAndCompanyId(dto.UserId, dto.CompanyId);
+            if (result.Success)
+                return Ok(result);
             return BadRequest(result);
         }
 

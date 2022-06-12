@@ -44,5 +44,16 @@ namespace Business.Concrete
         {
             throw new NotImplementedException();
         }
+
+        public IResult DeleteByUserIdAndCompanyId(int userId, int companyId)
+        {
+            var userCompanies = userCompanyDal.GetAll(u => u.UserId == userId && u.CompanyId == companyId);
+            if (userCompanies is null) return new ErrorResult("Bilinmeyen bir hata oluştu.");
+            foreach (var userCompany in userCompanies)
+            {
+                userCompanyDal.Delete(userCompany);
+            }
+            return new SuccessResult("Kullanıcı ile şirket bağlantısı kesildi.");
+        }
     }
 }

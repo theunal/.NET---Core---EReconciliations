@@ -63,6 +63,9 @@ namespace Business.DependencyResolvers
             builder.RegisterType<ForgotPasswordManager>().As<IForgotPasswordService>();
             builder.RegisterType<ForgotPasswordDal>().As<IForgotPasswordDal>();
 
+            builder.RegisterType<UserRelationshipManager>().As<IUserRelationshipService>();
+            builder.RegisterType<UserRelationshipDal>().As<IUserRelationshipDal>();
+
 
             // autofac config
             var assembly = System.Reflection.Assembly.GetExecutingAssembly();

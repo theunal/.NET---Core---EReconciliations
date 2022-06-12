@@ -97,16 +97,5 @@ namespace WebApi.Controllers
             return Ok();
         }
 
-        [HttpPost("delete")]
-        public IActionResult Delete(UserOperationClaim userOperationClaim)
-        {
-            var result = userOperationClaimService.Delete(userOperationClaim);
-            if (result.Success)
-            {
-                return Ok(result);
-            }
-            return BadRequest(result.Message);
-        }
-        
     }
 }

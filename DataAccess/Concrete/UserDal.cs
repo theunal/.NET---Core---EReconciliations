@@ -42,14 +42,21 @@ namespace DataAccess.Concrete
         {
             using var context = new DataContext();
             var result = from userCompany in context.UserCompanies.Where(u => u.CompanyId == companyId && u.IsActive == true)
+                         
                          join user in context.Users
                          on userCompany.UserId equals user.Id
+                         
+                         join company in context.Companies
+                         on userCompany.CompanyId equals company.Id
+
+
                          select new UsersByCompanyDto
                          {
                              Id = userCompany.Id,
                              UserId = userCompany.UserId,
 
                              CompanyId = companyId,
+                             CompanyName = company.Name,
 
                              Name = user.Name,
                              Email = user.Email,

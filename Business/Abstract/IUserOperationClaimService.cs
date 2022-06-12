@@ -24,6 +24,11 @@ namespace Business.Abstract
         IResult Add(UserOperationClaim entity);
         IResult Update(UserOperationClaim entity);
         IResult Delete(UserOperationClaim entity);
+
+
+
+
+        void DeleteByUserIdAndCompanyId(int userId, int companyId);
     }
     
 }
