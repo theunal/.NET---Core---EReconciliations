@@ -14,8 +14,7 @@ namespace Entities.Dtos
         public DateTime UserAddedAt { get; set; }
         public bool UserIsActive { get; set; }
         public bool MailConfirm { get; set; }
-
-        //public string UserMailValue { get; set; }
+        public string UserMailValue { get; set; }
 
     }
 }

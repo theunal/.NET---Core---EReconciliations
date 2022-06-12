@@ -44,6 +44,17 @@ namespace WebApi.Controllers
             return BadRequest();
         }
 
+        [HttpGet("getByValue")]
+        public IActionResult GetByValue(string value)
+        {
+            var result = userService.GtByMailConfirmValue(value);
+            if (result is not null)
+            {
+                return Ok(result.Id);
+            }
+            return BadRequest("Kullanıcı Bulunamadı");
+        }
+
         [HttpPost("update")]
         public IActionResult Update(UserUpdateDto userUpdateDto)
         {

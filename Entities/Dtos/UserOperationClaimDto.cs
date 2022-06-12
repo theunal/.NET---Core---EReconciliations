@@ -12,6 +12,7 @@ namespace Entities.Dtos
         public int OperationClaimId { get; set; }
         public string OperationClaimName { get; set; }
         public string OperationClaimDescription { get; set; }
-                
+        public bool IsActive { get; set; }
+
     }
 }

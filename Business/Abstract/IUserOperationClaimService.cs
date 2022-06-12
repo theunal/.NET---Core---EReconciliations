@@ -11,6 +11,16 @@ namespace Business.Abstract
         IDataResult<UserOperationClaim> GetById(int id);
 
 
+
+
+        IDataResult<UserOperationClaim> GetUserOperationClaimByUserIdOperationClaimIdCompanyId
+            (int userId, int operationClaimId, int companyId);
+        void UserOperationClaimUpdate (UserOperationClaimUpdateDto userOperationClaimUpdateDto);
+
+
+
+
+
         IResult Add(UserOperationClaim entity);
         IResult Update(UserOperationClaim entity);
         IResult Delete(UserOperationClaim entity);

@@ -30,9 +30,9 @@ namespace Business.Concrete
         {
             var result = userOperationClaimDal.GetAllDto(userId, companyId);
             return new SuccessDataResult<List<UserOperationClaimDto>>(result);
-        }        
+        }
 
-        [SecuredOperation("userOperationClaim.get,admin")]
+        //[SecuredOperation("userOperationClaim.get,admin")]
         public IDataResult<UserOperationClaim> GetById(int id)
         {
             var result = userOperationClaimDal.Get(x => x.Id == id);
@@ -43,19 +43,33 @@ namespace Business.Concrete
             return new ErrorDataResult<UserOperationClaim>(Messages.UserOperationClaimsNotFound);
         }
 
+        public IDataResult<UserOperationClaim> GetUserOperationClaimByUserIdOperationClaimIdCompanyId
+            (int userId, int operationClaimId, int companyId)
+        {
+            var result = userOperationClaimDal.Get
+                (u => u.UserId == userId && u.OperationClaimId == operationClaimId && u.CompanyId == companyId);
+            return new SuccessDataResult<UserOperationClaim>(result);
+        }
+        public void UserOperationClaimUpdate(UserOperationClaimUpdateDto dto)
+        {
+            var result = userOperationClaimDal.Get
+                (u => u.UserId == dto.UserId && u.OperationClaimId == dto.OperationClaimId && u.CompanyId == dto.CompanyId);
+            result.IsActive = result.IsActive ? false : true;
+            Update(result);
+        }
 
 
 
 
 
 
-       // [SecuredOperation("userOperationClaim.add,admin")]
+        // [SecuredOperation("userOperationClaim.add,admin")]
         public IResult Add(UserOperationClaim entity)
         {
             userOperationClaimDal.Add(entity);
             return new SuccessResult(Messages.UserOperationClaimAdded);
         }
-        
+
         [SecuredOperation("userOperationClaim.update,admin")]
         public IResult Update(UserOperationClaim entity)
         {
@@ -78,10 +92,10 @@ namespace Business.Concrete
                 return new SuccessResult(Messages.UserOperationClaimDeleted);
             }
             return result;
-         
+
         }
 
-       
+     
     }
 
 }

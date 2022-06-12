@@ -1,5 +1,6 @@
 ﻿using Business.Abstract;
 using Core.Entities.Concrete;
+using Entities.Dtos;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -51,6 +52,19 @@ namespace WebApi.Controllers
             return BadRequest(result.Message);
         }
 
+        [HttpGet("getUserOperationClaimByUserIdOperationClaimIdCompanyId")]
+        public IActionResult GetUserOperationClaimByUserIdOperationClaimIdCompanyId
+            (int userId, int operationClaimId, int companyId)
+        {
+            var result = userOperationClaimService.
+                GetUserOperationClaimByUserIdOperationClaimIdCompanyId(userId, operationClaimId, companyId);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest();
+        }
+
 
 
 
@@ -73,7 +87,14 @@ namespace WebApi.Controllers
             {
                 return Ok(result);
             }
-            return BadRequest(result.Message);
+            return BadRequest(result);
+        }
+
+        [HttpPost("userOperationClaimUpdate")]
+        public IActionResult UserOperationClaimUpdate(UserOperationClaimUpdateDto dto)
+        {
+            userOperationClaimService.UserOperationClaimUpdate(dto);
+            return Ok();
         }
 
         [HttpPost("delete")]

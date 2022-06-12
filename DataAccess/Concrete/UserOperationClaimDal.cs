@@ -25,6 +25,7 @@ namespace DataAccess.Concrete
 
                              OperationClaimName = operationClaim.Name,
                              OperationClaimDescription = operationClaim.Description,
+                             IsActive = userOperationClaim.IsActive
                          };
             return result.ToList();
         }

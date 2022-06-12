@@ -55,7 +55,8 @@ namespace DataAccess.Concrete
                              Email = user.Email,
                              MailConfirm = user.MailConfirm,
                              UserAddedAt = user.AddedAt,
-                             UserIsActive = user.IsActive
+                             UserIsActive = user.IsActive,
+                             UserMailValue = user.MailConfirmValue,
                          };
             return result.OrderBy(r => r.UserAddedAt).ToList();
         }
