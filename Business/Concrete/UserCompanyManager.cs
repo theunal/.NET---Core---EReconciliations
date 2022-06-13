@@ -27,7 +27,7 @@ namespace Business.Concrete
 
         public IDataResult<UserCompany> GetById(int id)
         {
-            var result = userCompanyDal.Get(u => u.UserId == id);
+            var result = userCompanyDal.GetAll(u => u.UserId == id).FirstOrDefault();
             if (result is null)
             {
                 return new ErrorDataResult<UserCompany>(Messages.UserCompanyNotFound);

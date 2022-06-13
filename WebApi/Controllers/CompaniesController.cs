@@ -15,7 +15,6 @@ namespace WebApi.Controllers
             this.companyService = companyService;
         }
 
-
         [HttpGet("getCompanyList")]
         public IActionResult GetList()
         {
@@ -28,15 +27,14 @@ namespace WebApi.Controllers
         }
 
         [HttpPost("addCompanyToUser")]
-        public IActionResult Add([FromBody] CompanyDto dto)
+        public IActionResult Add(CompanyDto dto)
         {
             var result = companyService.AddCompanyUser(dto);
             if (result.Success)
             {
                 return Ok(result);
             }
-            return BadRequest(result.Message);
-
+            return BadRequest(result);
         }
 
 
@@ -44,7 +42,7 @@ namespace WebApi.Controllers
         public IActionResult GetCompany(int id)
         {
             var result = companyService.GetById(id);
-            return result.Success ? Ok(result) : BadRequest(result.Message);
+            return result.Success ? Ok(result) : BadRequest(result);
         }
 
         [HttpPost("updateCompany")]

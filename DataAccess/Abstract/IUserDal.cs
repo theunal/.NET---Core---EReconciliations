@@ -8,5 +8,6 @@ namespace DataAccess.Abstract
     {
         List<OperationClaim> GetClaims(User user, int companyId);
         List<UsersByCompanyDto> GetUsersByCompanyId(int companyId);
+        List<AdminCompaniesDto> GetAdminCompanies(int adminUserId, int userUserId);
     }
 }

@@ -115,5 +115,11 @@ namespace Business.Concrete
             userDal.Update(user);
             return new SuccessResult(Messages.UserUpdated);
         }
+
+        public IDataResult<List<AdminCompaniesDto>> GetAdminCompanies(int adminUserId, int userUserId)
+        {
+            var result = userDal.GetAdminCompanies(adminUserId, userUserId);
+            return new SuccessDataResult<List<AdminCompaniesDto>>(result);
+        }
     }
 }

@@ -27,5 +27,9 @@ namespace Business.Abstract
         IDataResult<User> GetByValue(int id);
         IDataResult<User> GetById(int id);
 
+        IDataResult<List<AdminCompaniesDto>> GetAdminCompanies(int adminUserId, int userUserId); 
+        // adminin sahip oldugu şirketleri kullanıcıların şirketleri ile karşılaştırmak için
+        // eğer kullanıcıda şirket varsa yeniden aynı şirket eklenmiyecek
+
     }
 }

@@ -9,8 +9,9 @@ namespace Business.Abstract
         IDataResult<List<Company>> GetAll();
         IDataResult<Company> Get(Company company); // bunu değiştircem id ye göre getirme aşagıda var zaten
 
+        IDataResult<List<Company>> GetAllCompanyAdminUserId(int adminUserId);
 
-       
+
 
         IResult Delete(Company entity);
 

@@ -13,16 +13,15 @@ namespace WebApi.Controllers
         private readonly IUserRelationshipService userRelationshipService;
         private readonly IUserOperationClaimService userOperationClaimService;
         private readonly IUserCompanyService userCompanyService;
-        public UsersController(IUserService userService, IUserRelationshipService userRelationshipService, IUserOperationClaimService userOperationClaimService, IUserCompanyService userCompanyService)
+        private readonly ICompanyService companyService;
+        public UsersController(IUserService userService, IUserRelationshipService userRelationshipService, IUserOperationClaimService userOperationClaimService, IUserCompanyService userCompanyService, ICompanyService companyService)
         {
             this.userService = userService;
             this.userRelationshipService = userRelationshipService;
             this.userOperationClaimService = userOperationClaimService;
             this.userCompanyService = userCompanyService;
+            this.companyService = companyService;
         }
-
-
-
 
         [HttpGet("getAllByCompanyId")]
         public IActionResult GetAll(int companyId)
@@ -39,6 +38,31 @@ namespace WebApi.Controllers
         public IActionResult GetAllUserRelationshipByAdminUserId(int adminUserId)
         {
             var result = userRelationshipService.GetAllByAdminUserId(adminUserId);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+        [HttpGet("getAllCompanyAdminUserId")]
+        public IActionResult GetAllCompanyAdminUserId(int adminUserId)
+        {
+            var result = companyService.GetAllCompanyAdminUserId(adminUserId);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest();
+        }
+
+
+
+        // değiştircem
+        [HttpGet("getUserRelationshipByUserUserId")]
+        public IActionResult GetUserRelationshipByUserUserId(int userUserId)
+        {
+            var result = userRelationshipService.GetByUserUserId(userUserId);
             if (result.Success)
             {
                 return Ok(result);
@@ -97,6 +121,22 @@ namespace WebApi.Controllers
                 return Ok(result);
             return BadRequest(result);
         }
+
+
+
+
+        [HttpGet("getAdminCompanies")]
+        public IActionResult GetAdminCompanies(int adminUserId, int userUserId)
+        {
+            var result = userService.GetAdminCompanies(adminUserId, userUserId);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+
 
     }
 }

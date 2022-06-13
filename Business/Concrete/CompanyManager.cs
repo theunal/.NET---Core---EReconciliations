@@ -4,6 +4,7 @@ using Business.Const;
 using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Transaction;
 using Core.Aspects.Performance;
+using Core.Entities.Concrete;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
@@ -14,9 +15,14 @@ namespace Business.Concrete
     public class CompanyManager : ICompanyService
     {
         private readonly ICompanyDal companyDal;
-        public CompanyManager(ICompanyDal companyDal)
+        private readonly IOperationClaimService operationClaimService;
+        private readonly IUserOperationClaimService userOperationClaimService;
+        public CompanyManager(ICompanyDal companyDal, IOperationClaimService operationClaimService,
+            IUserOperationClaimService userOperationClaimService)
         {
             this.companyDal = companyDal;
+            this.operationClaimService = operationClaimService;
+            this.userOperationClaimService = userOperationClaimService;
         }
 
         [CacheAspect(30)]
@@ -24,13 +30,14 @@ namespace Business.Concrete
         {
             return new SuccessDataResult<List<Company>>(companyDal.GetAll(), Messages.CompaniesHasBeenBrought);
         }
-        [CacheAspect(30)]
+
+       // [CacheAspect(30)]
         public IDataResult<Company> Get(Company company)
         {
             return new SuccessDataResult<Company>(companyDal.Get(c => c.Id == company.Id));
         }
 
-        [CacheAspect(30)]
+       // [CacheAspect(30)]
         public IDataResult<Company> GetById(int id)
         {
             var result = companyDal.Get(c => c.Id == id);
@@ -44,8 +51,8 @@ namespace Business.Concrete
 
 
 
-        [PerformanceAspect(3)]
-        [SecuredOperation("company.update,admin")]
+       // [PerformanceAspect(3)]
+        //[SecuredOperation("company.update,admin")]
         [CacheRemoveAspect("ICompanyService.Get")]
         public IResult Update(Company entity)
         {
@@ -89,9 +96,32 @@ namespace Business.Concrete
         {   
             companyDal.Add(dto.Company);
             AddUserCompany(dto.UserId, dto.Company.Id);
+
+            var operationClaims = operationClaimService.GetAll();
+            foreach (var operationClaim in operationClaims.Data)
+            {
+                if (operationClaim.Name != "admin" && !operationClaim.Name.Contains("mail") &&
+                    !operationClaim.Name.Contains("Claim"))
+                {
+                    UserOperationClaim userOperationClaim = new UserOperationClaim
+                    {
+                        CompanyId = dto.Company.Id,
+                        UserId = dto.UserId,
+                        OperationClaimId = operationClaim.Id,
+                        AddedAt = DateTime.Now,
+                        IsActive = true
+                    };
+                    userOperationClaimService.Add(userOperationClaim);
+                }
+            }
+            
             return new SuccessResult(Messages.CompanyAdded);
         }
 
-
+        public IDataResult<List<Company>> GetAllCompanyAdminUserId(int adminUserId)
+        {
+            var result = companyDal.GetAllCompanyAdminUserId(adminUserId);
+            return new SuccessDataResult<List<Company>>(result, Messages.CompaniesHasBeenBrought);
+        }
     }
 }
