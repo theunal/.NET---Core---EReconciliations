@@ -11,12 +11,12 @@ namespace WebApi.Controllers
     {
         private readonly IAuthService authService;
         private readonly IForgotPasswordService forgotPasswordService;
+
         public AuthController(IAuthService authService, IForgotPasswordService forgotPasswordService)
         {
             this.authService = authService;
             this.forgotPasswordService = forgotPasswordService;
         }
-
 
         [HttpPost("login")]
         public ActionResult Login(UserLoginDto dto)
@@ -37,6 +37,7 @@ namespace WebApi.Controllers
 
             return BadRequest(result.Message);
         }
+        
 
         [HttpPost("register")]
         public ActionResult Register(UserRegisterAndCompanyDto dto)

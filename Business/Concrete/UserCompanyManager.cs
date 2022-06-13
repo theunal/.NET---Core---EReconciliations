@@ -35,6 +35,12 @@ namespace Business.Concrete
             return new SuccessDataResult<UserCompany>(result);
         }
 
+        //public IDataResult<UserCompany> GetByUserIdAndCompanyId(int userId, int companyId)
+        //{
+        //    var result = userCompanyDal.Get(u => u.UserId == userId && u.CompanyId == companyId);
+        //    return new SuccessDataResult<UserCompany>(result);
+        //}
+
         public IDataResult<List<UserCompany>> GetAll()
         {
             throw new NotImplementedException();
@@ -55,5 +61,7 @@ namespace Business.Concrete
             }
             return new SuccessResult("Kullanıcı ile şirket bağlantısı kesildi.");
         }
+
+     
     }
 }

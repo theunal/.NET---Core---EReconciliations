@@ -117,7 +117,6 @@ namespace Business.Concrete
         }
 
 
-
         [TransactionScopeAspect]
         [ValidationAspect(typeof(UserRegisterAndCompanyValidator))]
         public IDataResult<UserCompanyDto> Register(UserRegisterAndCompanyDto dto)
@@ -314,6 +313,7 @@ namespace Business.Concrete
             var companyName = companyService.GetById(companyId).Data.Name;
             var accessToken = tokenHelper.CreateToken(user, claims, companyId, companyName);
             return new SuccessDataResult<AccessToken>(accessToken, Messages.SuccessfulLogin);
+            // giriş tokeni 
         }
 
         public IResult ForgotPassword(User user)

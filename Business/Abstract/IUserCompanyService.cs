@@ -7,6 +7,7 @@ namespace Business.Abstract
     {
         IDataResult<List<UserCompany>> GetAll();
         IDataResult<UserCompany> GetById(int id);
+        //IDataResult<UserCompany> GetByUserIdAndCompanyId(int userId, int companyId);
 
 
         IResult Add(UserCompany entity);

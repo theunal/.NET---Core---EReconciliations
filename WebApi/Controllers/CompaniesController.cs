@@ -10,9 +10,11 @@ namespace WebApi.Controllers
     public class CompaniesController : ControllerBase
     {
         private readonly ICompanyService companyService;
-        public CompaniesController(ICompanyService companyService)
+        private readonly IAuthService authService;
+        public CompaniesController(ICompanyService companyService, IAuthService authService)
         {
             this.companyService = companyService;
+            this.authService = authService;
         }
 
         [HttpGet("getCompanyList")]
@@ -52,7 +54,19 @@ namespace WebApi.Controllers
             return result.Success ? Ok(result) : BadRequest(result.Message);
         }
 
+        [HttpPost("changeCompany")]
+        public IActionResult ChangeCompany(ChangeCompanyDto dto)
+        {
+            var user = authService.GetById(dto.UserId).Data;
+            //  var userCompany = userCompanyService.GetByUserIdAndCompanyId(dto.UserId, dto.CompanyId);
 
+            var result = authService.CreateAccessToken(user, dto.CompanyId);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest();
+        }
 
 
     }
