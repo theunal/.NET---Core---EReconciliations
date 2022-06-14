@@ -84,7 +84,6 @@ namespace Business.Concrete
 
         public void Update(User entity)
         {
-            var result = GetById(entity.Id);
             userDal.Update(entity);
         }
 

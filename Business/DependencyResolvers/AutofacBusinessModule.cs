@@ -66,7 +66,10 @@ namespace Business.DependencyResolvers
             builder.RegisterType<UserRelationshipManager>().As<IUserRelationshipService>();
             builder.RegisterType<UserRelationshipDal>().As<IUserRelationshipDal>();
 
+            builder.RegisterType<UserThemeManager>().As<IUserThemeService>();
+            builder.RegisterType<UserThemeDal>().As<IUserThemeDal>();
 
+            
             // autofac config
             var assembly = System.Reflection.Assembly.GetExecutingAssembly();
 

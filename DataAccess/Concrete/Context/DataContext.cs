@@ -34,5 +34,7 @@ namespace DataAccess.Concrete.Context
 
         public DbSet<UserRelationship> UserRelationships { get; set; }
 
+        public DbSet<UserTheme> UserThemes { get; set; }
+
     }
 }

@@ -23,6 +23,7 @@ namespace Business.Concrete
         private readonly IMailTemplateService mailTemplateService;
         private readonly IOperationClaimService operationClaimService;
         private readonly IUserOperationClaimService userOperationClaimService;
+        private readonly IUserThemeService userThemeService;
         public AuthManager(
             IUserService userService,
             IUserCompanyService userCompanyService,
@@ -32,7 +33,8 @@ namespace Business.Concrete
             IMailService mailService,
             IMailTemplateService mailTemplateService,
             IOperationClaimService operationClaimService,
-            IUserOperationClaimService userOperationClaimService)
+            IUserOperationClaimService userOperationClaimService,
+            IUserThemeService userThemeService)
         {
             this.userService = userService;
             this.userCompanyService = userCompanyService;
@@ -43,6 +45,7 @@ namespace Business.Concrete
             this.mailTemplateService = mailTemplateService;
             this.operationClaimService = operationClaimService;
             this.userOperationClaimService = userOperationClaimService;
+            this.userThemeService = userThemeService;
         }
 
 
@@ -66,6 +69,7 @@ namespace Business.Concrete
             var user = userService.GtByMailConfirmValue(value);
             return MailConfirm(user);
         }
+        
         public IDataResult<UserCompany> GetUserCompanyByUserId(int userId)
         {
             var userCompany = userCompanyService.GetById(userId);
@@ -116,7 +120,6 @@ namespace Business.Concrete
                        new ErrorDataResult<User>(Messages.PasswordError); // şifre yanlış
         }
 
-
         [TransactionScopeAspect]
         [ValidationAspect(typeof(UserRegisterAndCompanyValidator))]
         public IDataResult<UserCompanyDto> Register(UserRegisterAndCompanyDto dto)
@@ -139,22 +142,7 @@ namespace Business.Concrete
             userService.Add(user);
             companyService.Add(dto.Company);
             companyService.AddUserCompany(user.Id, dto.Company.Id);
-
-            UserCompanyDto userCompanyDto = new UserCompanyDto
-            {
-                Id = user.Id,
-                Name = user.Name,
-                Email = user.Email,
-                AddedAt = user.AddedAt,
-                CompanyId = dto.Company.Id,
-                IsActive = true,
-                MailConfirm = false,
-                MailConfirmDate = user.MailConfirmDate,
-                MailConfirmValue = user.MailConfirmValue,
-                PasswordHash = user.PasswordHash,
-                PasswordSalt = user.PasswordSalt,
-            };
-
+            SendConfirmEmail(user);
             var operationClaims = operationClaimService.GetAll();
             foreach (var operationClaim in operationClaims.Data)
             {
@@ -173,10 +161,31 @@ namespace Business.Concrete
                 }
             }
 
-            SendConfirmEmail(user);
+            UserTheme userTheme = new UserTheme
+            {
+                UserId = user.Id,
+                SidebarButtonColor = "primary", // 6-7 tane farklı renk
+                SidebarMode = "dark", // white dark transparent
+                Mode = "" // "" ya da dark-version
+            };
+            userThemeService.Update(userTheme);
+            
+            UserCompanyDto userCompanyDto = new UserCompanyDto
+            {
+                Id = user.Id,
+                Name = user.Name,
+                Email = user.Email,
+                AddedAt = user.AddedAt,
+                CompanyId = dto.Company.Id,
+                IsActive = true,
+                MailConfirm = false,
+                MailConfirmDate = user.MailConfirmDate,
+                MailConfirmValue = user.MailConfirmValue,
+                PasswordHash = user.PasswordHash,
+                PasswordSalt = user.PasswordSalt,
+            };
             return new SuccessDataResult<UserCompanyDto>(userCompanyDto, Messages.UserRegistered);
         }
-
 
 
         [TransactionScopeAspect]
@@ -201,6 +210,16 @@ namespace Business.Concrete
 
             userService.Add(user);
             companyService.AddUserCompany(user.Id, dto.CompanyId);
+            SendConfirmEmail(user);
+
+            UserTheme userTheme = new UserTheme
+            {
+                UserId = user.Id,
+                SidebarButtonColor = "primary", // 6-7 tane farklı renk
+                SidebarMode = "dark", // white dark transparent
+                Mode = "" // "" ya da dark-version
+            };
+            userThemeService.Update(userTheme);            
 
             var operationClaims = operationClaimService.GetAll();
             foreach (var operationClaim in operationClaims.Data)
@@ -220,7 +239,6 @@ namespace Business.Concrete
                 }
             }
 
-            SendConfirmEmail(user);
             return new SuccessDataResult<User>(user, Messages.UserRegistered);
         }
 
@@ -307,6 +325,7 @@ namespace Business.Concrete
 
             return new SuccessDataResult<User>(user);
         }
+        
         public IDataResult<AccessToken> CreateAccessToken(User user, int companyId)
         {
             var claims = userService.GetClaims(user, companyId);
@@ -373,6 +392,7 @@ namespace Business.Concrete
             ForgotPasswordEmail2(user, value);
             return new SuccessResult(Messages.PasswordReset);
         }
+        
         void ForgotPasswordEmail2(User user, string value)
         {
             string link = "http://localhost:4200/forgotPasswordLinkCheck/" + value;

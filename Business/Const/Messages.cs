@@ -127,5 +127,8 @@ namespace Business.Const
         public static string UserOperationClaimsNotFound = "Kullanıcının İşlem Yetki Kaydı Bulunamadı.";
 
 
+        public static string UserThemeUpdated = "Tema Ayarlarınız Güncellendi.";
+        public static string UserThemeAdded = "Tema Ayarlarınız Oluşturuldu.";
+        
     }
 }

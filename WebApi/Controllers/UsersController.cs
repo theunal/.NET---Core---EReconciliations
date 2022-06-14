@@ -1,4 +1,5 @@
 ﻿using Business.Abstract;
+using Entities.Concrete;
 using Entities.Dtos;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -14,15 +15,21 @@ namespace WebApi.Controllers
         private readonly IUserOperationClaimService userOperationClaimService;
         private readonly IUserCompanyService userCompanyService;
         private readonly ICompanyService companyService;
-        public UsersController(IUserService userService, IUserRelationshipService userRelationshipService, IUserOperationClaimService userOperationClaimService, IUserCompanyService userCompanyService, ICompanyService companyService)
+        private readonly IUserThemeService userThemeService;
+        public UsersController(IUserService userService, IUserRelationshipService userRelationshipService, IUserOperationClaimService userOperationClaimService, IUserCompanyService userCompanyService, ICompanyService companyService, IUserThemeService userThemeService)
         {
             this.userService = userService;
             this.userRelationshipService = userRelationshipService;
             this.userOperationClaimService = userOperationClaimService;
             this.userCompanyService = userCompanyService;
             this.companyService = companyService;
+            this.userThemeService = userThemeService;
         }
 
+
+
+
+        
         [HttpGet("getAllByCompanyId")]
         public IActionResult GetAll(int companyId)
         {
@@ -137,6 +144,31 @@ namespace WebApi.Controllers
         }
 
 
+
+
+
+
+
+
+        [HttpGet("getUserTheme")]
+        public IActionResult GetUserTheme(int userId)
+        {
+            var result = userThemeService.GetUserThemeByUserId(userId);
+            if (result.Success) return Ok(result);
+            
+            var createdUserTheme = userThemeService.CreateDefaultUserTheme(userId);
+            if (createdUserTheme.Success) return Ok(createdUserTheme);
+
+            return BadRequest();
+        }  
+        
+        
+        [HttpPost("changeUserTheme")]
+        public IActionResult ChangeUserTheme(UserTheme userTheme)
+        {
+            var result = userThemeService.Update(userTheme);
+            return Ok(result);
+        }
 
     }
 }
