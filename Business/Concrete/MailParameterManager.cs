@@ -32,28 +32,21 @@ namespace Business.Concrete
         [SecuredOperation("admin")]
         public IResult Update(MailParameter mailParameter)
         {
-            var result = Get(mailParameter.CompanyId);
-            
-            if (result.Data == null) 
+            var result = Get(mailParameter.CompanyId).Data;
+            if (result is null) 
             {
                 mailParameterDal.Add(mailParameter);
             }
             else // mail kayıtlı ise update ediyorum
             {
-                result.Data.SMTP = mailParameter.SMTP;
-                result.Data.Port = mailParameter.Port;
-                result.Data.SSL = mailParameter.SSL;
-                result.Data.Email = mailParameter.Email;
-                result.Data.Password = mailParameter.Password;
-                mailParameterDal.Update(result.Data);
+                result.SMTP = mailParameter.SMTP;
+                result.Port = mailParameter.Port;
+                result.SSL = mailParameter.SSL;
+                result.Email = mailParameter.Email;
+                if (mailParameter.Password != "") result.Password = mailParameter.Password;
+                mailParameterDal.Update(result);
             }
-
-            return new SuccessResult(Messages.MailUpdated);
+            return new SuccessResult(Messages.MailParametersUpdated);
         }
-     
-
-
-
-        
     }
 }

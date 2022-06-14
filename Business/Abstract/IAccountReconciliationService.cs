@@ -14,7 +14,7 @@ namespace Business.Abstract
 
         IResult Add(AccountReconciliation entity);
         IResult Update(AccountReconciliation entity);
-        IResult Delete(AccountReconciliation entity);
+        IResult Delete(int id);
 
 
         

@@ -7,11 +7,11 @@ namespace DataAccess.Concrete
 {
     public class CurrentAccountDal : EfEntityRepositoryBase<CurrentAccount, DataContext>, ICurrentAccountDal
     {
-        public bool ReconciliationCheck(int currencyAccountId)
+        public bool ReconciliationCheck(int currentAccountId)
         {
             using var context = new DataContext();
-            var accountReconciliations = context.AccountReconciliations.Where(a => a.CurrencyAccountId == currencyAccountId);
-            var babsReconciliations = context.BaBsReconciliations.Where(b => b.CurrencyAccountId == currencyAccountId);
+            var accountReconciliations = context.AccountReconciliations.Where(a => a.CurrentAccountId == currentAccountId);
+            var babsReconciliations = context.BaBsReconciliations.Where(b => b.CurrentAccountId == currentAccountId);
 
             if (accountReconciliations.Any() || babsReconciliations.Any())
             {

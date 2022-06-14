@@ -5,6 +5,6 @@ namespace DataAccess.Abstract
 {
     public interface ICurrentAccountDal : IEntityRepository<CurrentAccount>
     {
-       bool ReconciliationCheck(int currencyAccountId);
+       bool ReconciliationCheck(int currentAccountId);
     }
 }

@@ -31,7 +31,8 @@ namespace Business.Concrete
 
         public IDataResult<List<Currency>> GetAll()
         {
-            throw new NotImplementedException();
+            var result = currencyDal.GetAll();
+            return new SuccessDataResult<List<Currency>>(result);
         }
 
         public IResult Update(Currency entity)

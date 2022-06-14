@@ -22,7 +22,7 @@ namespace Business.Concrete
             {
                 UserId = userId,
                 SidebarButtonColor = "primary", // 6-7 tane farklı renk
-                SidebarMode = "dark", // white dark transparent
+                SidebarMode = "gradient-dark", // white dark transparent
                 Mode = "" // "" ya da dark-version
             };
             Update(newUserTheme);

@@ -16,17 +16,17 @@ namespace Business.Concrete
     public class AccountReconciliationManager : IAccountReconciliationService
     {
         private readonly IAccountReconciliationDal accountReconciliationDal;
-        private readonly ICurrentAccountService currencyAccountService;
+        private readonly ICurrentAccountService currentAccountService;
         private readonly IMailService mailService;
         private readonly IMailTemplateService mailTemplateService;
         private readonly IMailParameterService mailParameterService;
         public AccountReconciliationManager(IAccountReconciliationDal accountReconciliationDal,
-            ICurrentAccountService currencyAccountService,
+            ICurrentAccountService currentAccountService,
             IMailService mailService, IMailTemplateService mailTemplateService,
             IMailParameterService mailParameterService)
         {
             this.accountReconciliationDal = accountReconciliationDal;
-            this.currencyAccountService = currencyAccountService;
+            this.currentAccountService = currentAccountService;
             this.mailService = mailService;
             this.mailTemplateService = mailTemplateService;
             this.mailParameterService = mailParameterService;
@@ -35,7 +35,7 @@ namespace Business.Concrete
 
 
         [PerformanceAspect(3)]
-        [SecuredOperation("admin")]
+        [SecuredOperation("admin,accountReconciliation.getall")]
         [CacheAspect(30)]
         public IDataResult<List<AccountReconciliation>> GetAll(int companyId)
         {
@@ -45,8 +45,8 @@ namespace Business.Concrete
         }
 
         [PerformanceAspect(3)]
-        [SecuredOperation("admin")]
-        [CacheAspect(30)]
+        [SecuredOperation("admin,accountReconciliation.getall")]
+        //[CacheAspect(30)]
         public IDataResult<List<AccountReconciliationDto>> GetAllDto(int companyId)
         {
             return new SuccessDataResult<List<AccountReconciliationDto>>
@@ -58,7 +58,7 @@ namespace Business.Concrete
 
 
         //[PerformanceAspect(3)]
-        //[SecuredOperation("admin")]
+        //[SecuredOperation("admin,accountReconciliation.get")]
         //[CacheAspect(30)]
         public IDataResult<AccountReconciliation> GetById(int id)
         {
@@ -77,26 +77,27 @@ namespace Business.Concrete
 
 
         //[PerformanceAspect(3)]
-        //[SecuredOperation("admin")]
+        //[SecuredOperation("admin,accountReconciliation.add")]
         //[CacheRemoveAspect("IAccountReconciliationService.Get")]
         public IResult Add(AccountReconciliation entity)
         {
-            entity.Guid = new Guid().ToString();
+            entity.Guid = Guid.NewGuid().ToString();
             accountReconciliationDal.Add(entity);
             return new SuccessResult(Messages.AccountReconciliationAdded);
         }
 
         [PerformanceAspect(3)]
-        [SecuredOperation("admin")]
+        [SecuredOperation("admin,accountReconciliation.delete")]
         [CacheRemoveAspect("IAccountReconciliationService.Get")]
-        public IResult Delete(AccountReconciliation entity)
+        public IResult Delete(int id)
         {
-            accountReconciliationDal.Delete(entity);
+            var result = accountReconciliationDal.Get(x => x.Id == id);
+            accountReconciliationDal.Delete(result);
             return new SuccessResult(Messages.AccountReconciliationDeleted);
         }
 
         [PerformanceAspect(3)]
-        [SecuredOperation("admin")]
+        [SecuredOperation("admin,accountReconciliation.update")]
         [CacheRemoveAspect("IAccountReconciliationService.Get")]
         public IResult Update(AccountReconciliation entity)
         {
@@ -111,8 +112,8 @@ namespace Business.Concrete
 
 
 
-        [PerformanceAspect(3)]
-        [SecuredOperation("admin")]
+      //  [PerformanceAspect(3)]
+       // [SecuredOperation("admin")]
         [CacheRemoveAspect("IAccountReconciliationService.Get")]
         public IResult AddByExcel(AccountReconciliationExcelDto dto)
         {
@@ -139,13 +140,13 @@ namespace Business.Concrete
 
                         if (code != "Cari Kodu") // ilk satırı okumaması ociçin böyle yaptım
                         {
-                            var currencyAccountId = currencyAccountService.GetByCompanyIdAndCode(code, dto.CompanyId).Data.Id;
+                            var currentAccountId = currentAccountService.GetByCompanyIdAndCode(code, dto.CompanyId).Data.Id;
 
 
                             AccountReconciliation accountReconciliation = new AccountReconciliation()
                             {
                                 CompanyId = dto.CompanyId,
-                                CurrencyAccountId = currencyAccountId,
+                                CurrentAccountId = currentAccountId,
                                 CurrencyCredit = credit,
                                 CurrencyDebit = debit,
                                 CurrencyId = currencyId, // currency id TL USD

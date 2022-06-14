@@ -42,7 +42,7 @@ namespace Core.Aspects.Performance
 
             SendMailDto sendMailDto = new SendMailDto()
             {
-                Email = "emutabakat@zohomail.eu",
+                Email = "emutabakat007@zohomail.eu",
                 Password = "iTezvGfJqZFYqMD",
                 Port = 587,
                 SMTP = "smtp.zoho.eu",

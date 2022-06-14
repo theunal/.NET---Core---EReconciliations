@@ -30,7 +30,7 @@ namespace WebApi.Controllers
 
         [HttpGet("getAllDto")]
         public IActionResult GetAllDto(int companyId)
-        {
+         {
             var result = accountReconciliationService.GetAllDto(companyId);
             if (result.Success)
             {
@@ -47,7 +47,7 @@ namespace WebApi.Controllers
             {
                 return Ok(result);
             }
-            return BadRequest(result.Message);
+            return BadRequest(result);
         }
         
         [HttpGet("getByCode")] // guidi gönderiyoruz ama onaylandıktan sonra db de true ya çevirmedim düzelticem
@@ -94,7 +94,7 @@ namespace WebApi.Controllers
             {
                 return Ok(result);
             }
-            return BadRequest(result.Message);
+            return BadRequest(result);
         }
 
         [HttpPost("update")]
@@ -105,18 +105,18 @@ namespace WebApi.Controllers
             {
                 return Ok(result);
             }
-            return BadRequest(result.Message);
+            return BadRequest(result);
         }
 
         [HttpPost("delete")]
-        public IActionResult Delete(AccountReconciliation accountReconciliation)
+        public IActionResult Delete(int id)
         {
-            var result = accountReconciliationService.Delete(accountReconciliation);
+            var result = accountReconciliationService.Delete(id);
             if (result.Success)
             {
                 return Ok(result);
             }
-            return BadRequest(result.Message);
+            return BadRequest(result);
         }
 
 
@@ -147,7 +147,7 @@ namespace WebApi.Controllers
                 {
                     return Ok(result);
                 }
-                return BadRequest(result.Message);
+                return BadRequest(result);  
             }
             return BadRequest("Dosya seçilmedi.");
         }

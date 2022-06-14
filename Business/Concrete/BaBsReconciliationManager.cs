@@ -124,12 +124,12 @@ namespace Business.Concrete
 
                         if (code != "Cari Kodu") // ilk satırı okumaması için böyle yaptım
                         {
-                            var currencyAccountId = currencyAccountService.GetByCompanyIdAndCode(code, dto.CompanyId).Data.Id;
-                            var x = currencyAccountId;
+                            var currentAccountId = currencyAccountService.GetByCompanyIdAndCode(code, dto.CompanyId).Data.Id;
+
                             BaBsReconciliation baBsReconciliation = new BaBsReconciliation
                             {
                                 CompanyId = dto.CompanyId,
-                                CurrencyAccountId = currencyAccountId,
+                                CurrentAccountId = currentAccountId,
                                 Type = type,
                                 Mounth = mounth,
                                 Year = year,

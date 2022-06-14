@@ -16,7 +16,7 @@ namespace DataAccess.Concrete
                          on recoinciliation.CompanyId equals company.Id
                          
                          join account in context.CurrentAccounts 
-                         on recoinciliation.CurrencyAccountId equals account.Id
+                         on recoinciliation.CurrentAccountId equals account.Id
 
                          join currency in context.Currencies
                          on recoinciliation.CurrencyId equals currency.Id
@@ -26,15 +26,16 @@ namespace DataAccess.Concrete
                              Id = recoinciliation.Id,
                              
                              CompanyId = companyId,
-                             CurrencyAccountId = account.Id,
+                             CurrentAccountId = account.Id,
                              AccountIdentityNumber = account.IdentityNumber,
                              AccountName = account.Name,
                              AccountTaxDepartment = account.TaxDepartment,
                              AccountTaxIdNumber = account.TaxIdNumber,
                              CompanyIdentityNumber = company.IdentityNumber,
                              AccountEmail = account.Email,
+                             AccountCode = account.Code,
 
-
+                             
                              CompanyName = company.Name,
                              CompanyTaxDepartment = company.TaxDepartment,
                              CompanyTaxIdNumber = company.TaxIdNumber,
@@ -53,7 +54,7 @@ namespace DataAccess.Concrete
                              SendEmailDate = recoinciliation.SendEmailDate,
                              StartingDate = recoinciliation.StartingDate,
 
-                             CurrencyCode = currency.Code,
+                             CurrencyCode = currency.Name,
                              
                          };
             
