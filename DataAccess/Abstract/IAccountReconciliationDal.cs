@@ -7,5 +7,6 @@ namespace DataAccess.Abstract
     public interface IAccountReconciliationDal : IEntityRepository<AccountReconciliation>
     {
         List<AccountReconciliationDto> GetAllDto(int companyId);
+        AccountReconciliationDto GetById(int id);
     }
 }

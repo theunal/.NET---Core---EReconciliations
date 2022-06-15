@@ -9,11 +9,11 @@ namespace Business.Abstract
     {
         IDataResult<List<AccountReconciliation>> GetAll(int companyId);
         IDataResult<List<AccountReconciliationDto>> GetAllDto(int companyId);
-        IDataResult<AccountReconciliation> GetById(int id);
+        IDataResult<AccountReconciliationDto> GetById(int id);
         IDataResult<AccountReconciliation> GetByCode(string code);
 
         IResult Add(AccountReconciliation entity);
-        IResult Update(AccountReconciliation entity);
+        IResult Update(AccountReconciliation entity, string accountEmail, string code);
         IResult Delete(int id);
 
 

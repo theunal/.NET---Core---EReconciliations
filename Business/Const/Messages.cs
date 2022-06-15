@@ -68,7 +68,7 @@ namespace Business.Const
 
         public static string AccountReconciliationAdded = "Cari Mutabakat Kaydı Eklendi.";
         public static string AccountReconciliationsAdded = "Cari Mutabakat Kayıtları Eklendi.";
-        public static string AccountReconciliationUpdated = "Cari Mutabakat Güncelleni.";
+        public static string AccountReconciliationUpdated = "Cari Mutabakat Güncellendi.";
         public static string AccountReconciliationDeleted = "Cari Mutabakat Silindi.";
         public static string AccountReconciliationHasBeenBrought = "Cari Mutabakat Kaydı Getirildi.";
         public static string AccountReconciliationsHasBeenBrought = "Cari Mutabakat Kayıtları Getirildi.";

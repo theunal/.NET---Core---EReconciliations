@@ -69,7 +69,7 @@ namespace Business.Concrete
 
 
         [PerformanceAspect(3)]
-        [SecuredOperation("admin")]
+        [SecuredOperation("admin,accountReconciliation.update")]
         [CacheAspect(30)]
         public IDataResult<CurrentAccount> GetByCode(string code)
         {
@@ -220,6 +220,12 @@ namespace Business.Concrete
                 }
             }
             return new SuccessResult(Messages.CurrencyAccountsAdded);
+        }
+
+        public IDataResult<CurrentAccount> GetByEmail(string email)
+        {
+            var result = currencyAccountDal.Get(c => c.Email == email);
+            return new SuccessDataResult<CurrentAccount>(result);
         }
     }
 }

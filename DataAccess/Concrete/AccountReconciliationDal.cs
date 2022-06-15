@@ -11,19 +11,19 @@ namespace DataAccess.Concrete
         public List<AccountReconciliationDto> GetAllDto(int companyId)
         {
             using var context = new DataContext();
-            var result = from recoinciliation in context.AccountReconciliations.Where(p => p.CompanyId == companyId)
+            var result = from reconciliation in context.AccountReconciliations.Where(p => p.CompanyId == companyId)
                          join company in context.Companies 
-                         on recoinciliation.CompanyId equals company.Id
+                         on reconciliation.CompanyId equals company.Id
                          
                          join account in context.CurrentAccounts 
-                         on recoinciliation.CurrentAccountId equals account.Id
+                         on reconciliation.CurrentAccountId equals account.Id
 
                          join currency in context.Currencies
-                         on recoinciliation.CurrencyId equals currency.Id
+                         on reconciliation.CurrencyId equals currency.Id
 
                          select new AccountReconciliationDto
                          {
-                             Id = recoinciliation.Id,
+                             Id = reconciliation.Id,
                              
                              CompanyId = companyId,
                              CurrentAccountId = account.Id,
@@ -40,19 +40,19 @@ namespace DataAccess.Concrete
                              CompanyTaxDepartment = company.TaxDepartment,
                              CompanyTaxIdNumber = company.TaxIdNumber,
                              
-                             CurrencyCredit = recoinciliation.CurrencyCredit,
-                             CurrencyDebit = recoinciliation.CurrencyDebit,
-                             CurrencyId = recoinciliation.CurrencyId,
-                             EmailReadDate = recoinciliation.EmailReadDate,
-                             EndingDate = recoinciliation.EndingDate,
-                             Guid = recoinciliation.Guid,
-                             IsEmailRead = recoinciliation.IsEmailRead,
-                             IsResultSucceed = recoinciliation.IsResultSucceed,
-                             IsSendEmail = recoinciliation.IsSendEmail,
-                             ResultDate = recoinciliation.ResultDate,
-                             ResultNote = recoinciliation.ResultNote,
-                             SendEmailDate = recoinciliation.SendEmailDate,
-                             StartingDate = recoinciliation.StartingDate,
+                             CurrencyCredit = reconciliation.CurrencyCredit,
+                             CurrencyDebit = reconciliation.CurrencyDebit,
+                             CurrencyId = reconciliation.CurrencyId,
+                             EmailReadDate = reconciliation.EmailReadDate,
+                             EndingDate = reconciliation.EndingDate,
+                             Guid = reconciliation.Guid,
+                             IsEmailRead = reconciliation.IsEmailRead,
+                             IsResultSucceed = reconciliation.IsResultSucceed,
+                             IsSendEmail = reconciliation.IsSendEmail,
+                             ResultDate = reconciliation.ResultDate,
+                             ResultNote = reconciliation.ResultNote,
+                             SendEmailDate = reconciliation.SendEmailDate,
+                             StartingDate = reconciliation.StartingDate,
 
                              CurrencyCode = currency.Name,
                              
@@ -60,6 +60,59 @@ namespace DataAccess.Concrete
             
             return result.ToList();
         }
-        
+
+        public AccountReconciliationDto GetById(int id)
+        {
+            using var context = new DataContext();
+            var result = from reconciliation in context.AccountReconciliations.Where(p => p.Id == id)
+                         join company in context.Companies
+                         on reconciliation.CompanyId equals company.Id
+
+                         join account in context.CurrentAccounts
+                         on reconciliation.CurrentAccountId equals account.Id
+
+                         join currency in context.Currencies
+                         on reconciliation.CurrencyId equals currency.Id
+
+                         select new AccountReconciliationDto
+                         {
+                             Id = reconciliation.Id,
+
+                             CompanyId = reconciliation.CompanyId,
+                             CurrentAccountId = account.Id,
+                             AccountIdentityNumber = account.IdentityNumber,
+                             AccountName = account.Name,
+                             AccountTaxDepartment = account.TaxDepartment,
+                             AccountTaxIdNumber = account.TaxIdNumber,
+                             CompanyIdentityNumber = company.IdentityNumber,
+                             AccountEmail = account.Email,
+                             AccountCode = account.Code,
+
+
+                             CompanyName = company.Name,
+                             CompanyTaxDepartment = company.TaxDepartment,
+                             CompanyTaxIdNumber = company.TaxIdNumber,
+
+                             CurrencyCredit = reconciliation.CurrencyCredit,
+                             CurrencyDebit = reconciliation.CurrencyDebit,
+                             CurrencyId = reconciliation.CurrencyId,
+                             EmailReadDate = reconciliation.EmailReadDate,
+                             EndingDate = reconciliation.EndingDate,
+                             Guid = reconciliation.Guid,
+                             IsEmailRead = reconciliation.IsEmailRead,
+                             IsResultSucceed = reconciliation.IsResultSucceed,
+                             IsSendEmail = reconciliation.IsSendEmail,
+                             ResultDate = reconciliation.ResultDate,
+                             ResultNote = reconciliation.ResultNote,
+                             SendEmailDate = reconciliation.SendEmailDate,
+                             StartingDate = reconciliation.StartingDate,
+
+                             CurrencyCode = currency.Name,
+
+                         };
+
+            return result.FirstOrDefault();
+        }
+
     }
 }

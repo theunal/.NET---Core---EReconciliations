@@ -61,6 +61,8 @@ namespace WebApi.Controllers
             return BadRequest(result.Message);
         }
         
+
+
         [HttpGet("getById")]
         public IActionResult GetById(int id)
         {
@@ -98,9 +100,9 @@ namespace WebApi.Controllers
         }
 
         [HttpPost("update")]
-        public IActionResult Update(AccountReconciliation accountReconciliation)
+        public IActionResult Update(AccountReconciliation accountReconciliation, string accountEmail, string code)
         {
-            var result = accountReconciliationService.Update(accountReconciliation);
+            var result = accountReconciliationService.Update(accountReconciliation, accountEmail, code);
             if (result.Success)
             {
                 return Ok(result);

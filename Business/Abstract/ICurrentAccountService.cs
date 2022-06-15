@@ -8,6 +8,7 @@ namespace Business.Abstract
     {
         IDataResult<List<CurrentAccount>> GetAll(int companyId); // şirketin cari lerini getir
         IDataResult<CurrentAccount> GetById(int id);
+        IDataResult<CurrentAccount> GetByEmail(string email);
         IDataResult<CurrentAccount> GetByCode(string code);
         IDataResult<CurrentAccount> GetByCompanyId(int companyId);
         IDataResult<CurrentAccount> GetByCompanyIdAndCode(string code, int companyId);

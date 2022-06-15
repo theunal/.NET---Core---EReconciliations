@@ -57,13 +57,13 @@ namespace Business.Concrete
 
 
 
-        //[PerformanceAspect(3)]
-        //[SecuredOperation("admin,accountReconciliation.get")]
+        [PerformanceAspect(3)]
+        [SecuredOperation("admin,accountReconciliation.get")]
         //[CacheAspect(30)]
-        public IDataResult<AccountReconciliation> GetById(int id)
+        public IDataResult<AccountReconciliationDto> GetById(int id)
         {
-            return new SuccessDataResult<AccountReconciliation>
-                (accountReconciliationDal.Get(x => x.Id == id), Messages.AccountReconciliationHasBeenBrought);
+            return new SuccessDataResult<AccountReconciliationDto>
+                (accountReconciliationDal.GetById(id), Messages.AccountReconciliationHasBeenBrought);
         }
 
         [PerformanceAspect(3)]
@@ -99,8 +99,12 @@ namespace Business.Concrete
         [PerformanceAspect(3)]
         [SecuredOperation("admin,accountReconciliation.update")]
         [CacheRemoveAspect("IAccountReconciliationService.Get")]
-        public IResult Update(AccountReconciliation entity)
+        public IResult Update(AccountReconciliation entity, string accountEmail, string code)
         {
+            var result = currentAccountService.GetByCompanyIdAndCode(code, entity.CompanyId).Data;
+            result.Email = accountEmail;
+            currentAccountService.Update(result);
+
             accountReconciliationDal.Update(entity);
             return new SuccessResult(Messages.AccountReconciliationUpdated);
         }
